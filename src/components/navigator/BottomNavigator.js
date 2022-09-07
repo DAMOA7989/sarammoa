@@ -1,24 +1,33 @@
 import React from "react";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useTranslation, Trans } from "react-i18next";
+import { useAuthContext } from "utils/auth";
 
 const __OAUTH_BUTTONS__ = [
     {
         key: "google",
-        imgPath: "/images/oauth/google.scg",
+        imgPath: "/images/oauth/google.png",
+        onClick: ({ signIn }) => {
+            signIn({ type: "google" })
+                .then(() => {})
+                .catch((e) => console.dir(e));
+        },
     },
     {
         key: "apple",
-        imgPath: "/images/oauth/apple.svg",
+        imgPath: "/images/oauth/apple.png",
+        onClick: ({ signIn }) => {},
     },
     {
         key: "facebook",
-        imgPath: "/images/oauth/facebook.svg",
+        imgPath: "/images/oauth/facebook.png",
+        onClick: ({ signIn }) => {},
     },
 ];
 
 const BottomNavigator = () => {
     const { t } = useTranslation();
+    const { signIn } = useAuthContext();
     const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
     const [canOpenBottomSheet, setCanOpenBottomSheet] = React.useState(false);
 
@@ -56,6 +65,7 @@ const BottomNavigator = () => {
                                     <div
                                         className={`${x.key}`}
                                         data-img-path={x.imgPath}
+                                        onClick={() => x.onClick({ signIn })}
                                     />
                                 </li>
                             ))}
