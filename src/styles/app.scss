@@ -1,3 +1,8 @@
 @import "./include.scss";
+@import "./reset.css";
 
+@import "./mobile/globals.scss";
 @import "./mobile/components.scss";
+
+@import "./pc/globals.scss";
+@import "./pc/components.scss";

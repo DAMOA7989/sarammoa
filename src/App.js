@@ -9,7 +9,6 @@ const App = () => {
 
     return (
         <div>
-            {t("test")}
             <Routes>
                 <Route path="/" element={<AppLayout />}>
                     <Route index element={<NewsFeed />} />
