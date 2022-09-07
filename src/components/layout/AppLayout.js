@@ -1,12 +1,12 @@
 import React from "react";
-import AppFooter from "components/footer/AppFooter";
+import BottomNavigator from "components/navigator/BottomNavigator";
 import { Outlet } from "react-router-dom";
 
 const AppLayout = () => {
     return (
         <>
             <Outlet />
-            <AppFooter />
+            <BottomNavigator />
         </>
     );
 };

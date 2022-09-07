@@ -1,7 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const NewsFeed = () => {
-    return <main>news feed</main>;
+    const { t } = useTranslation();
+
+    return <main>news feed {t("test")}</main>;
 };
 
 export default NewsFeed;
