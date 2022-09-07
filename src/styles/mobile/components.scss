@@ -1,6 +1,6 @@
 @import "../include.scss";
 
-.components-navigator-bottom-navigator {
+.components-navigation-bottom-navigation {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -10,10 +10,69 @@
         font-size: 16px;
         position: absolute;
         width: 100px;
-        height: 56px;
+        height: 52px;
         bottom: 40px;
         left: 0;
         right: 0;
         margin: 0 auto;
+    }
+
+    > ul.bottom-navigation-tabs {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+
+        > li {
+            flex: 1;
+            z-index: 1;
+
+            > .container {
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 80px;
+                border-top: 1px solid $x11_dark_gray_color;
+            }
+        }
+
+        li:nth-child(1).active ~ .indicator {
+            // transform: translateX(20% * 0);
+            left: 20% * 0;
+        }
+
+        li:nth-child(2).active ~ .indicator {
+            // transform: translateX(100% * 1);
+            left: 20% * 1;
+        }
+
+        li:nth-child(3).active ~ .indicator {
+            // transform: translateX(100% * 2);
+            left: 20% * 2;
+        }
+
+        li:nth-child(4).active ~ .indicator {
+            // transform: translateX(100% * 3);
+            left: 20% * 3;
+        }
+
+        li:nth-child(5).active ~ .indicator {
+            // transform: translateX(100% * 4);
+            left: 20% * 4;
+        }
+
+        .indicator {
+            position: absolute;
+            left: 0;
+            width: 20%;
+            height: 100%;
+            background-color: $primary_color;
+            transition: left 0.2s;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            transform: scale(0.85);
+        }
     }
 }
