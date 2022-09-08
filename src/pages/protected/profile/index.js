@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import styles from "styles/include.scss";
 
 const __TABS__ = [
     {
@@ -39,7 +40,10 @@ const Profile = () => {
         etc: React.useRef(null),
     };
     const originalProfileSizeRef = React.useRef([0, 0]);
+    const profileWrapRef = React.useRef(null);
     const profileRef = React.useRef(null);
+    const profileThumbnailRef = React.useRef(null);
+    const profileInfoRef = React.useRef(null);
     const infoRef = React.useRef(null);
 
     React.useEffect(() => {
@@ -85,17 +89,11 @@ const Profile = () => {
     }, []);
 
     React.useEffect(() => {
-        if (!profileRef.current) return;
-        if (
-            originalProfileSizeRef.current?.[0] !== 0 ||
-            originalProfileSizeRef.current?.[1] !== 0
-        )
-            return;
         originalProfileSizeRef.current = [
             profileRef.current.offsetWidth,
             profileRef.current.offsetHeight,
         ];
-    }, [profileRef.current]);
+    }, []);
 
     React.useEffect(() => {
         if (
@@ -108,8 +106,22 @@ const Profile = () => {
 
             if (curHeight >= originalProfileSizeRef.current?.[1] / 2) {
                 profileRef.current.style.height = `${originalProfileSizeRef.current?.[1]}px`;
+                profileInfoRef.current.style.opacity = "1";
+                profileInfoRef.current.style.display = "inline-flex";
+                profileWrapRef.current.style.backgroundColor = `${styles.appBackgroundColor}`;
+                profileThumbnailRef.current.style.width = "Min(150px, 30vw)";
+                profileThumbnailRef.current.style.height = "Min(150px, 30vw)";
+                profileThumbnailRef.current.style.marginBottom = "24px";
+                // profileThumbnailRef.current.style.top = "0";
             } else {
                 profileRef.current.style.height = `0px`;
+                profileInfoRef.current.style.opacity = "0";
+                profileInfoRef.current.style.display = "none";
+                profileWrapRef.current.style.backgroundColor = "white";
+                profileThumbnailRef.current.style.width = "Min(75px, 15vw)";
+                profileThumbnailRef.current.style.height = "Min(75px, 15vw)";
+                profileThumbnailRef.current.style.marginBottom = "0";
+                // profileThumbnailRef.current.style.top = `Min(37.5px, 7.5vw)`;
             }
             prevTouchPosition.current = [0, 0];
             return;
@@ -147,7 +159,7 @@ const Profile = () => {
 
     return (
         <main className="pages-protected-profile">
-            <div className="profile-wrap">
+            <div ref={profileWrapRef} className="profile-wrap">
                 <header>
                     <div className="gear-icon"></div>
                     <div className="dots-vertical-icon"></div>
@@ -155,25 +167,30 @@ const Profile = () => {
                 <div ref={profileRef} className="profile">
                     <div className="profile-container">
                         <div
+                            ref={profileThumbnailRef}
                             className="profile-thumbnail"
                             style={{
                                 backgroundImage: `url('https://www.bentbusinessmarketing.com/wp-content/uploads/2013/02/35844588650_3ebd4096b1_b-1024x683.jpg')`,
                             }}
                         ></div>
-                        <span className="name">Walter Yoon</span>
-                        <span className="position">Javascript Developer</span>
-                        <div className="counts">
-                            <div className="thumb-up">
-                                <div className="icon" />
-                                <span className="count">0</span>
-                            </div>
-                            <div className="follow-to">
-                                <div className="icon" />
-                                <span className="count">0</span>
-                            </div>
-                            <div className="follow-from">
-                                <div className="icon" />
-                                <span className="count">0</span>
+                        <div ref={profileInfoRef} className="profile-info">
+                            <span className="name">Walter Yoon</span>
+                            <span className="position">
+                                Javascript Developer
+                            </span>
+                            <div className="counts">
+                                <div className="thumb-up">
+                                    <div className="icon" />
+                                    <span className="count">0</span>
+                                </div>
+                                <div className="follow-to">
+                                    <div className="icon" />
+                                    <span className="count">0</span>
+                                </div>
+                                <div className="follow-from">
+                                    <div className="icon" />
+                                    <span className="count">0</span>
+                                </div>
                             </div>
                         </div>
                     </div>

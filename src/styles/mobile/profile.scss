@@ -9,6 +9,7 @@
         padding-top: clamp(0px, 8vh, 80px);
         padding-bottom: clamp(0px, 4vh, 40px);
         transition: background-color 1s;
+        overflow: hidden;
 
         > header {
             display: flex;
@@ -68,12 +69,15 @@
 
             > .profile-container {
                 display: inline-flex;
+                width: 100%;
                 flex-direction: column;
                 align-items: center;
 
                 > .profile-thumbnail {
-                    width: 100px;
-                    height: 100px;
+                    position: relative;
+                    left: 0;
+                    width: Min(150px, 30vw);
+                    height: Min(150px, 30vw);
                     border-radius: 50%;
                     overflow: hidden;
                     display: inline-flex;
@@ -82,88 +86,92 @@
                     box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
                     background-size: cover;
                     background-position: center;
+                    transition: width 1s, height 1s, top 1s, left 1s;
                     margin-bottom: 24px;
                 }
 
-                > span.name {
-                    font-size: 18px;
-                    font-weight: 600;
-                    line-height: 22px;
-                    margin-bottom: 8px;
-                    opacity: 1;
-                    transition: opacity 1s;
-                }
-
-                > span.position {
-                    color: $auro_metal_saurus_color;
-                    font-size: 14px;
-                    font-weight: 400;
-                    line-height: 17px;
-                    margin-bottom: 12px;
-                    opacity: 1;
-                    transition: opacity 1s;
-                }
-
-                > .counts {
+                > .profile-info {
                     display: inline-flex;
+                    width: 100%;
+                    flex-direction: column;
                     align-items: center;
-                    gap: 12px;
                     opacity: 1;
-                    transition: opacity 1s;
+                    transition: opacity 0.25s, transform 0.5s;
 
-                    > div {
+                    > span.name {
+                        font-size: 18px;
+                        font-weight: 600;
+                        line-height: 22px;
+                        margin-bottom: 8px;
+                    }
+
+                    > span.position {
+                        color: $auro_metal_saurus_color;
+                        font-size: 14px;
+                        font-weight: 400;
+                        line-height: 17px;
+                        margin-bottom: 12px;
+                    }
+
+                    > .counts {
                         display: inline-flex;
                         align-items: center;
-                        gap: 4px;
+                        gap: 12px;
 
-                        > .icon {
-                            width: 14px;
-                            height: 14px;
+                        > div {
                             display: inline-flex;
-                            justify-content: center;
                             align-items: center;
+                            gap: 4px;
 
-                            &::after {
-                                content: "";
-                                width: 100%;
-                                height: 100%;
+                            > .icon {
+                                width: 14px;
+                                height: 14px;
+                                display: inline-flex;
+                                justify-content: center;
+                                align-items: center;
 
-                                mask-repeat: no-repeat;
-                                mask-position: center;
-                                mask-size: cover;
-                                background-color: $gunmetal_color;
+                                &::after {
+                                    content: "";
+                                    width: 100%;
+                                    height: 100%;
+
+                                    mask-repeat: no-repeat;
+                                    mask-position: center;
+                                    mask-size: cover;
+                                    background-color: $gunmetal_color;
+                                }
+                            }
+
+                            > .count {
+                                font-size: 12px;
+                                font-weight: bold;
+                                color: $gunmetal_color;
                             }
                         }
 
-                        > .count {
-                            font-size: 12px;
-                            font-weight: bold;
-                            color: $gunmetal_color;
-                        }
-                    }
-
-                    > .thumb-up {
-                        > .icon {
-                            &::after {
-                                width: 90%;
-                                height: 90%;
-                                mask-image: url("/assets/images/icons/thumb_up.svg");
+                        > .thumb-up {
+                            > .icon {
+                                &::after {
+                                    width: 90%;
+                                    height: 90%;
+                                    mask-image: url("/assets/images/icons/thumb_up.svg");
+                                }
                             }
                         }
-                    }
 
-                    > .follow-to {
-                        > .icon {
-                            &::after {
-                                mask-image: url("/assets/images/icons/follow_to.svg");
+                        > .follow-to {
+                            > .icon {
+                                &::after {
+                                    mask-image: url("/assets/images/icons/follow_to.svg");
+                                }
                             }
                         }
-                    }
 
-                    > .follow-from {
-                        > .icon {
-                            &::after {
-                                mask-image: url("/assets/images/icons/follow_from.svg");
+                        > .follow-from {
+                            > .icon {
+                                &::after {
+                                    mask-image: url("/assets/images/icons/follow_from.svg");
+                                }
                             }
                         }
                     }

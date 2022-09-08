@@ -19,3 +19,7 @@ $black_russian_color: #111827;
 
 $common_box_shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+
+:export {
+    appBackgroundColor: $app_background_color;
+}
