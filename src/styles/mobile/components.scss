@@ -28,6 +28,8 @@
         background-color: white;
         // box-shadow: -10px -7px 10px 5px $app_background_color;
         border-top: 6px solid $app_background_color;
+        border-left: 6px solid $app_background_color;
+        border-right: 6px solid $app_background_color;
         padding: 0 20px;
 
         > ul.bottom-navigation-tabs {
