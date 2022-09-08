@@ -1,6 +1,15 @@
 import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import { Connect, Notice, Profile, Support, NewsFeed } from "pages";
+import {
+    Connect,
+    Notice,
+    Profile,
+    ProfileHistory,
+    ProfileInformation,
+    ProfileEtc,
+    Support,
+    NewsFeed,
+} from "pages";
 import AppLayout from "components/layout/AppLayout";
 import { AuthProvider } from "utils/auth";
 import { gapi } from "gapi-script";
@@ -24,7 +33,14 @@ const App = () => {
                     <Route path="support" element={<Support />} />
                     <Route path="connect" element={<Connect />} />
                     <Route path="notice" element={<Notice />} />
-                    <Route path="profile" element={<Profile />} />
+                    <Route path="profile" element={<Profile />}>
+                        <Route path="" element={<ProfileHistory />} />
+                        <Route
+                            path="information"
+                            element={<ProfileInformation />}
+                        />
+                        <Route path="etc" element={<ProfileEtc />} />
+                    </Route>
                 </Route>
             </Routes>
         </AuthProvider>

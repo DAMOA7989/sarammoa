@@ -131,7 +131,6 @@ const BottomNavigation = () => {
     }, []);
 
     React.useEffect(() => {
-        console.log("d tabBarWidth", tabBarWidth);
         setTabWidth(tabBarWidth / __TABS__.length);
     }, [tabBarWidth]);
 

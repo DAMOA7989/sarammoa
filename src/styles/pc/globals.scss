@@ -55,6 +55,8 @@
     color: $x11_dark_gray_color;
     font-size: 16px;
     font-weight: 500;
+    padding: 12px 16px;
+    border-radius: 16px;
 
     &.active {
         cursor: pointer;

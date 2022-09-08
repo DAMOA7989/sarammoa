@@ -3,11 +3,17 @@
 
 @import "./mobile/globals.scss";
 @import "./mobile/components.scss";
+@import "./mobile/profile.scss";
 
 @import "./pc/globals.scss";
 @import "./pc/components.scss";
+@import "./pc/profile.scss";
 
-html {
-    // background-color: $app_background_color;
-    background-color: white;
+#root {
+    display: flex;
+    flex-direction: column;
+
+    > main {
+        flex: 1;
+    }
 }
