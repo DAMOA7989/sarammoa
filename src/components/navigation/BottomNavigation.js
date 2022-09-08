@@ -40,6 +40,7 @@ const __TABS__ = [
     {
         key: "newsfeed",
         path: "/",
+        i18nKey: "tab.home",
         icon: {
             inactive: <NewsFeedIcon />,
             active: <NewsFeedActiveIcon />,
@@ -52,6 +53,7 @@ const __TABS__ = [
     {
         key: "support",
         path: "/support",
+        i18nKey: "tab.support",
         icon: {
             inactive: <SupportIcon />,
             active: <SupportActiveIcon />,
@@ -64,6 +66,7 @@ const __TABS__ = [
     {
         key: "connect",
         path: "/connect",
+        i18nKey: "tab.connect",
         icon: {
             inactive: <ConnectIcon />,
             active: <ConnectActiveIcon />,
@@ -76,6 +79,7 @@ const __TABS__ = [
     {
         key: "notice",
         path: "/notice",
+        i18nKey: "tab.notice",
         icon: {
             inactive: <NoticeIcon />,
             active: <NoticeActiveIcon />,
@@ -88,6 +92,7 @@ const __TABS__ = [
     {
         key: "profile",
         path: "/profile",
+        i18nKey: "tab.profile",
         icon: {
             inactive: <ProfileIcon />,
             active: <ProfileActiveIcon />,
@@ -156,40 +161,43 @@ const BottomNavigation = () => {
     return (
         <nav className="components-navigation-bottom-navigation">
             {user ? (
-                <ul
-                    ref={bottomNavigationTabsRef}
-                    className={`bottom-navigation-tabs`}
-                    style={{
-                        width: `${tabBarWidth}px`,
-                    }}
-                >
-                    {__TABS__.map((tab) => (
-                        <li
-                            key={tab.key}
-                            className={`bottom-navigation-tabs-tab ${
-                                curTab === tab.key && "active"
-                            }`}
-                        >
-                            <div
-                                className="container"
-                                onClick={() => tab.onClick({ navigate })}
-                            >
-                                {tab.icon.inactive}
-                            </div>
-                        </li>
-                    ))}
-                    <div
-                        className="indicator"
+                <div className="bottom-navigation-container">
+                    <ul
+                        ref={bottomNavigationTabsRef}
+                        className={`bottom-navigation-tabs`}
                         style={{
-                            backgroundColor:
-                                __TABS__[
-                                    __TABS__.findIndex(
-                                        (tab) => tab.key === curTab
-                                    )
-                                ].color,
+                            width: `${tabBarWidth}px`,
                         }}
-                    ></div>
-                </ul>
+                    >
+                        {__TABS__.map((tab) => (
+                            <li
+                                key={tab.key}
+                                className={`bottom-navigation-tabs-tab ${
+                                    curTab === tab.key && "active"
+                                }`}
+                            >
+                                <div
+                                    className="container"
+                                    onClick={() => tab.onClick({ navigate })}
+                                >
+                                    {tab.icon.inactive}
+                                    <span>{t(tab.i18nKey)}</span>
+                                </div>
+                            </li>
+                        ))}
+                        <div
+                            className="indicator"
+                            style={{
+                                backgroundColor:
+                                    __TABS__[
+                                        __TABS__.findIndex(
+                                            (tab) => tab.key === curTab
+                                        )
+                                    ].color,
+                            }}
+                        ></div>
+                    </ul>
+                </div>
             ) : (
                 <>
                     <button
