@@ -23,6 +23,10 @@ html {
     background-color: $app_background_color;
 }
 
+body {
+    overscroll-behavior: contain;
+}
+
 #root {
     min-height: 100%;
 }

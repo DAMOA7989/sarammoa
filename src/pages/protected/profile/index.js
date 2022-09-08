@@ -40,10 +40,14 @@ const Profile = () => {
         etc: React.useRef(null),
     };
     const originalProfileSizeRef = React.useRef([0, 0]);
+    const originalProfileInfoSizeRef = React.useRef([0, 0]);
     const profileWrapRef = React.useRef(null);
     const profileRef = React.useRef(null);
+    const profileContainerRef = React.useRef(null);
     const profileThumbnailRef = React.useRef(null);
     const profileInfoRef = React.useRef(null);
+    const profileSmallNameRef = React.useRef(null);
+    const profileInfoNavRef = React.useRef(null);
     const infoRef = React.useRef(null);
 
     React.useEffect(() => {
@@ -51,9 +55,15 @@ const Profile = () => {
             const touch = event.touches?.[0] || event.changedTouches?.[0];
             setTouchPosition([touch.clientX, touch.clientY]);
             profileRef.current.style.transition = ``;
+            profileThumbnailRef.current.style.transition = ``;
+            profileInfoRef.current.style.transition = ``;
+            profileInfoNavRef.current.style.transition = ``;
+            profileContainerRef.current.style.transition = ``;
+            profileSmallNameRef.current.style.transition = ``;
         };
 
         const processTouchmove = (event) => {
+            event.preventDefault();
             const touch = event.touches?.[0] || event.changedTouches?.[0];
             if (!infoRef.current.contains(event.target)) return;
             setTouchPosition([touch.clientX, touch.clientY]);
@@ -66,6 +76,11 @@ const Profile = () => {
         const processTouchend = (event) => {
             const touch = event.touches?.[0] || event.changedTouches?.[0];
             profileRef.current.style.transition = `height 1s`;
+            profileThumbnailRef.current.style.transition = `top 1s, left 1s, width 1s, height 1s, transform 1s`;
+            profileInfoRef.current.style.transition = `transform 1s, opacity .5s`;
+            profileInfoNavRef.current.style.transition = `padding 1s`;
+            profileContainerRef.current.style.transition = `padding 1s`;
+            profileSmallNameRef.current.style.transition = `opacity .5s, transform 1s`;
             setTouchPosition([0, 0]);
         };
 
@@ -89,6 +104,14 @@ const Profile = () => {
     }, []);
 
     React.useEffect(() => {
+        profileContainerRef.current.style.paddingBottom = `${
+            profileInfoRef.current.offsetHeight + 24
+        }px`;
+        originalProfileInfoSizeRef.current = [
+            profileInfoRef.current.offsetWidth,
+            profileInfoRef.current.offsetHeight,
+        ];
+
         originalProfileSizeRef.current = [
             profileRef.current.offsetWidth,
             profileRef.current.offsetHeight,
@@ -106,22 +129,47 @@ const Profile = () => {
 
             if (curHeight >= originalProfileSizeRef.current?.[1] / 2) {
                 profileRef.current.style.height = `${originalProfileSizeRef.current?.[1]}px`;
+                profileContainerRef.current.style.paddingBottom = `${
+                    originalProfileInfoSizeRef.current?.[1] + 24
+                }px`;
                 profileInfoRef.current.style.opacity = "1";
-                profileInfoRef.current.style.display = "inline-flex";
+                // profileInfoRef.current.style.display = "inline-flex";
+                profileInfoRef.current.style.transform = `translateX(0px)`;
+                profileInfoNavRef.current.style.paddingTop = "24px";
                 profileWrapRef.current.style.backgroundColor = `${styles.appBackgroundColor}`;
-                profileThumbnailRef.current.style.width = "Min(150px, 30vw)";
-                profileThumbnailRef.current.style.height = "Min(150px, 30vw)";
-                profileThumbnailRef.current.style.marginBottom = "24px";
-                // profileThumbnailRef.current.style.top = "0";
+                profileThumbnailRef.current.style.width = "120px";
+                profileThumbnailRef.current.style.height = "120px";
+                // profileThumbnailRef.current.style.marginBottom = `${
+                //     24 + profileInfoRef.current.offsetHeight
+                // }px`;
+                profileThumbnailRef.current.style.top = "0";
+                profileThumbnailRef.current.style.transform = `translateX(0px)`;
+                profileSmallNameRef.current.style.opacity = "0";
+                profileSmallNameRef.current.style.transform = `translateX(${
+                    originalProfileSizeRef.current?.[0] / 2 -
+                    profileSmallNameRef.current.offsetWidth / 2
+                }px) scale(0.5) translateY(3px)`;
             } else {
                 profileRef.current.style.height = `0px`;
+                profileContainerRef.current.style.paddingBottom = "0px";
                 profileInfoRef.current.style.opacity = "0";
-                profileInfoRef.current.style.display = "none";
+                // profileInfoRef.current.style.display = "none";
+                profileInfoRef.current.style.transform = `translateX(${
+                    originalProfileSizeRef.current?.[0] / 2 -
+                    profileInfoRef.current.offsetWidth / 2 -
+                    68
+                }px)`;
+                profileInfoNavRef.current.style.paddingTop = "0";
                 profileWrapRef.current.style.backgroundColor = "white";
-                profileThumbnailRef.current.style.width = "Min(75px, 15vw)";
-                profileThumbnailRef.current.style.height = "Min(75px, 15vw)";
+                profileThumbnailRef.current.style.width = "60px";
+                profileThumbnailRef.current.style.height = "60px";
                 profileThumbnailRef.current.style.marginBottom = "0";
-                // profileThumbnailRef.current.style.top = `Min(37.5px, 7.5vw)`;
+                profileThumbnailRef.current.style.top = "-15px";
+                profileThumbnailRef.current.style.transform = `translateX(${
+                    -originalProfileSizeRef.current?.[0] / 2 + 30 + 68
+                }px)`;
+                profileSmallNameRef.current.style.opacity = "1";
+                profileSmallNameRef.current.style.transform = `translateX(0px) scale(1) translateY(3px)`;
             }
             prevTouchPosition.current = [0, 0];
             return;
@@ -135,11 +183,50 @@ const Profile = () => {
             return;
         }
 
-        profileRef.current.style.height = `${
+        const nextHeight =
             profileRef.current.offsetHeight -
             prevTouchPosition.current?.[1] +
-            touchPosition?.[1]
+            touchPosition?.[1];
+        profileRef.current.style.height = `${nextHeight}px`;
+        let curHeightRatio = nextHeight / originalProfileSizeRef.current?.[1];
+        curHeightRatio =
+            curHeightRatio < 0 ? 0 : curHeightRatio > 1 ? 1 : curHeightRatio;
+
+        profileContainerRef.current.style.paddingBottom = `${
+            originalProfileInfoSizeRef.current?.[1] * curHeightRatio + 24
         }px`;
+        profileInfoRef.current.style.opacity = `${
+            curHeightRatio - 0.3 > 0 ? curHeightRatio - 0.3 : 0
+        }`;
+        profileInfoRef.current.style.transform = `translateX(${
+            (originalProfileSizeRef.current?.[0] / 2 -
+                profileInfoRef.current.offsetWidth / 2 -
+                68) *
+            (1 - curHeightRatio)
+        }px)`;
+        profileThumbnailRef.current.style.width = `${
+            60 + 60 * curHeightRatio
+        }px`;
+        profileThumbnailRef.current.style.height = `${
+            60 + 60 * curHeightRatio
+        }px`;
+        profileThumbnailRef.current.style.top = `${-15 * curHeightRatio}px`;
+        profileThumbnailRef.current.style.transform = `translateX(${
+            (-originalProfileSizeRef.current?.[0] / 2 +
+                profileThumbnailRef.current.offsetWidth / 2 +
+                68) *
+            (1 - curHeightRatio)
+        }px)`;
+        profileInfoNavRef.current.style.paddingTop = `${24 * curHeightRatio}px`;
+        profileSmallNameRef.current.style.opacity = `${
+            1 - curHeightRatio * 2 < 0 ? 0 : 1 - curHeightRatio * 2
+        }`;
+        profileSmallNameRef.current.style.transform = `translateX(${
+            (originalProfileSizeRef.current?.[0] / 2 -
+                profileSmallNameRef.current.offsetWidth / 2) *
+            curHeightRatio
+        }px) scale(${0.5 + (0.5 - curHeightRatio / 2)}) translateY(3px)`;
+
         prevTouchPosition.current = touchPosition;
     }, [touchPosition]);
 
@@ -165,7 +252,10 @@ const Profile = () => {
                     <div className="dots-vertical-icon"></div>
                 </header>
                 <div ref={profileRef} className="profile">
-                    <div className="profile-container">
+                    <div
+                        ref={profileContainerRef}
+                        className="profile-container"
+                    >
                         <div
                             ref={profileThumbnailRef}
                             className="profile-thumbnail"
@@ -193,14 +283,18 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
+                        <span ref={profileSmallNameRef} className="name-small">
+                            Walter Yoon
+                        </span>
                     </div>
                 </div>
             </div>
             <div ref={infoRef} className="info">
-                <nav className="tabs">
+                <nav ref={profileInfoNavRef} className="tabs">
                     <ul>
                         {__TABS__.map((tab) => (
                             <li
+                                key={tab.key}
                                 className={`${
                                     curTab === tab.key && "selected"
                                 }`}

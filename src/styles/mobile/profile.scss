@@ -23,8 +23,8 @@
             > .gear-icon {
                 cursor: pointer;
                 display: inline-flex;
-                width: 32px;
-                height: 32px;
+                width: 28px;
+                height: 28px;
                 justify-content: center;
                 align-items: center;
 
@@ -43,8 +43,8 @@
             > .dots-vertical-icon {
                 cursor: pointer;
                 display: inline-flex;
-                width: 32px;
-                height: 32px;
+                width: 28px;
+                height: 28px;
                 justify-content: center;
                 align-items: center;
 
@@ -62,10 +62,12 @@
         }
 
         > .profile {
+            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            box-sizing: content-box;
 
             > .profile-container {
                 display: inline-flex;
@@ -76,8 +78,8 @@
                 > .profile-thumbnail {
                     position: relative;
                     left: 0;
-                    width: Min(150px, 30vw);
-                    height: Min(150px, 30vw);
+                    width: 120px;
+                    height: 120px;
                     border-radius: 50%;
                     overflow: hidden;
                     display: inline-flex;
@@ -86,17 +88,18 @@
                     box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
                     background-size: cover;
                     background-position: center;
-                    transition: width 1s, height 1s, top 1s, left 1s;
-                    margin-bottom: 24px;
+                    transition: top 1s, left 1s;
                 }
 
                 > .profile-info {
+                    position: absolute;
+                    bottom: 0;
                     display: inline-flex;
-                    width: 100%;
+                    // width: 100%;
                     flex-direction: column;
                     align-items: center;
                     opacity: 1;
-                    transition: opacity 0.25s, transform 0.5s;
+                    // transition: opacity 0.25s, transform 0.5s;
 
                     > span.name {
                         font-size: 18px;
@@ -176,6 +179,14 @@
                         }
                     }
                 }
+
+                > .name-small {
+                    position: absolute;
+                    font-size: 18px;
+                    font-weight: 600;
+                    opacity: 0;
+                    // transition: opacity 1s;
+                }
             }
         }
     }
@@ -189,6 +200,7 @@
             width: 100%;
             justify-content: center;
             align-items: center;
+            // transition: padding 1s;
 
             > ul {
                 display: inline-flex;

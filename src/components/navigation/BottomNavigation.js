@@ -116,14 +116,14 @@ const BottomNavigation = () => {
     const [canOpenBottomSheet, setCanOpenBottomSheet] = React.useState(false);
     const [curTab, setCurTab] = React.useState(null);
     const [tabBarWidth, setTabBarWidth] = React.useState(
-        window.innerWidth - 2 * MARGIN - 2 * PADDING
+        window.innerWidth - 2 * PADDING
     );
     const [tabWidth, setTabWidth] = React.useState(0);
     const bottomNavigationTabsRef = React.useRef(null);
 
     React.useEffect(() => {
         const eventHandler = (event) => {
-            setTabBarWidth(window.innerWidth - 2 * MARGIN - 2 * PADDING);
+            setTabBarWidth(window.innerWidth - 2 * PADDING);
         };
 
         window.addEventListener("resize", eventHandler);
