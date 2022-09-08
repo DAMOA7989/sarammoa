@@ -44,6 +44,7 @@ const __TABS__ = [
             inactive: <NewsFeedIcon />,
             active: <NewsFeedActiveIcon />,
         },
+        color: "#FF4500",
         onClick: ({ navigate }) => {
             navigate("/");
         },
@@ -55,6 +56,7 @@ const __TABS__ = [
             inactive: <SupportIcon />,
             active: <SupportActiveIcon />,
         },
+        color: "#FFA500",
         onClick: ({ navigate }) => {
             navigate("/support");
         },
@@ -66,6 +68,7 @@ const __TABS__ = [
             inactive: <ConnectIcon />,
             active: <ConnectActiveIcon />,
         },
+        color: "#228B22",
         onClick: ({ navigate }) => {
             navigate("/connect");
         },
@@ -77,6 +80,7 @@ const __TABS__ = [
             inactive: <NoticeIcon />,
             active: <NoticeActiveIcon />,
         },
+        color: "#1E90FF",
         onClick: ({ navigate }) => {
             navigate("/notice");
         },
@@ -88,6 +92,7 @@ const __TABS__ = [
             inactive: <ProfileIcon />,
             active: <ProfileActiveIcon />,
         },
+        color: "#FF00FF",
         onClick: ({ navigate }) => {
             navigate("/profile");
         },
@@ -173,7 +178,17 @@ const BottomNavigation = () => {
                             </div>
                         </li>
                     ))}
-                    <div className="indicator"></div>
+                    <div
+                        className="indicator"
+                        style={{
+                            backgroundColor:
+                                __TABS__[
+                                    __TABS__.findIndex(
+                                        (tab) => tab.key === curTab
+                                    )
+                                ].color,
+                        }}
+                    ></div>
                 </ul>
             ) : (
                 <>
