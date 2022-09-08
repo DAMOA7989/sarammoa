@@ -94,6 +94,8 @@ const __TABS__ = [
     },
 ];
 
+const MARGIN = 16;
+
 const BottomNavigation = () => {
     const { t } = useTranslation();
     const { user, signIn } = useAuthContext();
@@ -102,6 +104,24 @@ const BottomNavigation = () => {
     const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
     const [canOpenBottomSheet, setCanOpenBottomSheet] = React.useState(false);
     const [curTab, setCurTab] = React.useState(null);
+    const [tabBarWidth, setTabBarWidth] = React.useState(
+        window.innerWidth - 2 * MARGIN
+    );
+    const [tabWidth, setTabWidth] = React.useState(0);
+    const bottomNavigationTabsRef = React.useRef(null);
+
+    React.useEffect(() => {
+        const eventHandler = (event) => {
+            setTabBarWidth(window.innerWidth - 2 * MARGIN);
+        };
+
+        window.addEventListener("resize", eventHandler);
+        return () => window.removeEventListener("resize", eventHandler);
+    }, []);
+
+    React.useEffect(() => {
+        setTabWidth(tabBarWidth / __TABS__.length);
+    }, [tabBarWidth]);
 
     React.useEffect(() => {
         if (openBottomSheet) return setCanOpenBottomSheet(false);
@@ -131,7 +151,13 @@ const BottomNavigation = () => {
     return (
         <nav className="components-navigation-bottom-navigation">
             {user ? (
-                <ul className={`bottom-navigation-tabs`}>
+                <ul
+                    ref={bottomNavigationTabsRef}
+                    className={`bottom-navigation-tabs`}
+                    style={{
+                        width: `${tabBarWidth}px`,
+                    }}
+                >
                     {__TABS__.map((tab) => (
                         <li
                             key={tab.key}
@@ -143,9 +169,7 @@ const BottomNavigation = () => {
                                 className="container"
                                 onClick={() => tab.onClick({ navigate })}
                             >
-                                {curTab === tab.key
-                                    ? tab.icon.active
-                                    : tab.icon.inactive}
+                                {tab.icon.inactive}
                             </div>
                         </li>
                     ))}

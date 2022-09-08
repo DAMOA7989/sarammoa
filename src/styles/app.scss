@@ -6,3 +6,7 @@
 
 @import "./pc/globals.scss";
 @import "./pc/components.scss";
+
+html {
+    background-color: $app_background_color;
+}
