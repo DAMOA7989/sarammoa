@@ -13,6 +13,7 @@ import { ReactComponent as SupportActiveIcon } from "assets/images/tabs/support_
 import { ReactComponent as ConnectActiveIcon } from "assets/images/tabs/connect_active.svg";
 import { ReactComponent as NoticeActiveIcon } from "assets/images/tabs/notice_active.svg";
 import { ReactComponent as ProfileActiveIcon } from "assets/images/tabs/profile_active.svg";
+import styles from "styles/include.scss";
 
 const __OAUTH_BUTTONS__ = [
     {
@@ -45,7 +46,7 @@ const __TABS__ = [
             inactive: <NewsFeedIcon />,
             active: <NewsFeedActiveIcon />,
         },
-        color: "#FF4500",
+        color: styles.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/");
         },
@@ -58,7 +59,7 @@ const __TABS__ = [
             inactive: <SupportIcon />,
             active: <SupportActiveIcon />,
         },
-        color: "#FFA500",
+        color: styles.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/support");
         },
@@ -71,7 +72,7 @@ const __TABS__ = [
             inactive: <ConnectIcon />,
             active: <ConnectActiveIcon />,
         },
-        color: "#228B22",
+        color: styles.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/connect");
         },
@@ -84,7 +85,7 @@ const __TABS__ = [
             inactive: <NoticeIcon />,
             active: <NoticeActiveIcon />,
         },
-        color: "#1E90FF",
+        color: styles.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/notice");
         },
@@ -97,7 +98,7 @@ const __TABS__ = [
             inactive: <ProfileIcon />,
             active: <ProfileActiveIcon />,
         },
-        color: "#FF00FF",
+        color: styles.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/profile");
         },
@@ -213,7 +214,7 @@ const BottomNavigation = () => {
                         className="bottom-sheet bottom-navigation"
                         open={openBottomSheet}
                         onDismiss={() => setOpenBottomSheet(false)}
-                        snapPoints={({ maxHeight }) => 0.5 * maxHeight}
+                        snapPoints={({ maxHeight }) => 0.6 * maxHeight}
                     >
                         <div className="bottom-sheet-body">
                             <Trans
