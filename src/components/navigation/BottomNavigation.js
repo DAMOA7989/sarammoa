@@ -167,7 +167,7 @@ const BottomNavigation = () => {
                         ref={bottomNavigationTabsRef}
                         className={`bottom-navigation-tabs`}
                         style={{
-                            width: `${tabBarWidth}px`,
+                            width: `${tabBarWidth * 0.0625}em`,
                         }}
                     >
                         {__TABS__.map((tab) => (

@@ -6,8 +6,8 @@
 
     > .profile-wrap {
         position: relative;
-        padding-top: clamp(0px, 8vh, 80px);
-        padding-bottom: clamp(0px, 4vh, 40px);
+        padding-top: clamp(0em, 8vh, 5em);
+        padding-bottom: clamp(0em, 4vh, 2.5em);
         transition: background-color 1s;
         overflow: hidden;
 
@@ -16,15 +16,15 @@
             justify-content: space-between;
             align-items: center;
             position: absolute;
-            width: calc(100% - 40px);
-            left: 20px;
-            top: 20px;
+            width: calc(100% - 2.5em);
+            left: 1.25em;
+            top: 1.25em;
 
             > .gear-icon {
                 cursor: pointer;
                 display: inline-flex;
-                width: 28px;
-                height: 28px;
+                width: 1.75em;
+                height: 1.75em;
                 justify-content: center;
                 align-items: center;
 
@@ -43,8 +43,8 @@
             > .dots-vertical-icon {
                 cursor: pointer;
                 display: inline-flex;
-                width: 28px;
-                height: 28px;
+                width: 1.75em;
+                height: 1.75em;
                 justify-content: center;
                 align-items: center;
 
@@ -78,14 +78,14 @@
                 > .profile-thumbnail {
                     position: relative;
                     left: 0;
-                    width: 120px;
-                    height: 120px;
+                    width: 7.5em;
+                    height: 7.5em;
                     border-radius: 50%;
                     overflow: hidden;
                     display: inline-flex;
                     justify-content: center;
                     align-items: center;
-                    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    box-shadow: inset 0em 0.25em 0.25em rgba(0, 0, 0, 0.25);
                     background-size: cover;
                     background-position: center;
                     transition: top 1s, left 1s;
@@ -102,33 +102,33 @@
                     // transition: opacity 0.25s, transform 0.5s;
 
                     > span.name {
-                        font-size: 18px;
+                        font-size: 1.125rem;
                         font-weight: 600;
-                        line-height: 22px;
-                        margin-bottom: 8px;
+                        line-height: 1.375em;
+                        margin-bottom: 0.5em;
                     }
 
                     > span.position {
                         color: $auro_metal_saurus_color;
-                        font-size: 14px;
+                        font-size: 0.875rem;
                         font-weight: 400;
-                        line-height: 17px;
-                        margin-bottom: 12px;
+                        line-height: 1.0625em;
+                        margin-bottom: 0.75em;
                     }
 
                     > .counts {
                         display: inline-flex;
                         align-items: center;
-                        gap: 12px;
+                        gap: 0.75em;
 
                         > div {
                             display: inline-flex;
                             align-items: center;
-                            gap: 4px;
+                            gap: 0.25em;
 
                             > .icon {
-                                width: 14px;
-                                height: 14px;
+                                width: 0.875em;
+                                height: 0.875em;
                                 display: inline-flex;
                                 justify-content: center;
                                 align-items: center;
@@ -146,7 +146,7 @@
                             }
 
                             > .count {
-                                font-size: 12px;
+                                font-size: 0.75rem;
                                 font-weight: bold;
                                 color: $gunmetal_color;
                             }
@@ -182,9 +182,9 @@
 
                 > .name-small {
                     position: absolute;
-                    font-size: 18px;
+                    font-size: 1.125rem;
                     font-weight: 600;
-                    left: 148px;
+                    left: 9.25em;
                     opacity: 0;
                     // transition: opacity 1s;
                 }
@@ -196,7 +196,7 @@
         background-color: white;
 
         > nav {
-            padding: 24px 0;
+            padding: 1.5em 0;
             display: flex;
             width: 100%;
             justify-content: center;
@@ -206,7 +206,7 @@
             > ul {
                 display: inline-flex;
                 align-items: center;
-                gap: 32px;
+                gap: 2em;
                 position: relative;
 
                 > li {
@@ -232,22 +232,22 @@
                 }
 
                 li:nth-child(1).selected ~ .indicator {
-                    transform: translateX(calc(100% * 0 + 32px * 0));
+                    transform: translateX(calc(100% * 0 + 2em * 0));
                 }
 
                 li:nth-child(2).selected ~ .indicator {
-                    transform: translateX(calc(100% * 1 + 32px * 1));
+                    transform: translateX(calc(100% * 1 + 2em * 1));
                 }
 
                 li:nth-child(3).selected ~ .indicator {
-                    transform: translateX(calc(100% * 2 + 32px * 2));
+                    transform: translateX(calc(100% * 2 + 2em * 2));
                 }
 
                 > .indicator {
                     position: absolute;
-                    height: 32px;
+                    height: 2em;
                     background-color: $primary_color;
-                    border-radius: 8px;
+                    border-radius: 0.5em;
                     transition: transform 0.3s;
                 }
             }

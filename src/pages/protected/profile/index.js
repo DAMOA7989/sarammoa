@@ -105,8 +105,8 @@ const Profile = () => {
 
     React.useEffect(() => {
         profileContainerRef.current.style.paddingBottom = `${
-            profileInfoRef.current.offsetHeight + 24
-        }px`;
+            (profileInfoRef.current.offsetHeight + 24) * 0.0625
+        }em`;
         originalProfileInfoSizeRef.current = [
             profileInfoRef.current.offsetWidth,
             profileInfoRef.current.offsetHeight,
@@ -128,48 +128,52 @@ const Profile = () => {
             const curHeight = profileRef.current.offsetHeight;
 
             if (curHeight >= originalProfileSizeRef.current?.[1] / 2) {
-                profileRef.current.style.height = `${originalProfileSizeRef.current?.[1]}px`;
+                profileRef.current.style.height = `${
+                    originalProfileSizeRef.current?.[1] * 0.0625
+                }em`;
                 profileContainerRef.current.style.paddingBottom = `${
-                    originalProfileInfoSizeRef.current?.[1] + 24
-                }px`;
+                    (originalProfileInfoSizeRef.current?.[1] + 24) * 0.0625
+                }em`;
                 profileInfoRef.current.style.opacity = "1";
                 // profileInfoRef.current.style.display = "inline-flex";
-                profileInfoRef.current.style.transform = `translateX(0px)`;
-                profileInfoNavRef.current.style.paddingTop = "24px";
+                profileInfoRef.current.style.transform = `translateX(0em)`;
+                profileInfoNavRef.current.style.paddingTop = `${24 * 0.0625}em`;
                 profileWrapRef.current.style.backgroundColor = `${styles.appBackgroundColor}`;
-                profileThumbnailRef.current.style.width = "120px";
-                profileThumbnailRef.current.style.height = "120px";
-                // profileThumbnailRef.current.style.marginBottom = `${
-                //     24 + profileInfoRef.current.offsetHeight
-                // }px`;
+                profileThumbnailRef.current.style.width = `${120 * 0.0625}em`;
+                profileThumbnailRef.current.style.height = `${120 * 0.0625}em`;
                 profileThumbnailRef.current.style.top = "0";
-                profileThumbnailRef.current.style.transform = `translateX(0px)`;
+                profileThumbnailRef.current.style.transform = `translateX(0em)`;
                 profileSmallNameRef.current.style.opacity = "0";
                 profileSmallNameRef.current.style.transform = `translateX(${
-                    originalProfileSizeRef.current?.[0] / 2 -
-                    profileSmallNameRef.current.offsetWidth / 2
-                }px) scale(0.5) translateY(3px)`;
+                    (originalProfileSizeRef.current?.[0] / 2 -
+                        profileSmallNameRef.current.offsetWidth / 2) *
+                    0.0625
+                }em) scale(0.5) translateY(${3 * 0.0625}em)`;
             } else {
-                profileRef.current.style.height = `0px`;
-                profileContainerRef.current.style.paddingBottom = "0px";
+                profileRef.current.style.height = `0em`;
+                profileContainerRef.current.style.paddingBottom = "0em";
                 profileInfoRef.current.style.opacity = "0";
                 // profileInfoRef.current.style.display = "none";
                 profileInfoRef.current.style.transform = `translateX(${
-                    originalProfileSizeRef.current?.[0] / 2 -
-                    profileInfoRef.current.offsetWidth / 2 -
-                    68
-                }px)`;
+                    (originalProfileSizeRef.current?.[0] / 2 -
+                        profileInfoRef.current.offsetWidth / 2 -
+                        68) *
+                    0.0625
+                }em)`;
                 profileInfoNavRef.current.style.paddingTop = "0";
                 profileWrapRef.current.style.backgroundColor = "white";
-                profileThumbnailRef.current.style.width = "60px";
-                profileThumbnailRef.current.style.height = "60px";
+                profileThumbnailRef.current.style.width = `${60 * 0.0625}em`;
+                profileThumbnailRef.current.style.height = `${60 * 0.0625}em`;
                 profileThumbnailRef.current.style.marginBottom = "0";
-                profileThumbnailRef.current.style.top = "-15px";
+                profileThumbnailRef.current.style.top = `${-15 * 0.0625}em`;
                 profileThumbnailRef.current.style.transform = `translateX(${
-                    -originalProfileSizeRef.current?.[0] / 2 + 30 + 68
-                }px)`;
+                    (-originalProfileSizeRef.current?.[0] / 2 + 30 + 68) *
+                    0.0625
+                }em)`;
                 profileSmallNameRef.current.style.opacity = "1";
-                profileSmallNameRef.current.style.transform = `translateX(0px) scale(1) translateY(3px)`;
+                profileSmallNameRef.current.style.transform = `translateX(0em) scale(1) translateY(${
+                    3 * 0.0625
+                }em)`;
             }
             prevTouchPosition.current = [0, 0];
             return;
@@ -187,14 +191,15 @@ const Profile = () => {
             profileRef.current.offsetHeight -
             prevTouchPosition.current?.[1] +
             touchPosition?.[1];
-        profileRef.current.style.height = `${nextHeight}px`;
+        profileRef.current.style.height = `${nextHeight * 0.0625}em`;
         let curHeightRatio = nextHeight / originalProfileSizeRef.current?.[1];
         curHeightRatio =
             curHeightRatio < 0 ? 0 : curHeightRatio > 1 ? 1 : curHeightRatio;
 
         profileContainerRef.current.style.paddingBottom = `${
-            originalProfileInfoSizeRef.current?.[1] * curHeightRatio + 24
-        }px`;
+            (originalProfileInfoSizeRef.current?.[1] * curHeightRatio + 24) *
+            0.0625
+        }em`;
         profileInfoRef.current.style.opacity = `${
             curHeightRatio - 0.3 > 0 ? curHeightRatio - 0.3 : 0
         }`;
@@ -202,30 +207,39 @@ const Profile = () => {
             (originalProfileSizeRef.current?.[0] / 2 -
                 profileInfoRef.current.offsetWidth / 2 -
                 68) *
-            (1 - curHeightRatio)
-        }px)`;
+            (1 - curHeightRatio) *
+            0.0625
+        }em)`;
         profileThumbnailRef.current.style.width = `${
-            60 + 60 * curHeightRatio
-        }px`;
+            (60 + 60 * curHeightRatio) * 0.0625
+        }em`;
         profileThumbnailRef.current.style.height = `${
-            60 + 60 * curHeightRatio
-        }px`;
-        profileThumbnailRef.current.style.top = `${-15 * curHeightRatio}px`;
+            (60 + 60 * curHeightRatio) * 0.0625
+        }em`;
+        profileThumbnailRef.current.style.top = `${
+            -15 * curHeightRatio * 0.0625
+        }em`;
         profileThumbnailRef.current.style.transform = `translateX(${
             (-originalProfileSizeRef.current?.[0] / 2 +
                 profileThumbnailRef.current.offsetWidth / 2 +
                 68) *
-            (1 - curHeightRatio)
-        }px)`;
-        profileInfoNavRef.current.style.paddingTop = `${24 * curHeightRatio}px`;
+            (1 - curHeightRatio) *
+            0.0625
+        }em)`;
+        profileInfoNavRef.current.style.paddingTop = `${
+            24 * curHeightRatio * 0.0625
+        }em`;
         profileSmallNameRef.current.style.opacity = `${
             1 - curHeightRatio * 2 < 0 ? 0 : 1 - curHeightRatio * 2
         }`;
         profileSmallNameRef.current.style.transform = `translateX(${
             (originalProfileSizeRef.current?.[0] / 2 -
                 profileSmallNameRef.current.offsetWidth / 2) *
-            curHeightRatio
-        }px) scale(${0.5 + (0.5 - curHeightRatio / 2)}) translateY(3px)`;
+            curHeightRatio *
+            0.0625
+        }em) scale(${0.5 + (0.5 - curHeightRatio / 2)}) translateY(${
+            3 * 0.0625
+        }em)`;
 
         prevTouchPosition.current = touchPosition;
     }, [touchPosition]);
@@ -312,8 +326,10 @@ const Profile = () => {
                             className="indicator"
                             style={{
                                 width:
-                                    `${tabRefs?.[curTab]?.current?.offsetWidth}px` ||
-                                    "0px",
+                                    `${
+                                        tabRefs?.[curTab]?.current
+                                            ?.offsetWidth * 0.0625
+                                    }em` || "0em",
                             }}
                         />
                     </ul>
