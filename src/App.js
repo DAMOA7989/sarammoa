@@ -7,12 +7,14 @@ import {
     ProfileHistory,
     ProfileInformation,
     ProfileEtc,
+    ProfileSetup,
     Support,
     NewsFeed,
 } from "pages";
 import AppLayout from "components/layout/AppLayout";
 import { AuthProvider } from "utils/auth";
 import { gapi } from "gapi-script";
+import { RequireAuth } from "utils/auth";
 
 const App = () => {
     React.useEffect(() => {
@@ -42,6 +44,7 @@ const App = () => {
                         <Route path="etc" element={<ProfileEtc />} />
                     </Route>
                 </Route>
+                <Route path="/profile/setup" element={<ProfileSetup />} />
             </Routes>
         </AuthProvider>
     );

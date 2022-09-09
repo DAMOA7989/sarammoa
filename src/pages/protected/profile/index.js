@@ -262,7 +262,10 @@ const Profile = () => {
         <main className="pages-protected-profile">
             <div ref={profileWrapRef} className="profile-wrap">
                 <header>
-                    <div className="gear-icon"></div>
+                    <div
+                        className="gear-icon"
+                        onClick={() => navigate("/profile/setup")}
+                    ></div>
                     <div className="dots-vertical-icon"></div>
                 </header>
                 <div ref={profileRef} className="profile">

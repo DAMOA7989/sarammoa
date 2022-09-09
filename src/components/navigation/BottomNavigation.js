@@ -46,7 +46,7 @@ const __TABS__ = [
             inactive: <NewsFeedIcon />,
             active: <NewsFeedActiveIcon />,
         },
-        color: styles.primaryColor,
+        color: styles?.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/");
         },
@@ -59,7 +59,7 @@ const __TABS__ = [
             inactive: <SupportIcon />,
             active: <SupportActiveIcon />,
         },
-        color: styles.primaryColor,
+        color: styles?.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/support");
         },
@@ -72,7 +72,7 @@ const __TABS__ = [
             inactive: <ConnectIcon />,
             active: <ConnectActiveIcon />,
         },
-        color: styles.primaryColor,
+        color: styles?.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/connect");
         },
@@ -85,7 +85,7 @@ const __TABS__ = [
             inactive: <NoticeIcon />,
             active: <NoticeActiveIcon />,
         },
-        color: styles.primaryColor,
+        color: styles?.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/notice");
         },
@@ -98,7 +98,7 @@ const __TABS__ = [
             inactive: <ProfileIcon />,
             active: <ProfileActiveIcon />,
         },
-        color: styles.primaryColor,
+        color: styles?.primaryColor,
         onClick: ({ navigate }) => {
             navigate("/profile");
         },
@@ -195,7 +195,7 @@ const BottomNavigation = () => {
                                         __TABS__.findIndex(
                                             (tab) => tab.key === curTab
                                         )
-                                    ].color,
+                                    ]?.color || styles?.primaryColor,
                             }}
                         ></div>
                     </ul>
