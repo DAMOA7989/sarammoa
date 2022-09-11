@@ -84,9 +84,6 @@ const Setup = () => {
                     </section>
                 </section>
             ))}
-            <section className="general">
-                <h3 className="title">{t("")}</h3>
-            </section>
         </main>
     );
 };
