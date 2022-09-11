@@ -14,6 +14,7 @@ import { ReactComponent as ConnectActiveIcon } from "assets/images/tabs/connect_
 import { ReactComponent as NoticeActiveIcon } from "assets/images/tabs/notice_active.svg";
 import { ReactComponent as ProfileActiveIcon } from "assets/images/tabs/profile_active.svg";
 import styles from "styles/include.scss";
+import { useNavigateContext } from "utils/navigate";
 
 const __OAUTH_BUTTONS__ = [
     {
@@ -47,8 +48,11 @@ const __TABS__ = [
             active: <NewsFeedActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ navigate }) => {
-            navigate("/");
+        onClick: ({ push }) => {
+            push({
+                pathname: "/",
+                mode: "main",
+            });
         },
     },
     {
@@ -60,8 +64,11 @@ const __TABS__ = [
             active: <SupportActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ navigate }) => {
-            navigate("/support");
+        onClick: ({ push }) => {
+            push({
+                pathname: "/support",
+                mode: "main",
+            });
         },
     },
     {
@@ -73,8 +80,11 @@ const __TABS__ = [
             active: <ConnectActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ navigate }) => {
-            navigate("/connect");
+        onClick: ({ push }) => {
+            push({
+                pathname: "/connect",
+                mode: "main",
+            });
         },
     },
     {
@@ -86,8 +96,11 @@ const __TABS__ = [
             active: <NoticeActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ navigate }) => {
-            navigate("/notice");
+        onClick: ({ push }) => {
+            push({
+                pathname: "/notice",
+                mode: "main",
+            });
         },
     },
     {
@@ -99,8 +112,11 @@ const __TABS__ = [
             active: <ProfileActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ navigate }) => {
-            navigate("/profile");
+        onClick: ({ push }) => {
+            push({
+                pathname: "/profile",
+                mode: "main",
+            });
         },
     },
 ];
@@ -111,6 +127,7 @@ const PADDING = 20;
 const BottomNavigation = () => {
     const { t } = useTranslation();
     const { user, signIn } = useAuthContext();
+    const { push } = useNavigateContext();
     const navigate = useNavigate();
     const location = useLocation();
     const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
@@ -180,7 +197,7 @@ const BottomNavigation = () => {
                             >
                                 <div
                                     className="container"
-                                    onClick={() => tab.onClick({ navigate })}
+                                    onClick={() => tab.onClick({ push })}
                                 >
                                     {tab.icon.inactive}
                                     <span>{t(tab.i18nKey)}</span>

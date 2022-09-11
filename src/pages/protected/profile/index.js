@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import { useNavigate, Outlet, useLocation, useMatch } from "react-router-dom";
 import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
 
@@ -8,22 +8,31 @@ const __TABS__ = [
     {
         key: "history",
         i18nKey: "tab.profile.history",
-        onClick: ({ navigate }) => {
-            navigate("");
+        onClick: ({ push }) => {
+            push({
+                pathname: `/profile`,
+                mode: "main",
+            });
         },
     },
     {
         key: "information",
         i18nKey: "tab.profile.information",
-        onClick: ({ navigate }) => {
-            navigate("information");
+        onClick: ({ push }) => {
+            push({
+                pathname: "/profile/information",
+                mode: "main",
+            });
         },
     },
     {
         key: "etc",
         i18nKey: "tab.profile.etc",
-        onClick: ({ navigate }) => {
-            navigate("etc");
+        onClick: ({ push }) => {
+            push({
+                pathname: "/profile/etc",
+                mode: "main",
+            });
         },
     },
 ];
@@ -269,7 +278,7 @@ const Profile = () => {
                         onClick={() => {
                             push({
                                 pathname: "/profile/setup",
-                                stack: "sub",
+                                mode: "sub",
                                 screenTitle: "title.screen.setup",
                             });
                         }}
@@ -327,7 +336,7 @@ const Profile = () => {
                             >
                                 <button
                                     className={`text-button active primary`}
-                                    onClick={() => tab.onClick({ navigate })}
+                                    onClick={() => tab.onClick({ push })}
                                 >
                                     {t(tab.i18nKey)}
                                 </button>

@@ -8,12 +8,15 @@ import { BrowserRouter } from "react-router-dom";
 import "react-spring-bottom-sheet/dist/style.css";
 import "styles/app.scss";
 import "./i18n";
+import { NavigateProvider } from "utils/navigate";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     // <React.StrictMode>
     <BrowserRouter>
-        <App />
+        <NavigateProvider>
+            <App />
+        </NavigateProvider>
     </BrowserRouter>
     // </React.StrictMode>
 );
