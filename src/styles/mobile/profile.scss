@@ -220,8 +220,10 @@
                         > button {
                             color: white;
 
-                            &:hover {
-                                color: white;
+                            @media (hover: hover) {
+                                &:hover {
+                                    color: white;
+                                }
                             }
 
                             &:active {

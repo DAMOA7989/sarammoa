@@ -10,4 +10,4 @@ export { default as ProfileSetup } from "./protected/profile/setup";
 
 export { default as Support } from "./protected/support";
 
-export { default as NewsFeed } from "./public/newsFeed";
+export { default as Newsfeed } from "./public/newsfeed";

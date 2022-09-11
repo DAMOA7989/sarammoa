@@ -9,7 +9,7 @@ import {
     ProfileEtc,
     ProfileSetup,
     Support,
-    NewsFeed,
+    Newsfeed,
 } from "pages";
 import MainLayout from "components/layout/MainLayout";
 import SubLayout from "components/layout/SubLayout";
@@ -37,7 +37,7 @@ const App = () => {
         <AuthProvider>
             <Routes location={location}>
                 <Route path="/" element={<MainLayout />}>
-                    <Route index element={<NewsFeed />} />
+                    <Route index element={<Newsfeed />} />
                     <Route path="support" element={<Support />} />
                     <Route path="connect" element={<Connect />} />
                     <Route path="notice" element={<Notice />} />

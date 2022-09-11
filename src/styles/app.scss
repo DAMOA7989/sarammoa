@@ -4,10 +4,12 @@
 @import "./mobile/globals.scss";
 @import "./mobile/components.scss";
 @import "./mobile/profile.scss";
+@import "./mobile/newsfeed.scss";
 
 @import "./pc/globals.scss";
 @import "./pc/components.scss";
 @import "./pc/profile.scss";
+@import "./pc/newsfeed.scss";
 
 #root {
     display: flex;

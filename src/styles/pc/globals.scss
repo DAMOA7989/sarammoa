@@ -13,8 +13,10 @@
             background-color: $primary_color;
             color: white;
 
-            &:hover {
-                background-color: rgba($primary_color, 0.6);
+            @media (hover: hover) {
+                &:hover {
+                    background-color: rgba($primary_color, 0.6);
+                }
             }
 
             &:active {
@@ -26,8 +28,10 @@
             background-color: $secondary_color;
             color: white;
 
-            &:hover {
-                background-color: rgba($secondary_color, 0.6);
+            @media (hover: hover) {
+                &:hover {
+                    background-color: rgba($secondary_color, 0.6);
+                }
             }
 
             &:active {
@@ -39,8 +43,10 @@
             background-color: $tertiary_color;
             color: white;
 
-            &:hover {
-                background-color: rgba($tertiary_color, 0.6);
+            @media (hover: hover) {
+                &:hover {
+                    background-color: rgba($tertiary_color, 0.6);
+                }
             }
 
             &:active {
@@ -64,8 +70,10 @@
         &.primary {
             color: $primary_color;
 
-            &:hover {
-                color: rgba($primary_color, 0.6);
+            @media (hover: hover) {
+                &:hover {
+                    color: rgba($primary_color, 0.6);
+                }
             }
 
             &:active {
@@ -76,8 +84,10 @@
         &.secondary {
             color: $secondary_color;
 
-            &:hover {
-                color: rgba($secondary_color, 0.6);
+            @media (hover: hover) {
+                &:hover {
+                    color: rgba($secondary_color, 0.6);
+                }
             }
 
             &:active {
@@ -88,8 +98,10 @@
         &.tertiary {
             color: $tertiary_color;
 
-            &:hover {
-                color: rgba($tertiary_color, 0.6);
+            @media (hover: hover) {
+                &:hover {
+                    color: rgba($tertiary_color, 0.6);
+                }
             }
 
             &:active {
