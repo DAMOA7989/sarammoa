@@ -11,10 +11,12 @@ import {
     Support,
     NewsFeed,
 } from "pages";
-import AppLayout from "components/layout/AppLayout";
+import MainLayout from "components/layout/MainLayout";
+import SubLayout from "components/layout/SubLayout";
 import { AuthProvider } from "utils/auth";
 import { gapi } from "gapi-script";
 import { RequireAuth } from "utils/auth";
+import { NavigateProvider } from "utils/navigate";
 
 const App = () => {
     React.useEffect(() => {
@@ -29,23 +31,30 @@ const App = () => {
 
     return (
         <AuthProvider>
-            <Routes>
-                <Route path="/" element={<AppLayout />}>
-                    <Route index element={<NewsFeed />} />
-                    <Route path="support" element={<Support />} />
-                    <Route path="connect" element={<Connect />} />
-                    <Route path="notice" element={<Notice />} />
-                    <Route path="profile" element={<Profile />}>
-                        <Route path="" element={<ProfileHistory />} />
-                        <Route
-                            path="information"
-                            element={<ProfileInformation />}
-                        />
-                        <Route path="etc" element={<ProfileEtc />} />
+            <NavigateProvider>
+                <Routes>
+                    <Route path="/" element={<MainLayout />}>
+                        <Route index element={<NewsFeed />} />
+                        <Route path="support" element={<Support />} />
+                        <Route path="connect" element={<Connect />} />
+                        <Route path="notice" element={<Notice />} />
+                        <Route path="profile" element={<Profile />}>
+                            <Route path="" element={<ProfileHistory />} />
+                            <Route
+                                path="information"
+                                element={<ProfileInformation />}
+                            />
+                            <Route path="etc" element={<ProfileEtc />} />
+                        </Route>
                     </Route>
-                </Route>
-                <Route path="/profile/setup" element={<ProfileSetup />} />
-            </Routes>
+                    <Route path="/sub" element={<SubLayout />}>
+                        <Route
+                            path="profile/setup"
+                            element={<ProfileSetup />}
+                        />
+                    </Route>
+                </Routes>
+            </NavigateProvider>
         </AuthProvider>
     );
 };

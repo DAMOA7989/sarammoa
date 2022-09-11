@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import styles from "styles/include.scss";
+import { useNavigateContext } from "utils/navigate";
 
 const __TABS__ = [
     {
@@ -31,6 +32,7 @@ const Profile = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
+    const { push } = useNavigateContext();
     const [curTab, setCurTab] = React.useState(null);
     const prevTouchPosition = React.useRef([0, 0]);
     const [touchPosition, setTouchPosition] = React.useState([0, 0]);
@@ -264,7 +266,13 @@ const Profile = () => {
                 <header>
                     <div
                         className="gear-icon"
-                        onClick={() => navigate("/profile/setup")}
+                        onClick={() => {
+                            push({
+                                pathname: "/profile/setup",
+                                stack: "sub",
+                                screenTitle: "title.screen.setup",
+                            });
+                        }}
                     ></div>
                     <div className="dots-vertical-icon"></div>
                 </header>

@@ -2,7 +2,7 @@ import React from "react";
 import BottomNavigation from "components/navigation/BottomNavigation";
 import { Outlet } from "react-router-dom";
 
-const AppLayout = () => {
+const MainLayout = () => {
     return (
         <>
             <Outlet />
@@ -11,4 +11,4 @@ const AppLayout = () => {
     );
 };
 
-export default AppLayout;
+export default MainLayout;
