@@ -75,7 +75,7 @@ const Setup = () => {
                         {(row?.cols || []).map((col) => (
                             <article
                                 key={col.key}
-                                className={col.key}
+                                className={`${col.key} list-button`}
                                 onClick={() => col.onClick()}
                             >
                                 <span>{t(col.i18nKey)}</span>
