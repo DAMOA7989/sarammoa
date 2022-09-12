@@ -246,9 +246,10 @@ const BottomNavigation = () => {
                                             <div
                                                 className={`${x.key}`}
                                                 data-img-path={x.imgPath}
-                                                onClick={() =>
-                                                    x.onClick({ signIn })
-                                                }
+                                                onClick={() => {
+                                                    setOpenBottomSheet(false);
+                                                    x.onClick({ signIn });
+                                                }}
                                             />
                                         </li>
                                     ))}

@@ -11,18 +11,25 @@ import "./i18n";
 import { NavigateProvider } from "utils/navigate";
 import { AuthProvider } from "utils/auth";
 import { ModalProvider } from "utils/modal";
+import { StatusProvider } from "utils/status";
+import { ThemeProvider } from "@mui/material/styles";
+import { theme } from "config/theme";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     // <React.StrictMode>
     <BrowserRouter>
-        <ModalProvider>
-            <AuthProvider>
-                <NavigateProvider>
-                    <App />
-                </NavigateProvider>
-            </AuthProvider>
-        </ModalProvider>
+        <ThemeProvider theme={theme}>
+            <ModalProvider>
+                <StatusProvider>
+                    <AuthProvider>
+                        <NavigateProvider>
+                            <App />
+                        </NavigateProvider>
+                    </AuthProvider>
+                </StatusProvider>
+            </ModalProvider>
+        </ThemeProvider>
     </BrowserRouter>
     // </React.StrictMode>
 );

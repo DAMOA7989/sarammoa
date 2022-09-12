@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { GoogleSpreadsheet } = require("google-spreadsheet");
-const serviceAccount = require("../src/config/updateLocaleServiceAccount.json");
+const serviceAccount = require("../src/config/ignore/updateLocaleServiceAccount.json");
 
 const langDoc = {
     ko: {},

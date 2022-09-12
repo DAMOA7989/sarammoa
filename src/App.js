@@ -21,10 +21,13 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { useNavigateContext } from "utils/navigate";
 import { useAuthContext } from "utils/auth";
 import Modal from "components/layout/Modal";
+import Pending from "components/layout/Pending";
+import { useStatusContext } from "utils/status";
 
 const App = () => {
     const { init, user } = useAuthContext();
     const { mode } = useNavigateContext();
+    const { task } = useStatusContext();
     const location = useLocation();
 
     React.useEffect(() => {
@@ -82,6 +85,7 @@ const App = () => {
                 </Route>
             </Routes>
             <Modal />
+            <Pending />
         </>
     );
 };

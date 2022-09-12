@@ -2,10 +2,12 @@ import React from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import { _signInWithRedirect, _signOut } from "utils/firebase/auth";
 import { auth } from "utils/firebase";
+import { useStatusContext } from "utils/status";
 
 const AuthContext = React.createContext(null);
 
 export const AuthProvider = ({ children }) => {
+    const { task } = useStatusContext();
     const [init, setInit] = React.useState(false);
     const [user, setUser] = React.useState({
         status: "idle",
@@ -16,6 +18,7 @@ export const AuthProvider = ({ children }) => {
         auth.onAuthStateChanged(async (user) => {
             setInit(true);
             window.sessionStorage.removeItem("sm_sign_in");
+            task.finish();
             if (user) {
                 setUser({
                     status: "fulfilled",
@@ -32,6 +35,21 @@ export const AuthProvider = ({ children }) => {
         });
     }, []);
 
+    React.useEffect(() => {
+        if (!init) {
+            if (Boolean(window.sessionStorage.getItem("sm_sign_in"))) {
+                setInit(true);
+                setUser({
+                    status: "pending",
+                    payload: {
+                        provider: window.sessionStorage.getItem("sm_sign_in"),
+                    },
+                });
+                task.run();
+            }
+        }
+    }, [init]);
+
     const signUp = () => new Promise(async (resolve, reject) => {});
 
     const signIn = ({ type }) =>
@@ -44,6 +62,7 @@ export const AuthProvider = ({ children }) => {
                     },
                 });
                 window.sessionStorage.setItem("sm_sign_in", type);
+                task.run();
                 switch (type) {
                     case "google":
                         signInWithGoogle();
