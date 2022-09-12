@@ -19,6 +19,7 @@
             width: calc(100% - 2.5em);
             left: 1.25em;
             top: 1.25em;
+            z-index: 10;
 
             > .gear-icon {
                 cursor: pointer;

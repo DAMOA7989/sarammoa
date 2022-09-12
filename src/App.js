@@ -36,7 +36,7 @@ const App = () => {
         };
     }, []);
 
-    if (!init) {
+    if (!init && !Boolean(window.sessionStorage.getItem("sm_sign_in"))) {
         return <SplashScreen />;
     }
 

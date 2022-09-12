@@ -37,12 +37,22 @@ const __ROWS__ = [
             {
                 key: "privacy_policy",
                 i18nKey: "text.setup.privacy_policy",
-                onClick: () => {},
+                onClick: () => {
+                    window.open(
+                        "https://damoa7989.notion.site/7989-c26ba8d9f3a74ebd87e19026cf0fc260",
+                        "_blank"
+                    );
+                },
             },
             {
                 key: "terms_of_service",
                 i18nKey: "text.setup.terms_of_service",
-                onClick: () => {},
+                onClick: () => {
+                    window.open(
+                        "https://damoa7989.notion.site/7989-8c05ce548ab34699a072d84d770fd51c",
+                        "_blank"
+                    );
+                },
             },
         ],
     },

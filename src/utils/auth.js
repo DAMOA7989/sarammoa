@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
     React.useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
             setInit(true);
+            window.sessionStorage.removeItem("sm_sign_in");
             if (user) {
                 setUser({
                     status: "fulfilled",
@@ -42,6 +43,7 @@ export const AuthProvider = ({ children }) => {
                         provider: type,
                     },
                 });
+                window.sessionStorage.setItem("sm_sign_in", type);
                 switch (type) {
                     case "google":
                         signInWithGoogle();
@@ -87,7 +89,6 @@ export const RequireAuth = ({ children }) => {
     const { user } = useAuthContext();
     const location = useLocation();
 
-    console.log("d user", user);
     if (user?.status !== "fulfilled") {
         return <Navigate to="/" state={{ from: location }} replace />;
     } else {
