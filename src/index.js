@@ -10,16 +10,19 @@ import "styles/app.scss";
 import "./i18n";
 import { NavigateProvider } from "utils/navigate";
 import { AuthProvider } from "utils/auth";
+import { ModalProvider } from "utils/modal";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     // <React.StrictMode>
     <BrowserRouter>
-        <AuthProvider>
-            <NavigateProvider>
-                <App />
-            </NavigateProvider>
-        </AuthProvider>
+        <ModalProvider>
+            <AuthProvider>
+                <NavigateProvider>
+                    <App />
+                </NavigateProvider>
+            </AuthProvider>
+        </ModalProvider>
     </BrowserRouter>
     // </React.StrictMode>
 );

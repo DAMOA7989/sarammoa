@@ -1,11 +1,9 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const NavigateContext = React.createContext(null);
 
 export const NavigateProvider = ({ children }) => {
-    const { t } = useTranslation();
     const navigate = useNavigate();
     const [pathname, setPathname] = React.useState("");
     const [mode, setMode] = React.useState(null);
