@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useAuthContext } from "utils/auth";
 
 const __ROWS__ = [
     {
@@ -57,7 +58,9 @@ const __ROWS__ = [
             {
                 key: "sign_out",
                 i18nKey: "text.setup.sign_out",
-                onClick: () => {},
+                onClick: async ({ signOut }) => {
+                    await signOut();
+                },
             },
         ],
     },
@@ -65,6 +68,7 @@ const __ROWS__ = [
 
 const Setup = () => {
     const { t } = useTranslation();
+    const { signOut } = useAuthContext();
 
     return (
         <main className="pages-protected-profile-setup">
@@ -76,7 +80,7 @@ const Setup = () => {
                             <article
                                 key={col.key}
                                 className={`${col.key} list-button`}
-                                onClick={() => col.onClick()}
+                                onClick={() => col.onClick({ signOut })}
                             >
                                 <span>{t(col.i18nKey)}</span>
                             </article>

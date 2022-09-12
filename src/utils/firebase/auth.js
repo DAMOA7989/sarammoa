@@ -4,6 +4,7 @@ import {
     signInWithRedirect,
     GoogleAuthProvider,
     getRedirectResult,
+    signOut,
 } from "firebase/auth";
 
 export const _signInWithRedirect = () =>
@@ -12,6 +13,16 @@ export const _signInWithRedirect = () =>
             const provider = new GoogleAuthProvider();
             await signInWithRedirect(auth, provider);
             return resolve(true);
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _signOut = () =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await signOut(auth);
+            return resolve();
         } catch (e) {
             return reject(e);
         }

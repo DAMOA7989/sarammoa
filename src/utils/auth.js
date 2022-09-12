@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, Navigate } from "react-router-dom";
-import { _signInWithRedirect } from "utils/firebase/auth";
+import { _signInWithRedirect, _signOut } from "utils/firebase/auth";
 import { auth } from "utils/firebase";
 
 const AuthContext = React.createContext(null);
@@ -34,12 +34,21 @@ export const AuthProvider = ({ children }) => {
         new Promise(async (resolve, reject) => {
             try {
                 await _signInWithRedirect();
+                return resolve();
             } catch (e) {
                 return reject(e);
             }
         });
 
-    const signOut = () => new Promise(async (resolve, reject) => {});
+    const signOut = () =>
+        new Promise(async (resolve, reject) => {
+            try {
+                await _signOut();
+                return resolve();
+            } catch (e) {
+                return reject(e);
+            }
+        });
 
     const value = {
         user,

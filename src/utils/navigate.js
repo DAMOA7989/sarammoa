@@ -12,7 +12,6 @@ export const NavigateProvider = ({ children }) => {
     const [screenTitle, setScreenTitle] = React.useState("");
     const [isRouting, setIsRouting] = React.useState(false);
 
-    console.log("d mode", mode);
     const push = ({ pathname: _pathname, mode, screenTitle, replace }) => {
         setPathname(_pathname);
         setScreenTitle(screenTitle || "");

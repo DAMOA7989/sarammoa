@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import {
+    Protected,
     Connect,
     Notice,
     Profile,
@@ -38,20 +39,39 @@ const App = () => {
             <Routes location={location}>
                 <Route path="/" element={<MainLayout />}>
                     <Route index element={<Newsfeed />} />
-                    <Route path="support" element={<Support />} />
-                    <Route path="connect" element={<Connect />} />
-                    <Route path="notice" element={<Notice />} />
-                    <Route path="profile" element={<Profile />}>
-                        <Route path="" element={<ProfileHistory />} />
-                        <Route
-                            path="information"
-                            element={<ProfileInformation />}
-                        />
-                        <Route path="etc" element={<ProfileEtc />} />
+                    <Route
+                        element={
+                            <RequireAuth>
+                                <Protected />
+                            </RequireAuth>
+                        }
+                    >
+                        <Route path="support" element={<Support />} />
+                        <Route path="connect" element={<Connect />} />
+                        <Route path="notice" element={<Notice />} />
+                        <Route path="profile" element={<Profile />}>
+                            <Route path="" element={<ProfileHistory />} />
+                            <Route
+                                path="information"
+                                element={<ProfileInformation />}
+                            />
+                            <Route path="etc" element={<ProfileEtc />} />
+                        </Route>
                     </Route>
                 </Route>
                 <Route path="/sub" element={<SubLayout />}>
-                    <Route path="profile/setup" element={<ProfileSetup />} />
+                    <Route
+                        element={
+                            <RequireAuth>
+                                <Protected />
+                            </RequireAuth>
+                        }
+                    >
+                        <Route
+                            path="profile/setup"
+                            element={<ProfileSetup />}
+                        />
+                    </Route>
                 </Route>
             </Routes>
         </AuthProvider>

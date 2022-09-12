@@ -1,3 +1,5 @@
+export { default as Protected } from "./protected";
+
 export { default as Connect } from "./protected/connect";
 
 export { default as Notice } from "./protected/notice";
