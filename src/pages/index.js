@@ -13,3 +13,5 @@ export { default as ProfileSetup } from "./protected/profile/setup";
 export { default as Support } from "./protected/support";
 
 export { default as Newsfeed } from "./public/newsfeed";
+
+export { default as SplashScreen } from "./public/splash";

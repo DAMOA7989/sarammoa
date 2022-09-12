@@ -11,16 +11,18 @@ import {
     ProfileSetup,
     Support,
     Newsfeed,
+    SplashScreen,
 } from "pages";
 import MainLayout from "components/layout/MainLayout";
 import SubLayout from "components/layout/SubLayout";
-import { AuthProvider } from "utils/auth";
 import { gapi } from "gapi-script";
 import { RequireAuth } from "utils/auth";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { useNavigateContext } from "utils/navigate";
+import { useAuthContext } from "utils/auth";
 
 const App = () => {
+    const { init, user } = useAuthContext();
     const { mode } = useNavigateContext();
     const location = useLocation();
 
@@ -34,47 +36,46 @@ const App = () => {
         };
     }, []);
 
+    if (!init) {
+        return <SplashScreen />;
+    }
+
     return (
-        <AuthProvider>
-            <Routes location={location}>
-                <Route path="/" element={<MainLayout />}>
-                    <Route index element={<Newsfeed />} />
-                    <Route
-                        element={
-                            <RequireAuth>
-                                <Protected />
-                            </RequireAuth>
-                        }
-                    >
-                        <Route path="support" element={<Support />} />
-                        <Route path="connect" element={<Connect />} />
-                        <Route path="notice" element={<Notice />} />
-                        <Route path="profile" element={<Profile />}>
-                            <Route path="" element={<ProfileHistory />} />
-                            <Route
-                                path="information"
-                                element={<ProfileInformation />}
-                            />
-                            <Route path="etc" element={<ProfileEtc />} />
-                        </Route>
-                    </Route>
-                </Route>
-                <Route path="/sub" element={<SubLayout />}>
-                    <Route
-                        element={
-                            <RequireAuth>
-                                <Protected />
-                            </RequireAuth>
-                        }
-                    >
+        <Routes location={location}>
+            <Route path="/" element={<MainLayout />}>
+                <Route index element={<Newsfeed />} />
+                <Route
+                    element={
+                        <RequireAuth>
+                            <Protected />
+                        </RequireAuth>
+                    }
+                >
+                    <Route path="support" element={<Support />} />
+                    <Route path="connect" element={<Connect />} />
+                    <Route path="notice" element={<Notice />} />
+                    <Route path="profile" element={<Profile />}>
+                        <Route path="" element={<ProfileHistory />} />
                         <Route
-                            path="profile/setup"
-                            element={<ProfileSetup />}
+                            path="information"
+                            element={<ProfileInformation />}
                         />
+                        <Route path="etc" element={<ProfileEtc />} />
                     </Route>
                 </Route>
-            </Routes>
-        </AuthProvider>
+            </Route>
+            <Route path="/sub" element={<SubLayout />}>
+                <Route
+                    element={
+                        <RequireAuth>
+                            <Protected />
+                        </RequireAuth>
+                    }
+                >
+                    <Route path="profile/setup" element={<ProfileSetup />} />
+                </Route>
+            </Route>
+        </Routes>
     );
 };
 

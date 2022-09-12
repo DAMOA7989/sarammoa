@@ -9,14 +9,17 @@ import "react-spring-bottom-sheet/dist/style.css";
 import "styles/app.scss";
 import "./i18n";
 import { NavigateProvider } from "utils/navigate";
+import { AuthProvider } from "utils/auth";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     // <React.StrictMode>
     <BrowserRouter>
-        <NavigateProvider>
-            <App />
-        </NavigateProvider>
+        <AuthProvider>
+            <NavigateProvider>
+                <App />
+            </NavigateProvider>
+        </AuthProvider>
     </BrowserRouter>
     // </React.StrictMode>
 );

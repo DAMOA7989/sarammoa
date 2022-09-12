@@ -7,16 +7,12 @@ import {
     signOut,
 } from "firebase/auth";
 
-export const _signInWithRedirect = () =>
-    new Promise(async (resolve, reject) => {
-        try {
-            const provider = new GoogleAuthProvider();
-            await signInWithRedirect(auth, provider);
-            return resolve(true);
-        } catch (e) {
-            return reject(e);
-        }
-    });
+export const _getRedirectResult = async () => await getRedirectResult(auth);
+
+export const _signInWithRedirect = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithRedirect(auth, provider);
+};
 
 export const _signOut = () =>
     new Promise(async (resolve, reject) => {

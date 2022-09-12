@@ -6,39 +6,56 @@ import { auth } from "utils/firebase";
 const AuthContext = React.createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = React.useState(null);
+    const [init, setInit] = React.useState(false);
+    const [user, setUser] = React.useState({
+        status: "idle",
+        payload: {},
+    });
 
     React.useEffect(() => {
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(async (user) => {
+            setInit(true);
             if (user) {
-                console.log("d user", user);
-                setUser(user);
+                setUser({
+                    status: "fulfilled",
+                    payload: {
+                        user,
+                    },
+                });
             } else {
-                setUser(null);
+                setUser({
+                    status: "rejected",
+                    payload: {},
+                });
             }
         });
     }, []);
 
     const signUp = () => new Promise(async (resolve, reject) => {});
 
-    const signIn = ({ type }) => {
-        switch (type) {
-            case "google":
-                return signInWithGoogle();
-            default:
-                break;
-        }
-    };
-
-    const signInWithGoogle = () =>
+    const signIn = ({ type }) =>
         new Promise(async (resolve, reject) => {
             try {
-                await _signInWithRedirect();
+                setUser({
+                    status: "pending",
+                    payload: {
+                        provider: type,
+                    },
+                });
+                switch (type) {
+                    case "google":
+                        signInWithGoogle();
+                        break;
+                    default:
+                        break;
+                }
                 return resolve();
             } catch (e) {
                 return reject(e);
             }
         });
+
+    const signInWithGoogle = () => _signInWithRedirect();
 
     const signOut = () =>
         new Promise(async (resolve, reject) => {
@@ -46,11 +63,13 @@ export const AuthProvider = ({ children }) => {
                 await _signOut();
                 return resolve();
             } catch (e) {
+                console.dir(e);
                 return reject(e);
             }
         });
 
     const value = {
+        init,
         user,
         signUp,
         signIn,
@@ -68,7 +87,8 @@ export const RequireAuth = ({ children }) => {
     const { user } = useAuthContext();
     const location = useLocation();
 
-    if (!user) {
+    console.log("d user", user);
+    if (user?.status !== "fulfilled") {
         return <Navigate to="/" state={{ from: location }} replace />;
     } else {
         return children;

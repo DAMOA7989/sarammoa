@@ -126,7 +126,7 @@ const PADDING = 20;
 
 const BottomNavigation = () => {
     const { t } = useTranslation();
-    const { user, signIn } = useAuthContext();
+    const { init, user, signIn } = useAuthContext();
     const { push } = useNavigateContext();
     const navigate = useNavigate();
     const location = useLocation();
@@ -179,7 +179,7 @@ const BottomNavigation = () => {
 
     return (
         <nav className="components-navigation-bottom-navigation">
-            {user ? (
+            {user?.status === "fulfilled" ? (
                 <div className="bottom-navigation-container">
                     <ul
                         ref={bottomNavigationTabsRef}
