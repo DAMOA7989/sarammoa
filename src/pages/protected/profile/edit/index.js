@@ -5,7 +5,7 @@ import CommonButton from "components/button/CommonButton";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import ListButton from "components/button/ListButton";
 import { useAuthContext } from "utils/auth";
-import { _setUserInfo } from "utils/firebase/auth";
+import { _setUserInfo, _uploadProfileThumbnail } from "utils/firebase/auth";
 import { useNavigateContext } from "utils/navigate";
 
 const __PROFILE_THUMBNAIL_BUTTONS__ = [
@@ -30,7 +30,7 @@ const Edit = () => {
     const [profileThumbnailBlob, setProfileThumbnailBlob] =
         React.useState(null);
     const [profileThumbnailUrl, setProfileThumbnailUrl] = React.useState(
-        userInfo?.profileThumbmailUrl || ""
+        userInfo?.profileThumbnailUrl || ""
     );
     const [fullName, setFullName] = React.useState(userInfo?.fullName || "");
     const [nickname, setNickname] = React.useState(userInfo?.nickname || "");
@@ -40,23 +40,31 @@ const Edit = () => {
         userInfo?.introduction || ""
     );
     const [canSubmit, setCanSubmit] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(false);
     const [openProfileThumbnail, setOpenProfileThumbnail] =
         React.useState(false);
     const inputFileRef = React.useRef(null);
 
     React.useEffect(() => {
-        if (!Boolean(fullName)) {
+        if (isLoading) {
             return setCanSubmit(false);
         }
-        if (!Boolean(nickname)) {
-            return setCanSubmit(false);
-        }
-        if (!Boolean(position)) {
+
+        if (
+            (!Boolean(userInfo?.fullName) || fullName === userInfo?.fullName) &&
+            (!Boolean(userInfo?.nickname) || nickname === userInfo?.nickname) &&
+            (!Boolean(userInfo?.position) || position === userInfo?.position) &&
+            (!Boolean(userInfo?.website) || website === userInfo?.website) &&
+            (!Boolean(userInfo?.introduction) ||
+                introduction === userInfo?.introduction) &&
+            (!Boolean(profileThumbnailUrl) ||
+                profileThumbnailUrl === userInfo?.profileThumbnailUrl)
+        ) {
             return setCanSubmit(false);
         }
 
         setCanSubmit(true);
-    }, [fullName, nickname, website, introduction]);
+    }, [isLoading, fullName, nickname, website, introduction]);
 
     const onFileChangeHandler = (event) => {
         const file = event.target?.files?.[0];
@@ -79,35 +87,45 @@ const Edit = () => {
         setOpenProfileThumbnail(false);
     }, [profileThumbnailUrl]);
 
-    const onSubmitHandler = () => {
-        const payload = {};
-        if (Boolean(fullName)) {
-            payload.fullName = fullName;
-        }
-        if (Boolean(nickname)) {
-            payload.nickname = nickname;
-        }
-        if (Boolean(position)) {
-            payload.position = position;
-        }
-        if (Boolean(website)) {
-            payload.website = website;
-        }
-        if (Boolean(introduction)) {
-            payload.introduction = introduction;
-        }
+    const onSubmitHandler = async () => {
+        try {
+            setIsLoading(true);
 
-        _setUserInfo({
-            uid: userInfo?.id,
-            payload,
-        })
-            .then(() => {
-                userInfo?.refresh();
-                goBack();
-            })
-            .catch((e) => {
-                console.dir(e);
+            const payload = {};
+            if (Boolean(fullName)) {
+                payload.fullName = fullName;
+            }
+            if (Boolean(nickname)) {
+                payload.nickname = nickname;
+            }
+            if (Boolean(position)) {
+                payload.position = position;
+            }
+            if (Boolean(website)) {
+                payload.website = website;
+            }
+            if (Boolean(introduction)) {
+                payload.introduction = introduction;
+            }
+
+            if (profileThumbnailBlob) {
+                const { url } = await _uploadProfileThumbnail({
+                    uid: userInfo?.id,
+                    profileThumbnailBlob,
+                });
+                payload.profileThumbnailUrl = url;
+            }
+
+            await _setUserInfo({
+                uid: userInfo?.id,
+                payload,
             });
+            userInfo?.refresh();
+            goBack();
+            setIsLoading(false);
+        } catch (e) {
+            console.dir(e);
+        }
     };
 
     return (
@@ -156,6 +174,7 @@ const Edit = () => {
                 <CommonButton
                     color="primary"
                     disabled={!canSubmit}
+                    isLoading={isLoading}
                     onClick={onSubmitHandler}
                 >
                     {t("btn.finish")}

@@ -1,6 +1,14 @@
 import React from "react";
+import { CircularProgress } from "@mui/material";
 
-const CommonButton = ({ children, color, className, onClick, disabled }) => {
+const CommonButton = ({
+    children,
+    color,
+    className,
+    onClick,
+    disabled,
+    isLoading,
+}) => {
     return (
         <button
             className={`common-button ${color} ${
@@ -8,7 +16,11 @@ const CommonButton = ({ children, color, className, onClick, disabled }) => {
             } ${className}`}
             onClick={onClick}
         >
-            {children}
+            {isLoading ? (
+                <CircularProgress color="black" size={20} />
+            ) : (
+                children
+            )}
         </button>
     );
 };

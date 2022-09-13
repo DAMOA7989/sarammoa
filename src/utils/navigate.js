@@ -35,7 +35,7 @@ export const NavigateProvider = ({ children }) => {
             );
         }
         setMode(null);
-        setScreenTitle("");
+        // setScreenTitle("");
         setIsRouting(false);
     }, [isRouting]);
 

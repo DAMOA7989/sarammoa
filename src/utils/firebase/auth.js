@@ -1,4 +1,4 @@
-import { app, auth, db } from "./index";
+import { app, auth, db, storage } from "./index";
 import {
     getAuth,
     signInWithRedirect,
@@ -14,6 +14,7 @@ import {
     getDoc,
     Timestamp,
 } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export const _getRedirectResult = async () => await getRedirectResult(auth);
 
@@ -61,6 +62,18 @@ export const _getUserInfo = ({ uid }) =>
             } else {
                 throw new Error();
             }
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _uploadProfileThumbnail = ({ uid, profileThumbnailBlob }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const profileThumbnailRef = ref(storage, `${uid}/profileThumbnail`);
+            await uploadBytes(profileThumbnailRef, profileThumbnailBlob);
+            const url = await getDownloadURL(profileThumbnailRef);
+            return resolve({ url });
         } catch (e) {
             return reject(e);
         }

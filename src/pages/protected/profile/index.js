@@ -348,7 +348,7 @@ const Profile = () => {
                             </div>
                         </div>
                         <span ref={profileSmallNameRef} className="name-small">
-                            Walter Yoon
+                            {userInfo?.nickname || "loading"}
                         </span>
                     </div>
                 </div>

@@ -6,5 +6,8 @@ export const theme = createTheme({
         primary: {
             main: styles.primaryColor,
         },
+        black: {
+            main: "#000000",
+        },
     },
 });
