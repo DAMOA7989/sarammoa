@@ -1,6 +1,11 @@
 import React from "react";
 import { useLocation, Navigate } from "react-router-dom";
-import { _signInWithRedirect, _signOut } from "utils/firebase/auth";
+import {
+    _signInWithRedirect,
+    _signOut,
+    _setUserInfo,
+    _getUserInfo,
+} from "utils/firebase/auth";
 import { auth } from "utils/firebase";
 import { useStatusContext } from "utils/status";
 
@@ -13,6 +18,7 @@ export const AuthProvider = ({ children }) => {
         status: "idle",
         payload: {},
     });
+    const [userInfo, setUserInfo] = React.useState(null);
 
     React.useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
@@ -34,6 +40,24 @@ export const AuthProvider = ({ children }) => {
             }
         });
     }, []);
+
+    React.useEffect(() => {
+        if (user?.status !== "fulfilled") {
+            setUser(null);
+            setUserInfo(null);
+        } else {
+            const _user = user?.payload?.user;
+            setUser(user);
+            _setUserInfo({
+                uid: _user?.uid,
+                payload: {},
+            }).then(() => {
+                _getUserInfo({ uid: _user?.uid }).then((res) => {
+                    setUserInfo(res);
+                });
+            });
+        }
+    }, [user]);
 
     React.useEffect(() => {
         if (!init) {
@@ -92,6 +116,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         init,
         user,
+        userInfo,
         signUp,
         signIn,
         signOut,

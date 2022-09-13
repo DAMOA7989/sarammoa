@@ -60,6 +60,9 @@ select,
 textarea {
     vertical-align: middle;
     font-size: 0.875rem;
+    border: none;
+    background-color: transparent;
+    outline: none;
 }
 button {
     border: 0;

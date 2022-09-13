@@ -1,4 +1,4 @@
-import { app, auth } from "./index";
+import { app, auth, db } from "./index";
 import {
     getAuth,
     signInWithRedirect,
@@ -6,6 +6,7 @@ import {
     getRedirectResult,
     signOut,
 } from "firebase/auth";
+import { doc, collection, setDoc, addDoc, getDoc } from "firebase/firestore";
 
 export const _getRedirectResult = async () => await getRedirectResult(auth);
 
@@ -19,6 +20,36 @@ export const _signOut = () =>
         try {
             await signOut(auth);
             return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _setUserInfo = ({ uid, payload }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const docRef = doc(db, "users", uid);
+            await setDoc(docRef, { ...payload }, { merge: true });
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _getUserInfo = ({ uid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const docRef = doc(db, "users", uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                return resolve({
+                    id: docSnap.id,
+                    ...docSnap.data(),
+                });
+            } else {
+                throw new Error();
+            }
         } catch (e) {
             return reject(e);
         }

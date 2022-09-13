@@ -201,3 +201,44 @@
     border-bottom: 1px solid $link_water_color;
     box-sizing: border-box;
 }
+
+.woilonn-input {
+    width: 100%;
+
+    > .label {
+        font-size: 14px;
+        font-weight: 500;
+        color: $x11_gray_color;
+        margin-bottom: 0.5em;
+    }
+
+    > .input-container {
+        display: inline-flex;
+        align-items: center;
+        width: 100%;
+        height: 3em;
+        border: 1px solid $x11_gray_color;
+        border-radius: 8px;
+        padding: 0 1.25em;
+
+        > input {
+            flex: 1;
+            height: 100%;
+            color: $x11_gray_color;
+        }
+    }
+
+    &:focus-within {
+        > .label {
+            color: $auro_metal_saurus_color;
+        }
+
+        > .input-container {
+            border: 1px solid $auro_metal_saurus_color;
+
+            > input {
+                color: $auro_metal_saurus_color;
+            }
+        }
+    }
+}

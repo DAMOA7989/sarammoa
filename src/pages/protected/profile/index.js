@@ -41,13 +41,6 @@ const __TABS__ = [
 
 const __EXPAND_BUTTONS__ = [
     {
-        key: "share",
-        i18nKey: "text.profile.expand.share",
-        onClick: ({ navigate }) => {
-            // navigate.push({});
-        },
-    },
-    {
         key: "edit_profile",
         i18nKey: "text.profile.expand.edit_profile",
         onClick: ({ navigate }) => {
@@ -56,6 +49,13 @@ const __EXPAND_BUTTONS__ = [
                 mode: "sub",
                 screenTitle: "text.profile.expand.edit_profile",
             });
+        },
+    },
+    {
+        key: "share",
+        i18nKey: "text.profile.expand.share",
+        onClick: ({ navigate }) => {
+            // navigate.push({});
         },
     },
 ];
@@ -402,9 +402,6 @@ const Profile = () => {
                             <span>{t(button.i18nKey)}</span>
                         </ListButton>
                     ))}
-                    <ListButton>
-                        <span>{}</span>
-                    </ListButton>
                 </div>
             </BottomSheet>
         </main>
