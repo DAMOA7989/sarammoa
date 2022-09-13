@@ -5,6 +5,7 @@ import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import ListButton from "components/button/ListButton";
+import { useAuthContext } from "utils/auth";
 
 const __TABS__ = [
     {
@@ -64,6 +65,7 @@ const Profile = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigateContext();
+    const { userInfo } = useAuthContext();
     const [curTab, setCurTab] = React.useState(null);
     const [openExpand, setOpenExpand] = React.useState(false);
     const prevTouchPosition = React.useRef([0, 0]);
@@ -320,13 +322,15 @@ const Profile = () => {
                             ref={profileThumbnailRef}
                             className="profile-thumbnail"
                             style={{
-                                backgroundImage: `url('https://www.bentbusinessmarketing.com/wp-content/uploads/2013/02/35844588650_3ebd4096b1_b-1024x683.jpg')`,
+                                backgroundImage: `url('${userInfo?.profileThumbnailUrl}')`,
                             }}
                         ></div>
                         <div ref={profileInfoRef} className="profile-info">
-                            <span className="name">Walter Yoon</span>
+                            <span className="name">
+                                {userInfo?.nickname || "loading"}
+                            </span>
                             <span className="position">
-                                Javascript Developer
+                                {userInfo?.position || "loading"}
                             </span>
                             <div className="counts">
                                 <div className="thumb-up">

@@ -86,7 +86,7 @@
                     display: inline-flex;
                     justify-content: center;
                     align-items: center;
-                    box-shadow: inset 0em 0.25em 0.25em rgba(0, 0, 0, 0.25);
+                    box-shadow: $profile_thumbnail_box_shadow;
                     background-size: cover;
                     background-position: center;
                     transition: top 1s, left 1s;

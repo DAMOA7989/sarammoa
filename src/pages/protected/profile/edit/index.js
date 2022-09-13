@@ -5,13 +5,14 @@ import CommonButton from "components/button/CommonButton";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import ListButton from "components/button/ListButton";
 import { useAuthContext } from "utils/auth";
+import { _setUserInfo } from "utils/firebase/auth";
+import { useNavigateContext } from "utils/navigate";
 
 const __PROFILE_THUMBNAIL_BUTTONS__ = [
     {
         key: "upload",
         i18nKey: "btn.profile.edit.profile_thumbnail.upload",
         onClick: ({ inputFileRef }) => {
-            console.log("d inputFileRef", inputFileRef);
             inputFileRef.current.click();
         },
     },
@@ -25,52 +26,89 @@ const __PROFILE_THUMBNAIL_BUTTONS__ = [
 const Edit = () => {
     const { t } = useTranslation();
     const { userInfo } = useAuthContext();
-    const [image, setImage] = React.useState(null);
-    const [imageDataUrl, setImageDataUrl] = React.useState("");
-    const [name, setName] = React.useState("");
-    const [nickname, setNickname] = React.useState("");
-    const [website, setWebsite] = React.useState("");
-    const [introduction, setIntroduction] = React.useState("");
+    const { goBack } = useNavigateContext();
+    const [profileThumbnailBlob, setProfileThumbnailBlob] =
+        React.useState(null);
+    const [profileThumbnailUrl, setProfileThumbnailUrl] = React.useState(
+        userInfo?.profileThumbmailUrl || ""
+    );
+    const [fullName, setFullName] = React.useState(userInfo?.fullName || "");
+    const [nickname, setNickname] = React.useState(userInfo?.nickname || "");
+    const [position, setPosition] = React.useState(userInfo?.position || "");
+    const [website, setWebsite] = React.useState(userInfo?.website || "");
+    const [introduction, setIntroduction] = React.useState(
+        userInfo?.introduction || ""
+    );
     const [canSubmit, setCanSubmit] = React.useState(false);
     const [openProfileThumbnail, setOpenProfileThumbnail] =
         React.useState(false);
     const inputFileRef = React.useRef(null);
 
     React.useEffect(() => {
-        if (!Boolean(name)) {
+        if (!Boolean(fullName)) {
             return setCanSubmit(false);
         }
         if (!Boolean(nickname)) {
             return setCanSubmit(false);
         }
+        if (!Boolean(position)) {
+            return setCanSubmit(false);
+        }
 
         setCanSubmit(true);
-    }, [name, nickname, website, introduction]);
-
-    React.useEffect(() => {
-        setImageDataUrl(userInfo?.photoURL);
-    }, []);
+    }, [fullName, nickname, website, introduction]);
 
     const onFileChangeHandler = (event) => {
         const file = event.target?.files?.[0];
         if (!file) {
-            setImage(null);
-            setImageDataUrl(userInfo?.photoURL);
+            setProfileThumbnailBlob(null);
+            setProfileThumbnailUrl(userInfo?.profileThumbmailUrl);
             return;
         }
-        setImage(file);
+        setProfileThumbnailBlob(file);
 
         const reader = new FileReader();
 
         reader.onload = (event) => {
-            setImageDataUrl(event.target.result);
+            setProfileThumbnailUrl(event.target.result);
         };
         reader.readAsDataURL(file);
     };
 
     React.useEffect(() => {
         setOpenProfileThumbnail(false);
-    }, [imageDataUrl]);
+    }, [profileThumbnailUrl]);
+
+    const onSubmitHandler = () => {
+        const payload = {};
+        if (Boolean(fullName)) {
+            payload.fullName = fullName;
+        }
+        if (Boolean(nickname)) {
+            payload.nickname = nickname;
+        }
+        if (Boolean(position)) {
+            payload.position = position;
+        }
+        if (Boolean(website)) {
+            payload.website = website;
+        }
+        if (Boolean(introduction)) {
+            payload.introduction = introduction;
+        }
+
+        _setUserInfo({
+            uid: userInfo?.id,
+            payload,
+        })
+            .then(() => {
+                userInfo?.refresh();
+                goBack();
+            })
+            .catch((e) => {
+                console.dir(e);
+            });
+    };
 
     return (
         <main className="pages-protected-profile-edit">
@@ -81,18 +119,26 @@ const Edit = () => {
                         setOpenProfileThumbnail(!openProfileThumbnail)
                     }
                 >
-                    <img src={imageDataUrl} />
+                    <img
+                        src={profileThumbnailUrl || ""}
+                        alt="profile thumbnail"
+                    />
                 </div>
                 <div className="form">
                     <WoilonnInput
                         label={t("label.profile.edit.name")}
-                        value={name}
-                        onChange={(event) => setName(event.target.value)}
+                        value={fullName}
+                        onChange={(event) => setFullName(event.target.value)}
                     />
                     <WoilonnInput
                         label={t("label.profile.edit.nickname")}
                         value={nickname}
                         onChange={(event) => setNickname(event.target.value)}
+                    />
+                    <WoilonnInput
+                        label={t("label.profile.edit.position")}
+                        value={position}
+                        onChange={(event) => setPosition(event.target.value)}
                     />
                     <WoilonnInput
                         label={t("label.profile.edit.website")}
@@ -110,7 +156,7 @@ const Edit = () => {
                 <CommonButton
                     color="primary"
                     disabled={!canSubmit}
-                    onClick={() => {}}
+                    onClick={onSubmitHandler}
                 >
                     {t("btn.finish")}
                 </CommonButton>

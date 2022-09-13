@@ -6,7 +6,14 @@ import {
     getRedirectResult,
     signOut,
 } from "firebase/auth";
-import { doc, collection, setDoc, addDoc, getDoc } from "firebase/firestore";
+import {
+    doc,
+    collection,
+    setDoc,
+    addDoc,
+    getDoc,
+    Timestamp,
+} from "firebase/firestore";
 
 export const _getRedirectResult = async () => await getRedirectResult(auth);
 
@@ -29,7 +36,11 @@ export const _setUserInfo = ({ uid, payload }) =>
     new Promise(async (resolve, reject) => {
         try {
             const docRef = doc(db, "users", uid);
-            await setDoc(docRef, { ...payload }, { merge: true });
+            await setDoc(
+                docRef,
+                { ...payload, updatedAt: Timestamp.now() },
+                { merge: true }
+            );
             return resolve();
         } catch (e) {
             return reject(e);

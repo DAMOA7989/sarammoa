@@ -19,24 +19,30 @@ export const NavigateProvider = ({ children }) => {
 
     React.useEffect(() => {
         if (!isRouting) return;
-        if (mode === "sub") {
+        if (typeof pathname === "number") {
+            navigate(pathname);
+        } else if (mode === "sub") {
             navigate(
                 `${
                     mode === "main" ? "" : mode === "sub" ? "/sub" : ""
                 }${pathname}`
             );
-            setIsRouting(false);
         } else {
             navigate(
                 `${
                     mode === "main" ? "" : mode === "sub" ? "/sub" : ""
                 }${pathname}`
             );
-            setIsRouting(false);
         }
-    }, [isRouting, mode]);
+        setMode(null);
+        setScreenTitle("");
+        setIsRouting(false);
+    }, [isRouting]);
 
-    const goBack = () => {};
+    const goBack = () => {
+        setPathname(-1);
+        setIsRouting(true);
+    };
 
     const value = {
         mode,

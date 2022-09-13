@@ -51,11 +51,21 @@ export const AuthProvider = ({ children }) => {
             _setUserInfo({
                 uid: _user?.uid,
                 payload: {},
-            }).then(() => {
-                _getUserInfo({ uid: _user?.uid }).then((res) => {
-                    setUserInfo(res);
+            })
+                .then(() => {
+                    _getUserInfo({ uid: _user?.uid })
+                        .then((res) => {
+                            setUserInfo(res);
+                        })
+                        .catch((e) => {
+                            console.dir(e);
+                            setUserInfo(null);
+                        });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    setUserInfo(null);
                 });
-            });
         }
     }, [user]);
 
@@ -116,7 +126,20 @@ export const AuthProvider = ({ children }) => {
     const value = {
         init,
         user,
-        userInfo,
+        userInfo: userInfo
+            ? {
+                  ...userInfo,
+                  refresh: () => {
+                      _getUserInfo({ uid: userInfo?.id })
+                          .then((res) => {
+                              setUserInfo(res);
+                          })
+                          .catch((e) => {
+                              console.dir(e);
+                          });
+                  },
+              }
+            : null,
         signUp,
         signIn,
         signOut,
