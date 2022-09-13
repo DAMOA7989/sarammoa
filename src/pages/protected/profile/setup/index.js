@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthContext } from "utils/auth";
+import ListButton from "components/button/ListButton";
 
 const __ROWS__ = [
     {
@@ -87,13 +88,13 @@ const Setup = () => {
                     <h3 className="title">{t(row.title)}</h3>
                     <section className="cols">
                         {(row?.cols || []).map((col) => (
-                            <article
+                            <ListButton
                                 key={col.key}
                                 className={`${col.key} list-button`}
                                 onClick={() => col.onClick({ signOut })}
                             >
                                 <span>{t(col.i18nKey)}</span>
-                            </article>
+                            </ListButton>
                         ))}
                     </section>
                 </section>

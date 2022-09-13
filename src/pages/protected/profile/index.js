@@ -1,8 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, Outlet, useLocation, useMatch } from "react-router-dom";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
+import { BottomSheet } from "react-spring-bottom-sheet";
+import ListButton from "components/button/ListButton";
 
 const __TABS__ = [
     {
@@ -37,12 +39,33 @@ const __TABS__ = [
     },
 ];
 
+const __EXPAND_BUTTONS__ = [
+    {
+        key: "share",
+        i18nKey: "text.profile.expand.share",
+        onClick: ({ navigate }) => {
+            // navigate.push({});
+        },
+    },
+    {
+        key: "edit_profile",
+        i18nKey: "text.profile.expand.edit_profile",
+        onClick: ({ navigate }) => {
+            navigate.push({
+                pathname: "/profile/edit",
+                mode: "sub",
+                screenTitle: "text.profile.expand.edit_profile",
+            });
+        },
+    },
+];
+
 const Profile = () => {
     const { t } = useTranslation();
-    const navigate = useNavigate();
     const location = useLocation();
-    const { push } = useNavigateContext();
+    const navigate = useNavigateContext();
     const [curTab, setCurTab] = React.useState(null);
+    const [openExpand, setOpenExpand] = React.useState(false);
     const prevTouchPosition = React.useRef([0, 0]);
     const [touchPosition, setTouchPosition] = React.useState([0, 0]);
     const tabRefs = {
@@ -276,14 +299,17 @@ const Profile = () => {
                     <div
                         className="gear-icon"
                         onClick={() => {
-                            push({
+                            navigate.push({
                                 pathname: "/profile/setup",
                                 mode: "sub",
                                 screenTitle: "title.screen.setup",
                             });
                         }}
                     ></div>
-                    <div className="dots-vertical-icon"></div>
+                    <div
+                        className="dots-vertical-icon"
+                        onClick={() => setOpenExpand(!openExpand)}
+                    ></div>
                 </header>
                 <div ref={profileRef} className="profile">
                     <div
@@ -336,7 +362,9 @@ const Profile = () => {
                             >
                                 <button
                                     className={`text-button active primary`}
-                                    onClick={() => tab.onClick({ push })}
+                                    onClick={() =>
+                                        tab.onClick({ push: navigate.push })
+                                    }
                                 >
                                     {t(tab.i18nKey)}
                                 </button>
@@ -356,6 +384,29 @@ const Profile = () => {
                 </nav>
                 <Outlet />
             </div>
+            <BottomSheet
+                open={openExpand}
+                header={<div>{t("title.profile.expand")}</div>}
+                onDismiss={() => setOpenExpand(false)}
+            >
+                <div className="bottom-sheet expand">
+                    {__EXPAND_BUTTONS__.map((button) => (
+                        <ListButton
+                            key={button.key}
+                            className={button.key}
+                            onClick={() => {
+                                setOpenExpand(false);
+                                button.onClick({ navigate });
+                            }}
+                        >
+                            <span>{t(button.i18nKey)}</span>
+                        </ListButton>
+                    ))}
+                    <ListButton>
+                        <span>{}</span>
+                    </ListButton>
+                </div>
+            </BottomSheet>
         </main>
     );
 };

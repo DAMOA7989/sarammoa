@@ -1,16 +1,5 @@
 @import "../include.scss";
 
-.list-button {
-    display: inline-flex;
-    padding: 0 1.25em;
-    width: 100%;
-    height: 3.5em;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid $link_water_color;
-    box-sizing: border-box;
-}
-
 .splash-screen {
     flex: 1;
     display: flex;

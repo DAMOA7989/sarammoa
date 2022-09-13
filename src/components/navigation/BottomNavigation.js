@@ -231,7 +231,7 @@ const BottomNavigation = () => {
                         className="bottom-sheet bottom-navigation"
                         open={openBottomSheet}
                         onDismiss={() => setOpenBottomSheet(false)}
-                        snapPoints={({ maxHeight }) => 0.6 * maxHeight}
+                        // snapPoints={({ maxHeight }) => 0.6 * maxHeight}
                     >
                         <div className="bottom-sheet-body">
                             <Trans

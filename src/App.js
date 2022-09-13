@@ -9,6 +9,7 @@ import {
     ProfileInformation,
     ProfileEtc,
     ProfileSetup,
+    ProfileEdit,
     Support,
     Newsfeed,
     SplashScreen,
@@ -77,10 +78,10 @@ const App = () => {
                             </RequireAuth>
                         }
                     >
-                        <Route
-                            path="profile/setup"
-                            element={<ProfileSetup />}
-                        />
+                        <Route path="profile">
+                            <Route path="setup" element={<ProfileSetup />} />
+                            <Route path="edit" element={<ProfileEdit />} />
+                        </Route>
                     </Route>
                 </Route>
             </Routes>

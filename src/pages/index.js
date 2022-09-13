@@ -9,6 +9,7 @@ export { default as ProfileHistory } from "./protected/profile/history";
 export { default as ProfileInformation } from "./protected/profile/information";
 export { default as ProfileEtc } from "./protected/profile/etc";
 export { default as ProfileSetup } from "./protected/profile/setup";
+export { default as ProfileEdit } from "./protected/profile/edit";
 
 export { default as Support } from "./protected/support";
 
