@@ -51,13 +51,17 @@ const Edit = () => {
         }
 
         if (
-            (!Boolean(userInfo?.fullName) || fullName === userInfo?.fullName) &&
-            (!Boolean(userInfo?.nickname) || nickname === userInfo?.nickname) &&
-            (!Boolean(userInfo?.position) || position === userInfo?.position) &&
-            (!Boolean(userInfo?.website) || website === userInfo?.website) &&
-            (!Boolean(userInfo?.introduction) ||
+            ((!Boolean(userInfo?.fullName) && !Boolean(fullName)) ||
+                fullName === userInfo?.fullName) &&
+            ((!Boolean(userInfo?.nickname) && !Boolean(nickname)) ||
+                nickname === userInfo?.nickname) &&
+            ((!Boolean(userInfo?.position) && !Boolean(position)) ||
+                position === userInfo?.position) &&
+            ((!Boolean(userInfo?.website) && !Boolean(website)) ||
+                website === userInfo?.website) &&
+            ((!Boolean(userInfo?.introduction) && !Boolean(introduction)) ||
                 introduction === userInfo?.introduction) &&
-            (!Boolean(profileThumbnailUrl) ||
+            ((!Boolean(profileThumbnailUrl) && !Boolean(profileThumbnailUrl)) ||
                 profileThumbnailUrl === userInfo?.profileThumbnailUrl)
         ) {
             return setCanSubmit(false);
