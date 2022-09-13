@@ -61,8 +61,7 @@ const Edit = () => {
                 website === userInfo?.website) &&
             ((!Boolean(userInfo?.introduction) && !Boolean(introduction)) ||
                 introduction === userInfo?.introduction) &&
-            ((!Boolean(profileThumbnailUrl) && !Boolean(profileThumbnailUrl)) ||
-                profileThumbnailUrl === userInfo?.profileThumbnailUrl)
+            !profileThumbnailBlob
         ) {
             return setCanSubmit(false);
         }
