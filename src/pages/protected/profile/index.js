@@ -394,7 +394,8 @@ const Profile = () => {
                                     .reduce(
                                         (previousValue, currentValue) =>
                                             previousValue +
-                                            currentValue.current.offsetWidth,
+                                                currentValue.current
+                                                    ?.offsetWidth || 0,
                                         0
                                     )}px + ${
                                     2 *
