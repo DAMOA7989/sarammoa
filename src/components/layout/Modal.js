@@ -83,11 +83,11 @@ const Modal = () => {
             <div
                 ref={modalRef}
                 className={`modal ${Boolean(path) ? "display" : "dismiss"} ${
-                    options?.hasButton ? "has-button" : ""
+                    optionsRef.current?.hasButton ? "has-button" : ""
                 } ${optionsRef.current?.layout}`}
             >
                 <>
-                    <ModalHeader />
+                    <ModalHeader title={optionsRef.current?.title} />
                     <ModalComponentRef.current {...params} />
                 </>
             </div>

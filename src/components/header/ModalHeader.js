@@ -2,9 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useModalContext } from "utils/modal";
 
-const ModalHeader = () => {
+const ModalHeader = ({ title }) => {
     const { t } = useTranslation();
-    const { options, dismissModal } = useModalContext();
+    const { dismissModal } = useModalContext();
 
     return (
         <header className="modal-header">
@@ -13,9 +13,7 @@ const ModalHeader = () => {
                     className="dismiss-icon"
                     onClick={() => dismissModal()}
                 ></div>
-                {Boolean(options?.title) && (
-                    <span className="title">{t(options.title)}</span>
-                )}
+                {Boolean(title) && <span className="title">{t(title)}</span>}
             </div>
         </header>
     );
