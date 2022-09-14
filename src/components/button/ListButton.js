@@ -1,6 +1,6 @@
 import React from "react";
 
-const ListButton = ({ className, onClick, children }) => {
+const ListButton = ({ className, onClick, children, disabled, isLoading }) => {
     const timerRef = React.useRef(null);
     const containerRef = React.useRef(null);
     const rippleEffectRef = React.useRef(null);
@@ -41,7 +41,7 @@ const ListButton = ({ className, onClick, children }) => {
         <div
             ref={containerRef}
             className={`list-button ${className}`}
-            onClick={onClick}
+            onClick={disabled ? null : onClick}
         >
             {children}
             <div ref={rippleEffectRef} className="ripple-effect" />

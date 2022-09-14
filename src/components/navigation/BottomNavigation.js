@@ -15,6 +15,8 @@ import { ReactComponent as NoticeActiveIcon } from "assets/images/tabs/notice_ac
 import { ReactComponent as ProfileActiveIcon } from "assets/images/tabs/profile_active.svg";
 import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
+import CommonButton from "components/button/CommonButton";
+import TextButton from "components/button/TextButton";
 
 const __OAUTH_BUTTONS__ = [
     {
@@ -219,14 +221,13 @@ const BottomNavigation = () => {
                 </div>
             ) : (
                 <>
-                    <button
-                        className={`common-button primary ${
-                            canOpenBottomSheet && "active"
-                        }`}
+                    <CommonButton
+                        color="primary"
+                        disabled={!canOpenBottomSheet}
                         onClick={() => setOpenBottomSheet(!openBottomSheet)}
                     >
                         {t("btn.start")}
-                    </button>
+                    </CommonButton>
                     <BottomSheet
                         className="bottom-sheet bottom-navigation"
                         open={openBottomSheet}
@@ -254,12 +255,12 @@ const BottomNavigation = () => {
                                         </li>
                                     ))}
                                 </ul>
-                                <button
-                                    className={`text-button primary active`}
+                                <TextButton
+                                    color="primary"
                                     onClick={() => setOpenBottomSheet(false)}
                                 >
                                     {t("btn.after")}
-                                </button>
+                                </TextButton>
                             </section>
                         </div>
                     </BottomSheet>

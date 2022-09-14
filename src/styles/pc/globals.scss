@@ -1,120 +1,5 @@
 @import "../include.scss";
 
-.common-button {
-    cursor: default;
-    background-color: $x11_dark_gray_color;
-    padding: 0 1em;
-    height: 2.75em;
-    border-radius: 1em;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-
-    &.active {
-        cursor: pointer;
-
-        &.primary {
-            background-color: $primary_color;
-            color: white;
-
-            @media (hover: hover) {
-                &:hover {
-                    background-color: rgba($primary_color, 0.6);
-                }
-            }
-
-            &:active {
-                background-color: rgba($primary_color, 0.8);
-            }
-        }
-
-        &.secondary {
-            background-color: $secondary_color;
-            color: white;
-
-            @media (hover: hover) {
-                &:hover {
-                    background-color: rgba($secondary_color, 0.6);
-                }
-            }
-
-            &:active {
-                background-color: rgba($secondary_color, 0.8);
-            }
-        }
-
-        &.tertiary {
-            background-color: $tertiary_color;
-            color: white;
-
-            @media (hover: hover) {
-                &:hover {
-                    background-color: rgba($tertiary_color, 0.6);
-                }
-            }
-
-            &:active {
-                background-color: rgba($tertiary_color, 0.8);
-            }
-        }
-    }
-}
-
-.text-button {
-    cursor: default;
-    color: $x11_dark_gray_color;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.75em 1em;
-    border-radius: 1rem;
-
-    &.active {
-        cursor: pointer;
-
-        &.primary {
-            color: $primary_color;
-
-            @media (hover: hover) {
-                &:hover {
-                    color: rgba($primary_color, 0.6);
-                }
-            }
-
-            &:active {
-                color: rgba($primary_color, 0.8);
-            }
-        }
-
-        &.secondary {
-            color: $secondary_color;
-
-            @media (hover: hover) {
-                &:hover {
-                    color: rgba($secondary_color, 0.6);
-                }
-            }
-
-            &:active {
-                color: rgba($secondary_color, 0.8);
-            }
-        }
-
-        &.tertiary {
-            color: $tertiary_color;
-
-            @media (hover: hover) {
-                &:hover {
-                    color: rgba($tertiary_color, 0.6);
-                }
-            }
-
-            &:active {
-                color: rgba($tertiary_color, 0.8);
-            }
-        }
-    }
-}
-
 .bottom-sheet {
     > div:nth-child(2) {
         > div:nth-child(2) {
@@ -181,14 +66,8 @@
                     }
                 }
             }
-
-            button.text-button {
-            }
         }
     }
-}
-
-.list-button {
 }
 
 .splash-screen {

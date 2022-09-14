@@ -6,6 +6,7 @@ import { useNavigateContext } from "utils/navigate";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import ListButton from "components/button/ListButton";
 import { useAuthContext } from "utils/auth";
+import TextButton from "components/button/TextButton";
 
 const __TABS__ = [
     {
@@ -325,6 +326,7 @@ const Profile = () => {
                             <img
                                 src={userInfo?.profileThumbnailUrl}
                                 alt="profile thumbnail"
+                                loading="lazy"
                             />
                         </div>
                         <div ref={profileInfoRef} className="profile-info">
@@ -366,14 +368,14 @@ const Profile = () => {
                                 }`}
                                 ref={tabRefs[tab.key]}
                             >
-                                <button
-                                    className={`text-button active primary`}
+                                <TextButton
+                                    color="primary"
                                     onClick={() =>
                                         tab.onClick({ push: navigate.push })
                                     }
                                 >
                                     {t(tab.i18nKey)}
-                                </button>
+                                </TextButton>
                             </li>
                         ))}
                         <div

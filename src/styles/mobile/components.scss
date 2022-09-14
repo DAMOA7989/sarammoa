@@ -12,12 +12,7 @@
     > button.common-button {
         font-size: 1rem;
         position: absolute;
-        width: 6.25em;
-        height: 3.25em;
         bottom: 2.5em;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
     }
 
     > .bottom-navigation-container {
@@ -191,6 +186,153 @@
     }
 }
 
+.common-button {
+    cursor: default;
+    background-color: $x11_dark_gray_color;
+    padding: 0 1em;
+    height: 3.5em;
+    border-radius: 1em;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    > .ripple-effect {
+        position: absolute;
+        left: -1.75em;
+        top: -1.75em;
+        width: 3.5em;
+        height: 3.5em;
+        border-radius: 50%;
+        background-color: #eee;
+        opacity: 0;
+
+        &.active {
+            animation-name: ripple-effect-common-animation;
+            animation-duration: 0.5s;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+            animation-iteration-count: 1;
+
+            @keyframes ripple-effect-common-animation {
+                from {
+                    transform: scale(0);
+                    opacity: 0.5;
+                }
+
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        }
+    }
+
+    &.active {
+        cursor: pointer;
+
+        &.primary {
+            background-color: $primary_color;
+            color: white;
+
+            @media (hover: hover) {
+                &:hover {
+                    background-color: rgba($primary_color, 0.6);
+                }
+            }
+
+            &:active {
+                background-color: rgba($primary_color, 0.8);
+            }
+        }
+
+        &.secondary {
+            background-color: $secondary_color;
+            color: white;
+
+            @media (hover: hover) {
+                &:hover {
+                    background-color: rgba($secondary_color, 0.6);
+                }
+            }
+
+            &:active {
+                background-color: rgba($secondary_color, 0.8);
+            }
+        }
+
+        &.tertiary {
+            background-color: $tertiary_color;
+            color: white;
+
+            @media (hover: hover) {
+                &:hover {
+                    background-color: rgba($tertiary_color, 0.6);
+                }
+            }
+
+            &:active {
+                background-color: rgba($tertiary_color, 0.8);
+            }
+        }
+    }
+}
+
+.text-button {
+    cursor: default;
+    color: $x11_dark_gray_color;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.75em 1em;
+    border-radius: 1rem;
+
+    &.active {
+        cursor: pointer;
+
+        &.primary {
+            color: $primary_color;
+
+            @media (hover: hover) {
+                &:hover {
+                    color: rgba($primary_color, 0.6);
+                }
+            }
+
+            &:active {
+                color: rgba($primary_color, 0.8);
+            }
+        }
+
+        &.secondary {
+            color: $secondary_color;
+
+            @media (hover: hover) {
+                &:hover {
+                    color: rgba($secondary_color, 0.6);
+                }
+            }
+
+            &:active {
+                color: rgba($secondary_color, 0.8);
+            }
+        }
+
+        &.tertiary {
+            color: $tertiary_color;
+
+            @media (hover: hover) {
+                &:hover {
+                    color: rgba($tertiary_color, 0.6);
+                }
+            }
+
+            &:active {
+                color: rgba($tertiary_color, 0.8);
+            }
+        }
+    }
+}
+
 .list-button {
     position: relative;
     display: inline-flex;
@@ -214,13 +356,13 @@
         opacity: 0;
 
         &.active {
-            animation-name: ripple-effect-animation;
+            animation-name: ripple-effect-list-animation;
             animation-duration: 0.5s;
             animation-timing-function: linear;
             animation-fill-mode: forwards;
             animation-iteration-count: 1;
 
-            @keyframes ripple-effect-animation {
+            @keyframes ripple-effect-list-animation {
                 from {
                     transform: scale(0);
                     opacity: 0.5;

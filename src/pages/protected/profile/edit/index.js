@@ -143,6 +143,7 @@ const Edit = () => {
                     <img
                         src={profileThumbnailUrl || ""}
                         alt="profile thumbnail"
+                        loading="lazy"
                     />
                 </div>
                 <div className="form">
@@ -177,7 +178,7 @@ const Edit = () => {
                 <CommonButton
                     color="primary"
                     disabled={!canSubmit}
-                    isLoading={isLoading}
+                    loading={isLoading}
                     onClick={onSubmitHandler}
                 >
                     {t("btn.finish")}
