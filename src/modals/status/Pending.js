@@ -1,7 +1,7 @@
 import React from "react";
 
 const Pending = () => {
-    return <div className="modals-status-pending">pending...</div>;
+    return <main className="modals-status-pending">pending...</main>;
 };
 
 export default Pending;

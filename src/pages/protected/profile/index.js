@@ -1,12 +1,13 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import ListButton from "components/button/ListButton";
 import { useAuthContext } from "utils/auth";
 import TextButton from "components/button/TextButton";
+import { useModalContext } from "utils/modal";
 
 const __TABS__ = [
     {
@@ -56,8 +57,15 @@ const __EXPAND_BUTTONS__ = [
     {
         key: "share",
         i18nKey: "text.profile.expand.share",
-        onClick: ({ navigate }) => {
-            // navigate.push({});
+        onClick: ({ modal }) => {
+            modal.displayModal({
+                pathname: "profile/Share",
+                params: {},
+                options: {
+                    title: "title.profile.share",
+                    layout: "responsive",
+                },
+            });
         },
     },
 ];
@@ -67,6 +75,7 @@ const Profile = () => {
     const location = useLocation();
     const navigate = useNavigateContext();
     const { userInfo } = useAuthContext();
+    const modal = useModalContext();
     const [curTab, setCurTab] = React.useState(null);
     const [openExpand, setOpenExpand] = React.useState(false);
     const prevTouchPosition = React.useRef([0, 0]);
@@ -423,7 +432,7 @@ const Profile = () => {
                             className={button.key}
                             onClick={() => {
                                 setOpenExpand(false);
-                                button.onClick({ navigate });
+                                button.onClick({ navigate, modal });
                             }}
                         >
                             <span>{t(button.i18nKey)}</span>

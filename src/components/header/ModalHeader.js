@@ -4,7 +4,7 @@ import { useModalContext } from "utils/modal";
 
 const ModalHeader = () => {
     const { t } = useTranslation();
-    const { dismissModal } = useModalContext();
+    const { options, dismissModal } = useModalContext();
 
     return (
         <header className="modal-header">
@@ -13,6 +13,9 @@ const ModalHeader = () => {
                     className="dismiss-icon"
                     onClick={() => dismissModal()}
                 ></div>
+                {Boolean(options?.title) && (
+                    <span className="title">{t(options.title)}</span>
+                )}
             </div>
         </header>
     );

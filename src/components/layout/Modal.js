@@ -5,18 +5,64 @@ import ModalHeader from "components/header/ModalHeader";
 
 const Modal = () => {
     const { path, params, options, dismissModal } = useModalContext();
-    const [modalComponent, setModalComponent] = React.useState(null);
+    const [display, setDisplay] = React.useState(Boolean(path));
+    const modalContainerRef = React.useRef(null);
     const modalRef = React.useRef(null);
+    const timerRef = React.useRef(null);
+    const ModalComponentRef = React.useRef(null);
+    const optionsRef = React.useRef(options);
+    const optionsTimerRef = React.useRef(null);
 
     React.useEffect(() => {
-        if (!Boolean(path)) {
-            setTimeout(() => {
-                setModalComponent(null);
+        const eventHandler = (event) => {
+            if (!modalRef.current) return;
+            if (!modalRef.current.contains(event.target)) {
+                dismissModal();
+            }
+        };
+
+        window.document.addEventListener("click", eventHandler);
+
+        return () => {
+            window.document.removeEventListener("click", eventHandler);
+        };
+    }, []);
+
+    React.useEffect(() => {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+
+        if (path) {
+            setDisplay(true);
+            ModalComponentRef.current = require(`modals/${path}.js`).default;
+        } else {
+            timerRef.current = setTimeout(() => {
+                setDisplay(false);
+                ModalComponentRef.current = null;
             }, 200);
-            return;
         }
-        setModalComponent(require(`modals/${path}.js`).default);
     }, [path]);
+
+    React.useEffect(() => {
+        if (!modalRef.current) return;
+        modalRef.current.style.setProperty(
+            "--modal-height",
+            `${modalRef.current.children?.[1]?.offsetHeight + 60}px`
+        );
+    }, [display]);
+
+    React.useEffect(() => {
+        clearTimeout(optionsTimerRef.current);
+        optionsTimerRef.current = null;
+
+        if (options) {
+            optionsRef.current = options;
+        } else {
+            optionsTimerRef.current = setTimeout(() => {
+                optionsRef.current = null;
+            }, 200);
+        }
+    }, [options]);
 
     React.useEffect(() => {
         const rootElem = window.document.getElementById("root");
@@ -28,26 +74,21 @@ const Modal = () => {
     }, [path]);
 
     const el = document.getElementById("modal");
-    if (!modalComponent) {
+    if (!display) {
         return reactDom.createPortal(null, el);
     }
+    // const ModalComponent =
     return reactDom.createPortal(
-        <div className={`modal-container`}>
+        <div ref={modalContainerRef} className={`modal-container`}>
             <div
                 ref={modalRef}
                 className={`modal ${Boolean(path) ? "display" : "dismiss"} ${
                     options?.hasButton ? "has-button" : ""
-                }`}
+                } ${optionsRef.current?.layout}`}
             >
                 <>
                     <ModalHeader />
-                    {React.cloneElement(
-                        modalComponent,
-                        {
-                            params,
-                        },
-                        null
-                    )}
+                    <ModalComponentRef.current {...params} />
                 </>
             </div>
         </div>,

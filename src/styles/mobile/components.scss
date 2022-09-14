@@ -196,6 +196,13 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    position: relative;
+    font-size: 0.875rem;
+
+    > svg {
+        position: absolute;
+        left: 1em;
+    }
 
     > .ripple-effect {
         position: absolute;
@@ -273,6 +280,38 @@
 
             &:active {
                 background-color: rgba($tertiary_color, 0.8);
+            }
+        }
+    }
+
+    &.contrast {
+        &.active {
+            background-color: $contrast_button_background_color;
+
+            > .ripple-effect {
+                background-color: $primary_color;
+            }
+
+            &.dark_gray {
+                color: $gunmetal_color;
+
+                @media (hover: hover) {
+                    &:hover {
+                        color: rgba($gunmetal_color, 0.6);
+                        background-color: rgba(
+                            $contrast_button_background_color,
+                            0.6
+                        );
+                    }
+                }
+
+                &:active {
+                    color: rgba($gunmetal_color, 0.8);
+                    background-color: rgba(
+                        $contrast_button_background_color,
+                        0.8
+                    );
+                }
             }
         }
     }

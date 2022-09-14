@@ -8,8 +8,8 @@ export const ModalProvider = ({ children }) => {
     const [options, setOptions] = React.useState(null);
 
     const displayModal = React.useCallback(
-        ({ path: _path, params: _params, options: _options }) => {
-            setPath(_path);
+        ({ pathname: _pathname, params: _params, options: _options }) => {
+            setPath(_pathname);
             setParams(_params);
             setOptions(_options);
         },

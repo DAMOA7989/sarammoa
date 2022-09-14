@@ -8,6 +8,8 @@ const CommonButton = ({
     onClick,
     disabled,
     loading,
+    type,
+    icon,
 }) => {
     const timerRef = React.useRef(null);
     const buttonRef = React.useRef(null);
@@ -48,11 +50,12 @@ const CommonButton = ({
     return (
         <button
             ref={buttonRef}
-            className={`common-button ${color} ${
+            className={`common-button ${type} ${color} ${
                 !disabled && "active"
             } ${className}`}
             onClick={disabled ? null : onClick}
         >
+            {icon && icon}
             {loading ? <CircularProgress color="black" size={20} /> : children}
             <div ref={rippleEffectRef} className="ripple-effect" />
         </button>

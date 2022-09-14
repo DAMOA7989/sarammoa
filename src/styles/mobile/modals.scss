@@ -7,7 +7,8 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    // background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
 
     > .modal {
         width: 100%;
@@ -15,33 +16,67 @@
         background-color: white;
         animation-duration: 0.2s;
         animation-timing-function: ease-in;
+        animation-fill-mode: forwards;
+        --modal-height: 60px;
 
         &.display {
-            animation-name: popup;
+            animation-name: popup-full;
+
+            @keyframes popup-full {
+                from {
+                    transform: translateY(100%);
+                }
+
+                to {
+                    transform: translateY(0);
+                }
+            }
         }
 
         &.dismiss {
-            animation-name: popdown;
-            animation-fill-mode: forwards;
+            animation-name: popdown-full;
+
+            @keyframes popdown-full {
+                from {
+                    transform: translateY(0);
+                }
+
+                to {
+                    transform: translateY(100%);
+                }
+            }
         }
 
-        @keyframes popup {
-            from {
-                transform: translateY(100%);
+        &.responsive {
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+
+            &.display {
+                animation-name: popup-responsive;
+
+                @keyframes popup-responsive {
+                    from {
+                        transform: translateY(100%);
+                    }
+
+                    to {
+                        transform: translateY(calc(100% - var(--modal-height)));
+                    }
+                }
             }
 
-            to {
-                transform: translateY(0);
-            }
-        }
+            &.dismiss {
+                animation-name: popdown-responsive;
 
-        @keyframes popdown {
-            from {
-                transform: translateY(0);
-            }
+                @keyframes popdown-responsive {
+                    from {
+                        transform: translateY(calc(100% - var(--modal-height)));
+                    }
 
-            to {
-                transform: translateY(100%);
+                    to {
+                        transform: translateY(100%);
+                    }
+                }
             }
         }
 
@@ -57,6 +92,7 @@
                 width: 100%;
                 box-sizing: border-box;
                 box-shadow: $header_box_shadow;
+                gap: 1.25em;
 
                 > .dismiss-icon {
                     width: 28px;
@@ -76,7 +112,17 @@
                         background-color: $gunmetal_color;
                     }
                 }
+
+                > .title {
+                    font-size: 1.25rem;
+                    font-weight: 400;
+                }
             }
+        }
+
+        > main {
+            width: 100%;
+            // height: calc(100% - 60px);
         }
     }
 }
@@ -85,4 +131,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.modals-profile-share {
+    > .container {
+        width: 100%;
+        // height: 100%;
+        padding: 2.5em 1.25em;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        gap: 0.75em;
+    }
 }
