@@ -45,11 +45,15 @@ const Modal = () => {
 
     React.useEffect(() => {
         if (!modalRef.current) return;
+
         modalRef.current.style.setProperty(
             "--modal-height",
-            `${modalRef.current.children?.[1]?.offsetHeight + 60}px`
+            `${
+                modalRef.current.offsetHeight -
+                (modalRef.current.children?.[1]?.offsetHeight + 60)
+            }px`
         );
-    }, [display]);
+    }, [modalRef.current, display]);
 
     React.useEffect(() => {
         clearTimeout(optionsTimerRef.current);

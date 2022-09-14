@@ -17,7 +17,7 @@
         animation-duration: 0.2s;
         animation-timing-function: ease-in;
         animation-fill-mode: forwards;
-        --modal-height: 60px;
+        --modal-height: 50%;
 
         &.display {
             animation-name: popup-full;
@@ -60,7 +60,7 @@
                     }
 
                     to {
-                        transform: translateY(calc(100% - var(--modal-height)));
+                        transform: translateY(var(--modal-height));
                     }
                 }
             }
@@ -70,7 +70,7 @@
 
                 @keyframes popdown-responsive {
                     from {
-                        transform: translateY(calc(100% - var(--modal-height)));
+                        transform: translateY(var(--modal-height));
                     }
 
                     to {
