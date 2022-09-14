@@ -29,11 +29,11 @@ const __TABS__ = [
         },
     },
     {
-        key: "etc",
-        i18nKey: "tab.profile.etc",
+        key: "scrap",
+        i18nKey: "tab.profile.scrap",
         onClick: ({ push }) => {
             push({
-                pathname: "/profile/etc",
+                pathname: "/profile/scrap",
                 mode: "main",
             });
         },
@@ -73,7 +73,7 @@ const Profile = () => {
     const tabRefs = {
         history: React.useRef(null),
         information: React.useRef(null),
-        etc: React.useRef(null),
+        scrap: React.useRef(null),
     };
     const originalProfileSizeRef = React.useRef([0, 0]);
     const originalProfileInfoSizeRef = React.useRef([0, 0]);
@@ -285,8 +285,8 @@ const Profile = () => {
             case "information":
                 setCurTab("information");
                 break;
-            case "etc":
-                setCurTab("etc");
+            case "scrap":
+                setCurTab("scrap");
                 break;
             default:
                 setCurTab("history");
@@ -380,10 +380,28 @@ const Profile = () => {
                             className="indicator"
                             style={{
                                 width:
-                                    `${
-                                        tabRefs?.[curTab]?.current
-                                            ?.offsetWidth * 0.0625
-                                    }em` || "0em",
+                                    `${tabRefs?.[curTab]?.current?.offsetWidth}px` ||
+                                    "0",
+                                transform: `translateX(calc(${Object.values(
+                                    tabRefs
+                                )
+                                    .slice(
+                                        0,
+                                        Object.values(__TABS__).findIndex(
+                                            (x) => x.key === curTab
+                                        )
+                                    )
+                                    .reduce(
+                                        (previousValue, currentValue) =>
+                                            previousValue +
+                                            currentValue.current.offsetWidth,
+                                        0
+                                    )}px + ${
+                                    2 *
+                                    Object.values(__TABS__).findIndex(
+                                        (x) => x.key === curTab
+                                    )
+                                }em))`,
                             }}
                         />
                     </ul>
@@ -392,7 +410,7 @@ const Profile = () => {
             </div>
             <BottomSheet
                 open={openExpand}
-                header={<div>{t("title.profile.expand")}</div>}
+                header={<div></div>}
                 onDismiss={() => setOpenExpand(false)}
             >
                 <div className="bottom-sheet expand">

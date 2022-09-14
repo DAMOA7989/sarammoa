@@ -7,7 +7,7 @@ export { default as Notice } from "./protected/notice";
 export { default as Profile } from "./protected/profile";
 export { default as ProfileHistory } from "./protected/profile/history";
 export { default as ProfileInformation } from "./protected/profile/information";
-export { default as ProfileEtc } from "./protected/profile/etc";
+export { default as ProfileScrap } from "./protected/profile/scrap";
 export { default as ProfileSetup } from "./protected/profile/setup";
 export { default as ProfileEdit } from "./protected/profile/edit";
 

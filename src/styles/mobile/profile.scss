@@ -239,15 +239,15 @@
                 }
 
                 li:nth-child(1).selected ~ .indicator {
-                    transform: translateX(calc(100% * 0 + 2em * 0));
+                    // transform: translateX(calc(100% * 0 + 2em * 0));
                 }
 
                 li:nth-child(2).selected ~ .indicator {
-                    transform: translateX(calc(100% * 1 + 2em * 1));
+                    // transform: translateX(calc(100% * 1 + 2em * 1));
                 }
 
                 li:nth-child(3).selected ~ .indicator {
-                    transform: translateX(calc(100% * 2 + 2em * 2));
+                    // transform: translateX(calc(100% * 2 + 2em * 2));
                 }
 
                 > .indicator {
@@ -286,6 +286,7 @@
         align-items: center;
         padding: 2.5em 1.25em;
         width: 100%;
+        background-color: white;
 
         > .profile-thumbnail {
             cursor: pointer;

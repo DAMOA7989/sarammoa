@@ -14,7 +14,7 @@ const CommonButton = ({
             className={`common-button ${color} ${
                 !disabled && "active"
             } ${className}`}
-            onClick={onClick}
+            onClick={disabled ? null : onClick}
         >
             {isLoading ? (
                 <CircularProgress color="black" size={20} />

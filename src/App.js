@@ -7,7 +7,7 @@ import {
     Profile,
     ProfileHistory,
     ProfileInformation,
-    ProfileEtc,
+    ProfileScrap,
     ProfileSetup,
     ProfileEdit,
     Support,
@@ -66,7 +66,7 @@ const App = () => {
                                 path="information"
                                 element={<ProfileInformation />}
                             />
-                            <Route path="etc" element={<ProfileEtc />} />
+                            <Route path="scrap" element={<ProfileScrap />} />
                         </Route>
                     </Route>
                 </Route>
