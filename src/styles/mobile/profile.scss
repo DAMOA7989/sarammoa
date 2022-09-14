@@ -87,9 +87,13 @@
                     justify-content: center;
                     align-items: center;
                     box-shadow: $profile_thumbnail_box_shadow;
-                    background-size: cover;
-                    background-position: center;
                     transition: top 1s, left 1s;
+
+                    > img {
+                        width: 7.5em;
+                        height: 7.5em;
+                        object-fit: cover;
+                    }
                 }
 
                 > .profile-info {

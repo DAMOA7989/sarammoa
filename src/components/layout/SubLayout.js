@@ -8,12 +8,10 @@ const SubLayout = () => {
     const { isRouting } = useNavigateContext();
 
     return (
-        <CSSTransition timeout={300} in={isRouting} classNames={"sub"}>
-            <>
-                <SubHeader />
-                <Outlet />
-            </>
-        </CSSTransition>
+        <div className="sub-layout">
+            <SubHeader />
+            <Outlet />
+        </div>
     );
 };
 

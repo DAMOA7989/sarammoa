@@ -99,7 +99,7 @@ const Profile = () => {
         };
 
         const processTouchmove = (event) => {
-            event.preventDefault();
+            // event.preventDefault();
             const touch = event.touches?.[0] || event.changedTouches?.[0];
             if (!infoRef.current.contains(event.target)) return;
             setTouchPosition([touch.clientX, touch.clientY]);
@@ -321,10 +321,12 @@ const Profile = () => {
                         <div
                             ref={profileThumbnailRef}
                             className="profile-thumbnail"
-                            style={{
-                                backgroundImage: `url('${userInfo?.profileThumbnailUrl}')`,
-                            }}
-                        ></div>
+                        >
+                            <img
+                                src={userInfo?.profileThumbnailUrl}
+                                alt="profile thumbnail"
+                            />
+                        </div>
                         <div ref={profileInfoRef} className="profile-info">
                             <span className="name">
                                 {userInfo?.nickname || "loading"}
