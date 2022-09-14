@@ -13,11 +13,11 @@ const __ROWS__ = [
                 i18nKey: "text.setup.notice",
                 onClick: () => {},
             },
-            {
-                key: "clear_cache",
-                i18nKey: "text.setup.clear_cache",
-                onClick: () => {},
-            },
+            // {
+            //     key: "clear_cache",
+            //     i18nKey: "text.setup.clear_cache",
+            //     onClick: () => {},
+            // },
         ],
     },
     {
@@ -64,7 +64,9 @@ const __ROWS__ = [
             {
                 key: "bug_report",
                 i18nKey: "text.setup.bug_report",
-                onClick: () => {},
+                onClick: () => {
+                    window.location.href = "mailto:yoondev3434@gmail.com";
+                },
             },
             {
                 key: "sign_out",
