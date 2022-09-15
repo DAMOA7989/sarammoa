@@ -38,9 +38,7 @@ const __AVAILABLE_ITEMS__ = [
                 app_name: t("app_name"),
                 user_name: userInfo?.fullname,
                 profile_url:
-                    process.env.REACT_APP_HOST_URL +
-                    "/user/" +
-                    userInfo.nickname,
+                    process.env.REACT_APP_HOST_URL + "/user/" + userInfo.id,
             })}`;
         },
     },
@@ -65,19 +63,13 @@ const __AVAILABLE_ITEMS__ = [
                     app_name: t("app_name"),
                     user_name: userInfo?.fullname,
                     profile_url:
-                        process.env.REACT_APP_HOST_URL +
-                        "/user/" +
-                        userInfo.nickname,
+                        process.env.REACT_APP_HOST_URL + "/user/" + userInfo.id,
                 })}`,
                 link: {
                     mobileWebUrl:
-                        process.env.REACT_APP_HOST_URL +
-                        "/user/" +
-                        userInfo.nickname,
+                        process.env.REACT_APP_HOST_URL + "/user/" + userInfo.id,
                     webUrl:
-                        process.env.REACT_APP_HOST_URL +
-                        "/user/" +
-                        userInfo.nickname,
+                        process.env.REACT_APP_HOST_URL + "/user/" + userInfo.id,
                 },
             });
         },
