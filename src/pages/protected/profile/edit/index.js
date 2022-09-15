@@ -3,15 +3,17 @@ import WoilonnInput from "components/input/WoilonnInput";
 import { useTranslation } from "react-i18next";
 import CommonButton from "components/button/CommonButton";
 import { BottomSheet } from "react-spring-bottom-sheet";
-import ListButton from "components/button/ListButton";
 import { useAuthContext } from "utils/auth";
 import { _setUserInfo, _uploadProfileThumbnail } from "utils/firebase/auth";
 import { useNavigateContext } from "utils/navigate";
+import { ReactComponent as PhotoIcon } from "assets/images/icons/profile/edit/photo.svg";
+import { ReactComponent as TrashIcon } from "assets/images/icons/profile/edit/trash.svg";
 
 const __PROFILE_THUMBNAIL_BUTTONS__ = [
     {
         key: "upload",
         i18nKey: "btn.profile.edit.profile_thumbnail.upload",
+        icon: <PhotoIcon />,
         onClick: ({ inputFileRef }) => {
             inputFileRef.current.click();
         },
@@ -19,6 +21,7 @@ const __PROFILE_THUMBNAIL_BUTTONS__ = [
     {
         key: "delete",
         i18nKey: "btn.profile.edit.profile_thumbnail.delete",
+        icon: <TrashIcon />,
         onClick: () => {},
     },
 ];
@@ -132,8 +135,8 @@ const Edit = () => {
     };
 
     return (
-        <main className="pages-protected-profile-edit">
-            <div className="container">
+        <>
+            <main className="pages-protected-profile-edit">
                 <div
                     className="profile-thumbnail"
                     onClick={() =>
@@ -183,23 +186,25 @@ const Edit = () => {
                 >
                     {t("btn.finish")}
                 </CommonButton>
-            </div>
+            </main>
             <BottomSheet
                 open={openProfileThumbnail}
                 header={<div></div>}
                 onDismiss={() => setOpenProfileThumbnail(false)}
             >
-                <div>
+                <div className="bottom-sheet edit-profile-thumbnail">
                     {__PROFILE_THUMBNAIL_BUTTONS__.map((button) => (
-                        <ListButton
+                        <CommonButton
                             key={button.key}
+                            type="contrast"
                             onClick={() => {
                                 button.onClick({ inputFileRef });
                                 // setOpenProfileThumbnail(false);
                             }}
+                            icon={button.icon}
                         >
                             {t(button.i18nKey)}
-                        </ListButton>
+                        </CommonButton>
                     ))}
                     <input
                         ref={inputFileRef}
@@ -210,7 +215,7 @@ const Edit = () => {
                     />
                 </div>
             </BottomSheet>
-        </main>
+        </>
     );
 };
 

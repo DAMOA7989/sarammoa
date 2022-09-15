@@ -10,7 +10,6 @@
     &.bottom-navigation {
         .bottom-sheet-body {
             display: flex;
-            height: calc(60vh - 3.875em);
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
@@ -67,6 +66,13 @@
                 }
             }
         }
+    }
+
+    &.edit-profile-thumbnail {
+        display: flex;
+        flex-direction: column;
+        padding: 1.25em;
+        gap: 12px;
     }
 }
 
