@@ -8,6 +8,7 @@ import { copyText } from "utils/string";
 import { toast } from "react-toastify";
 import { useModalContext } from "utils/modal";
 import { useAuthContext } from "utils/auth";
+import { CircularProgress } from "@mui/material";
 
 const __AVAILABLE_ITEMS__ = [
     {
@@ -45,7 +46,39 @@ const __AVAILABLE_ITEMS__ = [
         key: "kakaotalk",
         i18nKey: "title.profile.share.kakaotalk",
         icon: <KakaotalkIcon />,
-        onClick: ({ t, userInfo }) => {},
+        onClick: ({ t, userInfo }) => {
+            const kakao = window.Kakao;
+            if (!kakao) return;
+
+            if (!kakao.isInitialized()) {
+                kakao.init(process.env.REACT_APP_KAKAO_APP_JAVASCRIPT_KEY);
+            }
+            if (!kakao.isInitialized()) {
+                return;
+            }
+
+            kakao.Share.sendDefault({
+                objectType: "text",
+                text: `${t("text.profile.share.email", {
+                    app_name: t("app_name"),
+                    user_name: userInfo?.fullname,
+                    profile_url:
+                        process.env.REACT_APP_HOST_URL +
+                        "/" +
+                        userInfo.nickname,
+                })}`,
+                link: {
+                    mobileWebUrl:
+                        process.env.REACT_APP_HOST_URL +
+                        "/" +
+                        userInfo.nickname,
+                    webUrl:
+                        process.env.REACT_APP_HOST_URL +
+                        "/" +
+                        userInfo.nickname,
+                },
+            });
+        },
     },
 ];
 
@@ -53,8 +86,20 @@ const Share = ({}) => {
     const { t } = useTranslation();
     const { dismissModal } = useModalContext();
     const { userInfo } = useAuthContext();
+    const [isLoading, setIsLoading] = React.useState(false);
 
-    console.log("d userInfo", userInfo);
+    React.useEffect(() => {
+        setIsLoading(true);
+        const script = window.document.createElement("script");
+        script.src = "https://developers.kakao.com/sdk/js/kakao.js";
+        script.async = true;
+        window.document.body.appendChild(script);
+
+        script.onload = () => {
+            setIsLoading(false);
+        };
+        return () => window.document.body.removeChild(script);
+    }, []);
 
     return (
         <main className="modals-profile-share">
