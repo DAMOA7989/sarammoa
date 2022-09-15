@@ -12,6 +12,8 @@ import {
     ProfileEdit,
     Support,
     Newsfeed,
+    User,
+    UserDetail,
     SplashScreen,
 } from "pages";
 import MainLayout from "components/layout/MainLayout";
@@ -52,6 +54,9 @@ const App = () => {
             <Routes location={location}>
                 <Route path="/" element={<MainLayout />}>
                     <Route index element={<Newsfeed />} />
+                    <Route path="user" element={<User />}>
+                        <Route path=":uid" element={<UserDetail />} />
+                    </Route>
                     <Route
                         element={
                             <RequireAuth>

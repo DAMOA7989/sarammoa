@@ -15,4 +15,7 @@ export { default as Support } from "./protected/support";
 
 export { default as Newsfeed } from "./public/newsfeed";
 
+export { default as User } from "./public/user";
+export { default as UserDetail } from "./public/user/detail";
+
 export { default as SplashScreen } from "./public/splash";

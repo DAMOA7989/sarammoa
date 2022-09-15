@@ -38,7 +38,9 @@ const __AVAILABLE_ITEMS__ = [
                 app_name: t("app_name"),
                 user_name: userInfo?.fullname,
                 profile_url:
-                    process.env.REACT_APP_HOST_URL + "/" + userInfo.nickname,
+                    process.env.REACT_APP_HOST_URL +
+                    "/user/" +
+                    userInfo.nickname,
             })}`;
         },
     },
@@ -64,17 +66,17 @@ const __AVAILABLE_ITEMS__ = [
                     user_name: userInfo?.fullname,
                     profile_url:
                         process.env.REACT_APP_HOST_URL +
-                        "/" +
+                        "/user/" +
                         userInfo.nickname,
                 })}`,
                 link: {
                     mobileWebUrl:
                         process.env.REACT_APP_HOST_URL +
-                        "/" +
+                        "/user/" +
                         userInfo.nickname,
                     webUrl:
                         process.env.REACT_APP_HOST_URL +
-                        "/" +
+                        "/user/" +
                         userInfo.nickname,
                 },
             });
