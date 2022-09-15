@@ -456,3 +456,39 @@
         }
     }
 }
+
+.woilonn-checkbox {
+    position: relative;
+    display: inline-flex;
+    width: 2.5em;
+    height: 1.5em;
+    border-radius: 0.75em;
+    transition: background-color 0.15s linear;
+
+    > .checkmark {
+        position: absolute;
+        width: 1em;
+        height: 1em;
+        background-color: white;
+        border-radius: 50%;
+        left: calc(50% - 0.5em);
+        top: calc(50% - 0.5em);
+        transition: transform 0.15s linear;
+    }
+
+    &.inactive {
+        background-color: $link_water_color;
+
+        > .checkmark {
+            transform: translateX(-0.5em);
+        }
+    }
+
+    &.active {
+        background-color: $primary_color;
+
+        > .checkmark {
+            transform: translateX(0.5em);
+        }
+    }
+}

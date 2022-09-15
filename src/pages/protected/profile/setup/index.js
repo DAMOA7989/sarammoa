@@ -2,16 +2,27 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthContext } from "utils/auth";
 import ListButton from "components/button/ListButton";
+import WoilonnCheckbox from "components/input/WoilonnCheckbox";
 
 const __ROWS__ = [
     {
         key: "general",
         title: "title.setup.general",
         cols: [
+            // {
+            //     key: "notice",
+            //     i18nKey: "text.setup.notice",
+            //     onClick: () => {},
+            // },
             {
-                key: "notice",
-                i18nKey: "text.setup.notice",
-                onClick: () => {},
+                key: "push_notice",
+                i18nKey: "text.setup.push_notice",
+                right: ({ checkedPushNotice }) => (
+                    <WoilonnCheckbox value={checkedPushNotice} />
+                ),
+                onClick: ({ checkedPushNotice, setCheckedPushNotice }) => {
+                    setCheckedPushNotice(!checkedPushNotice);
+                },
             },
             // {
             //     key: "clear_cache",
@@ -27,7 +38,15 @@ const __ROWS__ = [
             {
                 key: "send_usage_information",
                 i18nKey: "text.setup.send_usage_information",
-                onClick: () => {},
+                right: ({ checkedUsageInformation }) => (
+                    <WoilonnCheckbox value={checkedUsageInformation} />
+                ),
+                onClick: ({
+                    checkedUsageInformation,
+                    setCheckedUsageInformation,
+                }) => {
+                    setCheckedUsageInformation(!checkedUsageInformation);
+                },
             },
         ],
     },
@@ -82,6 +101,9 @@ const __ROWS__ = [
 const Setup = () => {
     const { t } = useTranslation();
     const { signOut } = useAuthContext();
+    const [checkedUsageInformation, setCheckedUsageInformation] =
+        React.useState(true);
+    const [checkedPushNotice, setCheckedPushNotice] = React.useState(true);
 
     return (
         <main className="pages-protected-profile-setup">
@@ -93,9 +115,22 @@ const Setup = () => {
                             <ListButton
                                 key={col.key}
                                 className={`${col.key} list-button`}
-                                onClick={() => col.onClick({ signOut })}
+                                onClick={() =>
+                                    col.onClick({
+                                        signOut,
+                                        checkedUsageInformation,
+                                        setCheckedUsageInformation,
+                                        checkedPushNotice,
+                                        setCheckedPushNotice,
+                                    })
+                                }
                             >
                                 <span>{t(col.i18nKey)}</span>
+                                {col.right &&
+                                    col.right({
+                                        checkedUsageInformation,
+                                        checkedPushNotice,
+                                    })}
                             </ListButton>
                         ))}
                     </section>
