@@ -4,10 +4,12 @@ import { Outlet, useLocation } from "react-router-dom";
 import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
 import { BottomSheet } from "react-spring-bottom-sheet";
-import ListButton from "components/button/ListButton";
 import { useAuthContext } from "utils/auth";
 import TextButton from "components/button/TextButton";
+import CommonButton from "components/button/CommonButton";
 import { useModalContext } from "utils/modal";
+import { ReactComponent as EditIcon } from "assets/images/icons/profile/edit.svg";
+import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
 
 const __TABS__ = [
     {
@@ -46,6 +48,7 @@ const __EXPAND_BUTTONS__ = [
     {
         key: "edit_profile",
         i18nKey: "text.profile.expand.edit_profile",
+        icon: <EditIcon />,
         onClick: ({ navigate }) => {
             navigate.push({
                 pathname: "/profile/edit",
@@ -57,6 +60,7 @@ const __EXPAND_BUTTONS__ = [
     {
         key: "share",
         i18nKey: "text.profile.expand.share",
+        icon: <ShareIcon />,
         onClick: ({ modal }) => {
             modal.displayModal({
                 pathname: "profile/Share",
@@ -305,121 +309,126 @@ const Profile = () => {
     }, [location.pathname]);
 
     return (
-        <main className="pages-protected-profile">
-            <div ref={profileWrapRef} className="profile-wrap">
-                <header>
-                    <div
-                        className="gear-icon"
-                        onClick={() => {
-                            navigate.push({
-                                pathname: "/profile/setup",
-                                mode: "sub",
-                                screenTitle: "title.screen.setup",
-                            });
-                        }}
-                    ></div>
-                    <div
-                        className="dots-vertical-icon"
-                        onClick={() => setOpenExpand(!openExpand)}
-                    ></div>
-                </header>
-                <div ref={profileRef} className="profile">
-                    <div
-                        ref={profileContainerRef}
-                        className="profile-container"
-                    >
+        <>
+            <main className="pages-protected-profile">
+                <div ref={profileWrapRef} className="profile-wrap">
+                    <header>
                         <div
-                            ref={profileThumbnailRef}
-                            className="profile-thumbnail"
+                            className="gear-icon"
+                            onClick={() => {
+                                navigate.push({
+                                    pathname: "/profile/setup",
+                                    mode: "sub",
+                                    screenTitle: "title.screen.setup",
+                                });
+                            }}
+                        ></div>
+                        <div
+                            className="dots-vertical-icon"
+                            onClick={() => setOpenExpand(!openExpand)}
+                        ></div>
+                    </header>
+                    <div ref={profileRef} className="profile">
+                        <div
+                            ref={profileContainerRef}
+                            className="profile-container"
                         >
-                            <img
-                                src={userInfo?.profileThumbnailUrl}
-                                alt="profile thumbnail"
-                                loading="lazy"
-                            />
-                        </div>
-                        <div ref={profileInfoRef} className="profile-info">
-                            <span className="name">
-                                {userInfo?.nickname || "loading"}
-                            </span>
-                            <span className="position">
-                                {userInfo?.position || "loading"}
-                            </span>
-                            <div className="counts">
-                                <div className="thumb-up">
-                                    <div className="icon" />
-                                    <span className="count">0</span>
-                                </div>
-                                <div className="follow-to">
-                                    <div className="icon" />
-                                    <span className="count">0</span>
-                                </div>
-                                <div className="follow-from">
-                                    <div className="icon" />
-                                    <span className="count">0</span>
+                            <div
+                                ref={profileThumbnailRef}
+                                className="profile-thumbnail"
+                            >
+                                <img
+                                    src={userInfo?.profileThumbnailUrl}
+                                    alt="profile thumbnail"
+                                    loading="lazy"
+                                />
+                            </div>
+                            <div ref={profileInfoRef} className="profile-info">
+                                <span className="name">
+                                    {userInfo?.nickname || "loading"}
+                                </span>
+                                <span className="position">
+                                    {userInfo?.position || "loading"}
+                                </span>
+                                <div className="counts">
+                                    <div className="thumb-up">
+                                        <div className="icon" />
+                                        <span className="count">0</span>
+                                    </div>
+                                    <div className="follow-to">
+                                        <div className="icon" />
+                                        <span className="count">0</span>
+                                    </div>
+                                    <div className="follow-from">
+                                        <div className="icon" />
+                                        <span className="count">0</span>
+                                    </div>
                                 </div>
                             </div>
+                            <span
+                                ref={profileSmallNameRef}
+                                className="name-small"
+                            >
+                                {userInfo?.nickname || "loading"}
+                            </span>
                         </div>
-                        <span ref={profileSmallNameRef} className="name-small">
-                            {userInfo?.nickname || "loading"}
-                        </span>
                     </div>
                 </div>
-            </div>
-            <div ref={infoRef} className="info">
-                <nav ref={profileInfoNavRef} className="tabs">
-                    <ul>
-                        {__TABS__.map((tab) => (
-                            <li
-                                key={tab.key}
-                                className={`${
-                                    curTab === tab.key && "selected"
-                                }`}
-                                ref={tabRefs[tab.key]}
-                            >
-                                <TextButton
-                                    color="primary"
-                                    onClick={() =>
-                                        tab.onClick({ push: navigate.push })
-                                    }
+                <div ref={infoRef} className="info">
+                    <nav ref={profileInfoNavRef} className="tabs">
+                        <ul>
+                            {__TABS__.map((tab) => (
+                                <li
+                                    key={tab.key}
+                                    className={`${
+                                        curTab === tab.key && "selected"
+                                    }`}
+                                    ref={tabRefs[tab.key]}
                                 >
-                                    {t(tab.i18nKey)}
-                                </TextButton>
-                            </li>
-                        ))}
-                        <div
-                            className="indicator"
-                            style={{
-                                width:
-                                    `${tabRefs?.[curTab]?.current?.offsetWidth}px` ||
-                                    "0",
-                                transform: `translateX(calc(${Object.values(
-                                    tabRefs
-                                )
-                                    .slice(
-                                        0,
+                                    <TextButton
+                                        color="primary"
+                                        onClick={() =>
+                                            tab.onClick({ push: navigate.push })
+                                        }
+                                    >
+                                        {t(tab.i18nKey)}
+                                    </TextButton>
+                                </li>
+                            ))}
+                            <div
+                                className="indicator"
+                                style={{
+                                    width:
+                                        `${tabRefs?.[curTab]?.current?.offsetWidth}px` ||
+                                        "0",
+                                    transform: `translateX(calc(${Object.values(
+                                        tabRefs
+                                    )
+                                        .slice(
+                                            0,
+                                            Object.values(__TABS__).findIndex(
+                                                (x) => x.key === curTab
+                                            )
+                                        )
+                                        .reduce(
+                                            (previousValue, currentValue) =>
+                                                previousValue +
+                                                    currentValue.current
+                                                        ?.offsetWidth || 0,
+                                            0
+                                        )}px + ${
+                                        2 *
                                         Object.values(__TABS__).findIndex(
                                             (x) => x.key === curTab
                                         )
-                                    )
-                                    .reduce(
-                                        (previousValue, currentValue) =>
-                                            previousValue +
-                                                currentValue.current
-                                                    ?.offsetWidth || 0,
-                                        0
-                                    )}px + ${
-                                    2 *
-                                    Object.values(__TABS__).findIndex(
-                                        (x) => x.key === curTab
-                                    )
-                                }em))`,
-                            }}
-                        />
-                    </ul>
-                </nav>
-                <Outlet />
-            </div>
+                                    }em))`,
+                                }}
+                            />
+                        </ul>
+                    </nav>
+                    <Outlet />
+                </div>
+            </main>
             <BottomSheet
                 open={openExpand}
                 header={<div></div>}
@@ -427,8 +436,10 @@ const Profile = () => {
             >
                 <div className="bottom-sheet expand">
                     {__EXPAND_BUTTONS__.map((button) => (
-                        <ListButton
+                        <CommonButton
                             key={button.key}
+                            type="contrast"
+                            icon={button.icon}
                             className={button.key}
                             onClick={() => {
                                 setOpenExpand(false);
@@ -436,11 +447,11 @@ const Profile = () => {
                             }}
                         >
                             <span>{t(button.i18nKey)}</span>
-                        </ListButton>
+                        </CommonButton>
                     ))}
                 </div>
             </BottomSheet>
-        </main>
+        </>
     );
 };
 
