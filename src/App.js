@@ -24,6 +24,8 @@ import { useAuthContext } from "utils/auth";
 import Modal from "components/layout/Modal";
 import Pending from "components/layout/Pending";
 import { useStatusContext } from "utils/status";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
     const { init, user } = useAuthContext();
@@ -87,6 +89,17 @@ const App = () => {
             </Routes>
             <Modal />
             <Pending />
+            <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick={true}
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable={true}
+                pauseOnHover={true}
+            />
         </>
     );
 };

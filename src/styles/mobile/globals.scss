@@ -25,3 +25,30 @@
     align-items: center;
     background-color: rgba(0, 0, 0, 0.2);
 }
+
+.Toastify {
+    .Toastify__toast-container {
+        position: absolute;
+        bottom: 5.625em;
+
+        .Toastify__toast {
+            border-radius: 8px;
+            border: 2px solid $secondary_color;
+            margin: 0 1.25em 0.75em 1.25em;
+            padding: 1em;
+
+            .Toastify__toast-body {
+                padding: 0;
+
+                > div {
+                    font-size: 14px;
+                    color: $gunmetal_color;
+                }
+            }
+
+            button.Toastify__close-button {
+                display: none;
+            }
+        }
+    }
+}
