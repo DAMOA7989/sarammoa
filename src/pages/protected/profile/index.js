@@ -10,6 +10,7 @@ import CommonButton from "components/button/CommonButton";
 import { useModalContext } from "utils/modal";
 import { ReactComponent as EditIcon } from "assets/images/icons/profile/edit.svg";
 import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
+import { Skeleton } from "@mui/material";
 
 const __TABS__ = [
     {
@@ -337,18 +338,42 @@ const Profile = () => {
                                 ref={profileThumbnailRef}
                                 className="profile-thumbnail"
                             >
-                                <img
-                                    src={userInfo?.profileThumbnailUrl}
-                                    alt="profile thumbnail"
-                                    loading="lazy"
-                                />
+                                {userInfo?.profileThumbnailUrl ? (
+                                    <img
+                                        src={userInfo?.profileThumbnailUrl}
+                                        alt="profile thumbnail"
+                                        loading="lazy"
+                                    />
+                                ) : (
+                                    <Skeleton
+                                        variant="rectangular"
+                                        width={120}
+                                        height={120}
+                                    />
+                                )}
                             </div>
                             <div ref={profileInfoRef} className="profile-info">
                                 <span className="name">
-                                    {userInfo?.nickname || "loading"}
+                                    {userInfo?.nickname || (
+                                        <Skeleton
+                                            variant="text"
+                                            width={120}
+                                            sx={{
+                                                fontSize: "1.125rem",
+                                            }}
+                                        />
+                                    )}
                                 </span>
                                 <span className="position">
-                                    {userInfo?.position || "loading"}
+                                    {userInfo?.position || (
+                                        <Skeleton
+                                            variant="text"
+                                            width={45}
+                                            sx={{
+                                                fontSize: "0.875rem",
+                                            }}
+                                        />
+                                    )}
                                 </span>
                                 <div className="counts">
                                     <div className="thumb-up">

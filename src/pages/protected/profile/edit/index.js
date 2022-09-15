@@ -8,6 +8,7 @@ import { _setUserInfo, _uploadProfileThumbnail } from "utils/firebase/auth";
 import { useNavigateContext } from "utils/navigate";
 import { ReactComponent as PhotoIcon } from "assets/images/icons/profile/edit/photo.svg";
 import { ReactComponent as TrashIcon } from "assets/images/icons/profile/edit/trash.svg";
+import { Skeleton } from "@mui/material";
 
 const __PROFILE_THUMBNAIL_BUTTONS__ = [
     {
@@ -143,11 +144,19 @@ const Edit = () => {
                         setOpenProfileThumbnail(!openProfileThumbnail)
                     }
                 >
-                    <img
-                        src={profileThumbnailUrl || ""}
-                        alt="profile thumbnail"
-                        loading="lazy"
-                    />
+                    {Boolean(profileThumbnailUrl) ? (
+                        <img
+                            src={profileThumbnailUrl || ""}
+                            alt="profile thumbnail"
+                            loading="lazy"
+                        />
+                    ) : (
+                        <Skeleton
+                            variant="rectangular"
+                            width={120}
+                            height={120}
+                        />
+                    )}
                 </div>
                 <div className="form">
                     <WoilonnInput
