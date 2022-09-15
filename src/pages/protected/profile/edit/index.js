@@ -126,7 +126,7 @@ const Edit = () => {
                 uid: userInfo?.id,
                 payload,
             });
-            userInfo?.refresh();
+            // userInfo?.refresh();
             goBack();
             setIsLoading(false);
         } catch (e) {

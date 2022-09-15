@@ -6,7 +6,8 @@ import {
     _setUserInfo,
     _getUserInfo,
 } from "utils/firebase/auth";
-import { auth } from "utils/firebase";
+import { doc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "utils/firebase";
 import { useStatusContext } from "utils/status";
 
 const AuthContext = React.createContext(null);
@@ -45,6 +46,7 @@ export const AuthProvider = ({ children }) => {
         if (user?.status !== "fulfilled") {
             setUser(null);
             setUserInfo(null);
+            return;
         } else {
             const _user = user?.payload?.user;
             setUser(user);
@@ -52,20 +54,29 @@ export const AuthProvider = ({ children }) => {
                 uid: _user?.uid,
                 payload: {},
             })
-                .then(() => {
-                    _getUserInfo({ uid: _user?.uid })
-                        .then((res) => {
-                            setUserInfo(res);
-                        })
-                        .catch((e) => {
-                            console.dir(e);
-                            setUserInfo(null);
-                        });
-                })
+                .then(() => {})
                 .catch((e) => {
                     console.dir(e);
                     setUserInfo(null);
                 });
+
+            const unsubscribe = onSnapshot(
+                doc(db, "users", _user?.uid),
+                (docSnap) => {
+                    if (docSnap.exists()) {
+                        setUserInfo({
+                            id: docSnap.id,
+                            ...docSnap.data(),
+                        });
+                    } else {
+                        setUserInfo(null);
+                    }
+                }
+            );
+
+            return () => {
+                unsubscribe();
+            };
         }
     }, [user]);
 
