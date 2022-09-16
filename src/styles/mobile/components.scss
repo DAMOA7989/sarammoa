@@ -19,8 +19,9 @@
         position: absolute;
         // bottom: 1em;
         bottom: 0;
-        border-radius: 0.625em;
-        padding: 0 1.25em;
+        border-top-left-radius: 1em;
+        border-top-right-radius: 1em;
+        padding: 0.25em 1.25em 0 1.25em;
         background-color: white;
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
@@ -491,5 +492,63 @@
         > .checkmark {
             transform: translateX(0.5em);
         }
+    }
+}
+
+.message-card {
+    position: relative;
+    padding: 0.625em;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 0.625em;
+    box-sizing: border-box;
+
+    > .profile-thumbnail {
+        width: 3em;
+        height: 3em;
+        border-radius: 1.5em;
+        overflow: hidden;
+
+        > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    > .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: calc(100% - 4.25em);
+        box-sizing: border-box;
+
+        > .nickname {
+            font-size: 14px;
+            font-weight: 600;
+            color: $gunmetal_color;
+        }
+
+        > .message {
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 24px;
+            width: 90%;
+            overflow: hidden;
+            color: $auro_metal_saurus_color;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    > .date {
+        position: absolute;
+        top: 0.625em;
+        right: 0.75em;
+        font-size: 11px;
+        font-weight: 400;
+        color: rgba($auro_metal_saurus_color, 0.8);
     }
 }

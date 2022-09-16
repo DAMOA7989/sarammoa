@@ -1,10 +1,15 @@
 @import "../include.scss";
 
 .pages-protected-notice {
-    padding: 2.5em 0;
+    padding: 1.25em 0 5.5em 0;
 
     > nav.tabs {
-        margin-bottom: 2.5em;
+        position: sticky;
+        top: 0;
+        margin-bottom: 1.25em;
+        z-index: 1;
+        padding: 1.25em 0;
+        background-color: $app_background_color;
 
         > ul {
             position: relative;
@@ -53,5 +58,14 @@
                 transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
             }
         }
+    }
+}
+
+.pages-protected-notice-message {
+    > .messages {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75em;
+        padding: 0 1.25em;
     }
 }
