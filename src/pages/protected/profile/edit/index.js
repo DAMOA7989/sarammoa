@@ -23,7 +23,12 @@ const __PROFILE_THUMBNAIL_BUTTONS__ = [
         key: "delete",
         i18nKey: "btn.profile.edit.profile_thumbnail.delete",
         icon: <TrashIcon />,
-        onClick: () => {},
+        onClick: ({ setProfileThumbnailBlob, setProfileThumbnailUrl }) => {
+            setProfileThumbnailUrl(
+                "https://firebasestorage.googleapis.com/v0/b/sarammoa-cc444.appspot.com/o/default%2FprofileThumbnail.png?alt=media&token=ee579067-ba85-435d-a84e-676edad1f3ad"
+            );
+            setProfileThumbnailBlob(null);
+        },
     },
 ];
 
@@ -65,13 +70,23 @@ const Edit = () => {
                 website === userInfo?.website) &&
             ((!Boolean(userInfo?.introduction) && !Boolean(introduction)) ||
                 introduction === userInfo?.introduction) &&
-            !profileThumbnailBlob
+            ((!Boolean(userInfo?.profileThumbnailUrl) &&
+                !Boolean(profileThumbnailUrl)) ||
+                profileThumbnailUrl === userInfo?.profileThumbnailUrl)
         ) {
             return setCanSubmit(false);
         }
 
         setCanSubmit(true);
-    }, [isLoading, fullName, nickname, website, introduction]);
+    }, [
+        isLoading,
+        userInfo,
+        fullName,
+        nickname,
+        website,
+        introduction,
+        profileThumbnailUrl,
+    ]);
 
     const onFileChangeHandler = (event) => {
         const file = event.target?.files?.[0];
@@ -121,6 +136,8 @@ const Edit = () => {
                     profileThumbnailBlob,
                 });
                 payload.profileThumbnailUrl = url;
+            } else {
+                payload.profileThumbnailUrl = profileThumbnailUrl || "";
             }
 
             await _setUserInfo({
@@ -207,7 +224,11 @@ const Edit = () => {
                             key={button.key}
                             type="contrast"
                             onClick={() => {
-                                button.onClick({ inputFileRef });
+                                button.onClick({
+                                    inputFileRef,
+                                    setProfileThumbnailBlob,
+                                    setProfileThumbnailUrl,
+                                });
                                 // setOpenProfileThumbnail(false);
                             }}
                             icon={button.icon}
