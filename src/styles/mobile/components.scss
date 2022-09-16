@@ -506,6 +506,16 @@
     box-sizing: border-box;
     overflow: hidden;
 
+    @media (hover: hover) {
+        &:hover {
+            background-color: rgba(white, 0.6);
+        }
+    }
+
+    &:active {
+        box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
     > .profile-thumbnail {
         width: 3em;
         height: 3em;
@@ -595,6 +605,16 @@
     gap: 0.625em;
     box-sizing: border-box;
     overflow: hidden;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: rgba(white, 0.6);
+        }
+    }
+
+    &:active {
+        box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.1);
+    }
 
     > .profile-thumbnail {
         width: 3em;
