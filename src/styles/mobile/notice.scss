@@ -1,14 +1,14 @@
 @import "../include.scss";
 
 .pages-protected-notice {
-    padding: 1.25em 0 5.5em 0;
+    padding: 1.875em 0 5.5em 0;
 
     > nav.tabs {
         position: sticky;
         top: 0;
-        margin-bottom: 1.25em;
+        margin-bottom: 1.875em;
         z-index: 1;
-        padding: 1.25em 0;
+        padding: 0.625em 0;
         background-color: $app_background_color;
 
         > ul {
@@ -63,6 +63,15 @@
 
 .pages-protected-notice-message {
     > .messages {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75em;
+        padding: 0 1.25em;
+    }
+}
+
+.pages-protected-notice-notification {
+    > ul.notifications {
         display: flex;
         flex-direction: column;
         gap: 0.75em;
