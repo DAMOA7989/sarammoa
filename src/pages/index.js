@@ -3,6 +3,8 @@ export { default as Protected } from "./protected";
 export { default as Connect } from "./protected/connect";
 
 export { default as Notice } from "./protected/notice";
+export { default as NoticeMessage } from "./protected/notice/message";
+export { default as NoticeNotification } from "./protected/notice/notification";
 
 export { default as Profile } from "./protected/profile";
 export { default as ProfileHistory } from "./protected/profile/history";

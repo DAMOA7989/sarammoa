@@ -21,6 +21,9 @@
         bottom: 0;
         border-radius: 0.625em;
         padding: 0 1.25em;
+        background-color: white;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
 
         > ul.bottom-navigation-tabs {
             position: relative;

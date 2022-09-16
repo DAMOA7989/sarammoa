@@ -4,6 +4,8 @@ import {
     Protected,
     Connect,
     Notice,
+    NoticeMessage,
+    NoticeNotification,
     Profile,
     ProfileHistory,
     ProfileInformation,
@@ -66,7 +68,13 @@ const App = () => {
                     >
                         <Route path="support" element={<Support />} />
                         <Route path="connect" element={<Connect />} />
-                        <Route path="notice" element={<Notice />} />
+                        <Route path="notice" element={<Notice />}>
+                            <Route path="" element={<NoticeMessage />} />
+                            <Route
+                                path="notification"
+                                element={<NoticeNotification />}
+                            />
+                        </Route>
                         <Route path="profile" element={<Profile />}>
                             <Route path="" element={<ProfileHistory />} />
                             <Route
