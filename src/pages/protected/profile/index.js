@@ -99,6 +99,7 @@ const Profile = () => {
     const profileInfoRef = React.useRef(null);
     const profileSmallNameRef = React.useRef(null);
     const profileInfoNavRef = React.useRef(null);
+    const profileInfoNavIndicatorRef = React.useRef(null);
     const infoRef = React.useRef(null);
 
     React.useEffect(() => {
@@ -296,6 +297,14 @@ const Profile = () => {
     }, [touchPosition]);
 
     React.useEffect(() => {
+        if (!profileInfoNavIndicatorRef.current) return;
+        if (profileInfoNavIndicatorRef.current.offsetWidth > 0) {
+            profileInfoNavIndicatorRef.current.style.transition =
+                "transform 0.3s";
+        }
+    }, [profileInfoNavIndicatorRef.current]);
+
+    React.useEffect(() => {
         switch (location.pathname.split("/")?.[2]) {
             case "information":
                 setCurTab("information");
@@ -421,11 +430,10 @@ const Profile = () => {
                                 </li>
                             ))}
                             <div
+                                ref={profileInfoNavIndicatorRef}
                                 className="indicator"
                                 style={{
-                                    width:
-                                        `${tabRefs?.[curTab]?.current?.offsetWidth}px` ||
-                                        "0",
+                                    width: `${tabRefs?.[curTab]?.current?.offsetWidth}px`,
                                     transform: `translateX(calc(${Object.values(
                                         tabRefs
                                     )

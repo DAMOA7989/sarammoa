@@ -17,6 +17,7 @@ const CommonButton = ({
 
     React.useEffect(() => {
         const eventHandler = (event) => {
+            event.preventDefault();
             if (!buttonRef.current.contains(event.target)) return;
 
             const rect = buttonRef.current.getBoundingClientRect();
