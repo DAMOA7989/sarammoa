@@ -4,6 +4,7 @@ export { default as Connect } from "./protected/connect";
 
 export { default as Notice } from "./protected/notice";
 export { default as NoticeMessage } from "./protected/notice/message";
+export { default as NoticeMessageDetail } from "./protected/notice/message/detail";
 export { default as NoticeNotification } from "./protected/notice/notification";
 
 export { default as Profile } from "./protected/profile";

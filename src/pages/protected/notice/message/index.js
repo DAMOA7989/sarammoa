@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import MessageCard from "components/surface/MessageCard";
 import { _getMessages } from "utils/firebase/notice";
 import { useAuthContext } from "utils/auth";
-import { useStoreContext } from "utils/store";
 import { db } from "utils/firebase";
 import {
     onSnapshot,
@@ -15,10 +14,12 @@ import {
     orderBy,
     limit,
 } from "firebase/firestore";
+import { useNavigateContext } from "utils/navigate";
 
 const Message = () => {
     const { t } = useTranslation();
     const { userInfo } = useAuthContext();
+    const navigate = useNavigateContext();
     const _messagesRef = React.useRef([]);
     const [messages, setMessages] = React.useState([]);
     const [lastMessages, setLastMessages] = React.useState({});
@@ -103,6 +104,13 @@ const Message = () => {
                 {(messages || []).map((message, idx) => (
                     <li key={idx}>
                         <MessageCard
+                            onClick={() => {
+                                navigate.push({
+                                    pathname: `/notice/${message?.id}`,
+                                    mode: "sub",
+                                    screenTitle: "test",
+                                });
+                            }}
                             user={message?.counterpart}
                             lastMessage={lastMessages?.[message?.id]}
                         />

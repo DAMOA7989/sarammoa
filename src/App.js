@@ -5,6 +5,7 @@ import {
     Connect,
     Notice,
     NoticeMessage,
+    NoticeMessageDetail,
     NoticeNotification,
     Profile,
     ProfileHistory,
@@ -96,6 +97,14 @@ const App = () => {
                         <Route path="profile">
                             <Route path="setup" element={<ProfileSetup />} />
                             <Route path="edit" element={<ProfileEdit />} />
+                        </Route>
+                        <Route path="notice">
+                            <Route path="">
+                                <Route
+                                    path=":mid"
+                                    element={<NoticeMessageDetail />}
+                                />
+                            </Route>
                         </Route>
                     </Route>
                 </Route>

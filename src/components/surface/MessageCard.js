@@ -1,7 +1,7 @@
 import React from "react";
 import { timestampToDate, dateToString } from "utils/date";
 
-const MessageCard = ({ user: _user, lastMessage }) => {
+const MessageCard = ({ user: _user, lastMessage, onClick }) => {
     const timerRef = React.useRef(null);
     const containerRef = React.useRef(null);
     const rippleEffectRef = React.useRef(null);
@@ -39,7 +39,7 @@ const MessageCard = ({ user: _user, lastMessage }) => {
     }, []);
 
     return (
-        <div ref={containerRef} className="message-card">
+        <div ref={containerRef} className="message-card" onClick={onClick}>
             <div className="profile-thumbnail">
                 <img
                     src={_user?.profileThumbnailUrl}
