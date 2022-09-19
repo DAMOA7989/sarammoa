@@ -3,6 +3,9 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import { useTranslation, Trans } from "react-i18next";
 import { useAuthContext } from "utils/auth";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ReactComponent as KakaoIcon } from "assets/images/oauth/kakao.svg";
+import { ReactComponent as GoogleIcon } from "assets/images/oauth/google.svg";
+import { ReactComponent as AppleIcon } from "assets/images/oauth/apple.svg";
 import { ReactComponent as NewsFeedIcon } from "assets/images/tabs/newsfeed.svg";
 import { ReactComponent as SupportIcon } from "assets/images/tabs/support.svg";
 import { ReactComponent as ConnectIcon } from "assets/images/tabs/connect.svg";
@@ -20,8 +23,15 @@ import TextButton from "components/button/TextButton";
 
 const __OAUTH_BUTTONS__ = [
     {
+        key: "kakao",
+        i18nKey: "btn.oauth.kakao",
+        icon: <KakaoIcon />,
+        onClick: ({ signIn }) => {},
+    },
+    {
         key: "google",
-        imgPath: "/images/oauth/google.png",
+        i18nKey: "btn.oauth.google",
+        icon: <GoogleIcon />,
         onClick: ({ signIn }) => {
             signIn({ type: "google" })
                 .then(() => {})
@@ -30,12 +40,8 @@ const __OAUTH_BUTTONS__ = [
     },
     {
         key: "apple",
-        imgPath: "/images/oauth/apple.png",
-        onClick: ({ signIn }) => {},
-    },
-    {
-        key: "facebook",
-        imgPath: "/images/oauth/facebook.png",
+        i18nKey: "btn.oauth.apple",
+        icon: <AppleIcon />,
         onClick: ({ signIn }) => {},
     },
 ];
@@ -232,7 +238,6 @@ const BottomNavigation = () => {
                         className="bottom-sheet bottom-navigation"
                         open={openBottomSheet}
                         onDismiss={() => setOpenBottomSheet(false)}
-                        // snapPoints={({ maxHeight }) => 0.6 * maxHeight}
                     >
                         <div className="bottom-sheet-body">
                             <Trans
@@ -246,12 +251,14 @@ const BottomNavigation = () => {
                                         <li key={x.key}>
                                             <div
                                                 className={`${x.key}`}
-                                                data-img-path={x.imgPath}
                                                 onClick={() => {
                                                     setOpenBottomSheet(false);
                                                     x.onClick({ signIn });
                                                 }}
-                                            />
+                                            >
+                                                {x.icon}
+                                                <span>{t(x.i18nKey)}</span>
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>
