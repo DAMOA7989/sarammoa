@@ -12,6 +12,7 @@ import { NavigateProvider } from "utils/navigate";
 import { AuthProvider } from "utils/auth";
 import { ModalProvider } from "utils/modal";
 import { StatusProvider } from "utils/status";
+import { StoreProvider } from "utils/store";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "config/theme";
 
@@ -23,9 +24,11 @@ root.render(
             <ModalProvider>
                 <StatusProvider>
                     <AuthProvider>
-                        <NavigateProvider>
-                            <App />
-                        </NavigateProvider>
+                        <StoreProvider>
+                            <NavigateProvider>
+                                <App />
+                            </NavigateProvider>
+                        </StoreProvider>
                     </AuthProvider>
                 </StatusProvider>
             </ModalProvider>

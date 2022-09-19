@@ -1,9 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import MessageCard from "components/surface/MessageCard";
+import { _getMessages } from "utils/firebase/notice";
+import { useAuthContext } from "utils/auth";
+import { useStoreContext } from "utils/store";
 
 const Message = () => {
     const { t } = useTranslation();
+    const { userInfo } = useAuthContext();
+    const { subscribe, unsubscribe } = useStoreContext();
     const [messages, setMessages] = React.useState([]);
 
     // React.useEffect(() => {
@@ -21,6 +26,22 @@ const Message = () => {
     //         },
     //     ]);
     // }, []);
+
+    React.useEffect(() => {
+        if (!Boolean(userInfo?.id)) return;
+        const observe = subscribe({
+            path: `messages`,
+            query: {
+                type: "where",
+                args: ["participants", "array-contains", userInfo?.id],
+            },
+            setData: setMessages,
+        });
+
+        return unsubscribe(observe);
+    }, [userInfo?.id]);
+
+    console.log("d messages", messages);
 
     return (
         <div className="pages-protected-notice-message">

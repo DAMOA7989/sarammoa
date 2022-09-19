@@ -24,7 +24,7 @@ exports.onUserSignUp = functions
 
         db.collection("messages")
             .add({
-                participants: [uid],
+                participants: ["sarammoa", uid],
                 updatedAt: serverTimeStamp,
                 createdAt: serverTimeStamp,
             })
