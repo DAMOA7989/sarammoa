@@ -1,4 +1,4 @@
-import { app, auth, db, storage } from "./index";
+import { auth, db, storage } from "./index";
 import {
     getAuth,
     signInWithRedirect,
