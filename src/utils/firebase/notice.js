@@ -23,7 +23,6 @@ export const _getMessages = ({ uid }) =>
             const querySnapshot = await getDocs(q);
             let docs = [];
             querySnapshot.forEach((doc) => {
-                console.log("d data", doc.data());
                 docs.push({
                     id: doc.id,
                     ...doc.data(),

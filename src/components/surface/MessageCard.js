@@ -1,6 +1,6 @@
 import React from "react";
 
-const MessageCard = ({ user: _user, message, date }) => {
+const MessageCard = ({ user: _user, lastMessage }) => {
     const timerRef = React.useRef(null);
     const containerRef = React.useRef(null);
     const rippleEffectRef = React.useRef(null);
@@ -48,9 +48,9 @@ const MessageCard = ({ user: _user, message, date }) => {
             </div>
             <div className="content">
                 <div className="nickname">{_user?.nickname}</div>
-                <div className="message">{message}</div>
+                <div className="message">{lastMessage?.message}</div>
             </div>
-            <div className="date">{date}</div>
+            <div className="date">{""}</div>
             <div ref={rippleEffectRef} className="ripple-effect" />
         </div>
     );

@@ -500,7 +500,7 @@
     padding: 0.625em;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    // box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     gap: 0.625em;
     box-sizing: border-box;
@@ -513,7 +513,7 @@
     }
 
     &:active {
-        box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.1);
+        // box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     > .profile-thumbnail {
@@ -600,7 +600,6 @@
     padding: 0.625em;
     background-color: white;
     border-radius: 8px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     gap: 0.625em;
     box-sizing: border-box;
@@ -613,7 +612,7 @@
     }
 
     &:active {
-        box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.1);
+        // box-shadow: inset 0px 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     > .profile-thumbnail {

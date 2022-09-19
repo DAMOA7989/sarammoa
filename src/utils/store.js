@@ -5,27 +5,22 @@ import { doc, collection, query, onSnapshot, where } from "firebase/firestore";
 const StoreContext = React.createContext(null);
 
 export const StoreProvider = ({ children }) => {
-    const [_docs, _setDocs] = React.useState([]);
-    const [docs, setDocs] = React.useState([]);
-
     const subscribe = ({
         path,
         query: _query = {
             type: null,
             args: [null, null, null],
         },
-        setData,
+        callback,
     }) => {
         let unsubscribe = null;
         switch ((path || "").split("/").length % 2) {
             case 0:
                 unsubscribe = onSnapshot(doc(db, path), (docSnapshot) => {
-                    if (setData) {
-                        setData({
-                            id: docSnapshot.id,
-                            ...docSnapshot.data(),
+                    if (callback)
+                        callback({
+                            payload: docSnapshot.data(),
                         });
-                    }
                 });
                 break;
             case 1:
@@ -56,9 +51,10 @@ export const StoreProvider = ({ children }) => {
                         });
                     });
 
-                    if (setData) {
-                        setData(datas);
-                    }
+                    if (callback)
+                        callback({
+                            payload: datas,
+                        });
                 });
                 break;
         }
@@ -71,7 +67,6 @@ export const StoreProvider = ({ children }) => {
     };
 
     const value = {
-        docs,
         subscribe,
         unsubscribe,
     };
