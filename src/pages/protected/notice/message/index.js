@@ -19,7 +19,7 @@ import {
 const Message = () => {
     const { t } = useTranslation();
     const { userInfo } = useAuthContext();
-    const [_messages, _setMessages] = React.useState([]);
+    const _messagesRef = React.useRef([]);
     const [messages, setMessages] = React.useState([]);
     const [lastMessages, setLastMessages] = React.useState({});
 
@@ -55,37 +55,35 @@ const Message = () => {
                         }
                     )
                 );
+
+                const sendCollectionRef = collection(
+                    db,
+                    `messages/${docSnapshot?.id}/sends`
+                );
+                const sendQuery = query(
+                    sendCollectionRef,
+                    orderBy("createdAt", "desc"),
+                    limit(1)
+                );
+                observers.push(
+                    onSnapshot(sendQuery, (sendQuerySnapshot) => {
+                        let lastMessage = null;
+                        sendQuerySnapshot.forEach((sendDocSnapshot) => {
+                            lastMessage = {
+                                id: sendDocSnapshot.id,
+                                ...sendDocSnapshot.data(),
+                            };
+                        });
+
+                        setLastMessages({
+                            [docSnapshot.id]: lastMessage,
+                        });
+                    })
+                );
             });
 
             Promise.allSettled(tasks || []).then(() => {
-                _setMessages(docs);
-
-                docs.forEach((docSnapshot) => {
-                    const sendCollectionRef = collection(
-                        db,
-                        `messages/${docSnapshot?.id}/sends`
-                    );
-                    const sendQuery = query(
-                        sendCollectionRef,
-                        orderBy("createdAt", "desc"),
-                        limit(1)
-                    );
-                    observers.push(
-                        onSnapshot(sendQuery, (sendQuerySnapshot) => {
-                            let lastMessage = null;
-                            sendQuerySnapshot.forEach((sendDocSnapshot) => {
-                                lastMessage = {
-                                    id: sendDocSnapshot.id,
-                                    ...sendDocSnapshot.data(),
-                                };
-                            });
-
-                            setLastMessages({
-                                [docSnapshot.id]: lastMessage,
-                            });
-                        })
-                    );
-                });
+                _messagesRef.current = docs;
             });
         });
 
@@ -96,8 +94,8 @@ const Message = () => {
     }, [userInfo?.id]);
 
     React.useEffect(() => {
-        setMessages([...messages, ..._messages]);
-    }, [_messages]);
+        setMessages([...messages, ..._messagesRef.current]);
+    }, [_messagesRef.current]);
 
     return (
         <div className="pages-protected-notice-message">

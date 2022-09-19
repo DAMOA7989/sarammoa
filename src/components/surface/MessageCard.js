@@ -1,4 +1,5 @@
 import React from "react";
+import { timestampToDate, dateToString } from "utils/date";
 
 const MessageCard = ({ user: _user, lastMessage }) => {
     const timerRef = React.useRef(null);
@@ -50,7 +51,12 @@ const MessageCard = ({ user: _user, lastMessage }) => {
                 <div className="nickname">{_user?.nickname}</div>
                 <div className="message">{lastMessage?.message}</div>
             </div>
-            <div className="date">{""}</div>
+            <div className="date">
+                {dateToString(
+                    timestampToDate(lastMessage?.createdAt),
+                    "message"
+                )}
+            </div>
             <div ref={rippleEffectRef} className="ripple-effect" />
         </div>
     );
