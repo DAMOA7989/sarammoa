@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ReactComponent as KakaoIcon } from "assets/images/oauth/kakao.svg";
 import { ReactComponent as GoogleIcon } from "assets/images/oauth/google.svg";
 import { ReactComponent as AppleIcon } from "assets/images/oauth/apple.svg";
+import { ReactComponent as EmailIcon } from "assets/images/oauth/email.svg";
 import { ReactComponent as NewsFeedIcon } from "assets/images/tabs/newsfeed.svg";
 import { ReactComponent as SupportIcon } from "assets/images/tabs/support.svg";
 import { ReactComponent as ConnectIcon } from "assets/images/tabs/connect.svg";
@@ -42,6 +43,12 @@ const __OAUTH_BUTTONS__ = [
         key: "apple",
         i18nKey: "btn.oauth.apple",
         icon: <AppleIcon />,
+        onClick: ({ signIn }) => {},
+    },
+    {
+        key: "email",
+        i18nKey: "btn.oauth.email",
+        icon: <EmailIcon />,
         onClick: ({ signIn }) => {},
     },
 ];
@@ -262,12 +269,6 @@ const BottomNavigation = () => {
                                         </li>
                                     ))}
                                 </ul>
-                                <TextButton
-                                    color="primary"
-                                    onClick={() => setOpenBottomSheet(false)}
-                                >
-                                    {t("btn.after")}
-                                </TextButton>
                             </section>
                         </div>
                     </BottomSheet>
