@@ -1,4 +1,4 @@
-import { auth, db, storage } from "./index";
+import { auth, db, storage, functions } from "./index";
 import {
     getAuth,
     signInWithRedirect,
@@ -15,6 +15,7 @@ import {
     Timestamp,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { httpsCallable } from "firebase/functions";
 
 export const _getRedirectResult = async () => await getRedirectResult(auth);
 
@@ -74,6 +75,38 @@ export const _uploadProfileThumbnail = ({ uid, profileThumbnailBlob }) =>
             await uploadBytes(profileThumbnailRef, profileThumbnailBlob);
             const url = await getDownloadURL(profileThumbnailRef);
             return resolve({ url });
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _getAccessTokenWithKakao = ({ code, redirect_uri }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const getAccessTokenWithKakao = httpsCallable(
+                functions,
+                "auth-caller-getAccessTokenWithKakao"
+            );
+            getAccessTokenWithKakao({
+                code,
+                redirect_uri,
+            }).then(
+                ({
+                    data: {
+                        access_token,
+                        token_type,
+                        refresh_token,
+                        refresh_token_expires_in,
+                        expires_in,
+                        scope,
+                    },
+                }) => {
+                    return resolve({
+                        accessToken: access_token,
+                        refreshToken: refresh_token,
+                    });
+                }
+            );
         } catch (e) {
             return reject(e);
         }

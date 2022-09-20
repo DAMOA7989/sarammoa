@@ -14,3 +14,4 @@ module.exports.firestore = admin.firestore;
 // });
 
 exports.auth = require("./modules/auth");
+exports.auth.caller = require("./modules/auth.caller");

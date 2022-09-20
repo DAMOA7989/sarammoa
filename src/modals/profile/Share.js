@@ -48,11 +48,7 @@ const __AVAILABLE_ITEMS__ = [
         icon: <KakaotalkIcon />,
         onClick: ({ t, userInfo }) => {
             const kakao = window.Kakao;
-            if (!kakao) return;
 
-            if (!kakao.isInitialized()) {
-                kakao.init(process.env.REACT_APP_KAKAO_APP_JAVASCRIPT_KEY);
-            }
             if (!kakao.isInitialized()) {
                 return;
             }
@@ -80,20 +76,6 @@ const Share = ({}) => {
     const { t } = useTranslation();
     const { dismissModal } = useModalContext();
     const { userInfo } = useAuthContext();
-    const [isLoading, setIsLoading] = React.useState(false);
-
-    React.useEffect(() => {
-        setIsLoading(true);
-        const script = window.document.createElement("script");
-        script.src = "https://developers.kakao.com/sdk/js/kakao.js";
-        script.async = true;
-        window.document.body.appendChild(script);
-
-        script.onload = () => {
-            setIsLoading(false);
-        };
-        return () => window.document.body.removeChild(script);
-    }, []);
 
     return (
         <main className="modals-profile-share">

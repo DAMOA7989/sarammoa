@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import {
+    KakaoSignin,
     Protected,
     Connect,
     Notice,
@@ -46,6 +47,25 @@ const App = () => {
             });
             gapi.load("client:auth2", initClient);
         };
+    }, []);
+
+    React.useEffect(() => {
+        // setIsLoading(true);
+        const script = window.document.createElement("script");
+        script.src = "https://developers.kakao.com/sdk/js/kakao.js";
+        script.async = true;
+        window.document.body.appendChild(script);
+
+        script.onload = () => {
+            // setIsLoading(false);
+            const kakao = window.Kakao;
+            if (!kakao) return;
+
+            if (!kakao.isInitialized()) {
+                kakao.init(process.env.REACT_APP_KAKAO_APP_JAVASCRIPT_KEY);
+            }
+        };
+        return () => window.document.body.removeChild(script);
     }, []);
 
     if (!init && !Boolean(window.sessionStorage.getItem("sm_sign_in"))) {
@@ -106,6 +126,11 @@ const App = () => {
                                 />
                             </Route>
                         </Route>
+                    </Route>
+                </Route>
+                <Route path="/oauth">
+                    <Route path="kakao">
+                        <Route path="signin" element={<KakaoSignin />} />
                     </Route>
                 </Route>
             </Routes>

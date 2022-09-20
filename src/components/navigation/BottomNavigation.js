@@ -27,7 +27,11 @@ const __OAUTH_BUTTONS__ = [
         key: "kakao",
         i18nKey: "btn.oauth.kakao",
         icon: <KakaoIcon />,
-        onClick: ({ signIn }) => {},
+        onClick: ({ signIn }) => {
+            signIn({ type: "kakao" })
+                .then(() => {})
+                .catch((e) => console.dir(e));
+        },
     },
     {
         key: "google",

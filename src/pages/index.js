@@ -1,3 +1,5 @@
+export { default as KakaoSignin } from "./auth/kakao/signin";
+
 export { default as Protected } from "./protected";
 
 export { default as Connect } from "./protected/connect";

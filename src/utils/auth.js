@@ -9,6 +9,7 @@ import {
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "utils/firebase";
 import { useStatusContext } from "utils/status";
+import axios from "axios";
 
 const AuthContext = React.createContext(null);
 
@@ -109,6 +110,9 @@ export const AuthProvider = ({ children }) => {
                 window.sessionStorage.setItem("sm_sign_in", type);
                 task.run();
                 switch (type) {
+                    case "kakao":
+                        signInWithKakao();
+                        break;
                     case "google":
                         signInWithGoogle();
                         break;
@@ -120,6 +124,22 @@ export const AuthProvider = ({ children }) => {
                 return reject(e);
             }
         });
+
+    const signInWithKakao = () => {
+        const kakao = window.Kakao;
+
+        if (!kakao) {
+            return;
+        }
+
+        if (!kakao.isInitialized()) {
+            return;
+        }
+
+        kakao.Auth.authorize({
+            redirectUri: `${process.env.REACT_APP_HOST_URL}/oauth/kakao/signin`,
+        });
+    };
 
     const signInWithGoogle = () => _signInWithRedirect();
 
