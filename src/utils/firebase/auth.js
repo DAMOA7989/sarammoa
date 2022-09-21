@@ -29,7 +29,7 @@ export const _logAccess = ({ uid }) =>
                     accessedAt: Timestamp.now(),
                 },
                 {
-                    replace: true,
+                    merge: true,
                 }
             );
             return resolve();
