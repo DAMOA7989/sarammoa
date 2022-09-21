@@ -1,6 +1,6 @@
-const functions = require("../index").functions;
-const db = require("../index").db;
-const firestore = require("../index").firestore;
+const functions = require("../../index").functions;
+const db = require("../../index").db;
+const firestore = require("../../index").firestore;
 
 const generateRandomId = function () {
     return "user_" + Math.random().toString(36).substr(2, 8);

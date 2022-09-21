@@ -2,6 +2,7 @@ import { auth, db, storage, functions } from "./index";
 import {
     getAuth,
     signInWithRedirect,
+    signInWithCustomToken,
     GoogleAuthProvider,
     getRedirectResult,
     signOut,
@@ -23,6 +24,16 @@ export const _signInWithRedirect = () => {
     const provider = new GoogleAuthProvider();
     signInWithRedirect(auth, provider);
 };
+
+export const _signInWithCustomToken = ({ token }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await signInWithCustomToken(auth, token);
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
 
 export const _signOut = () =>
     new Promise(async (resolve, reject) => {
@@ -85,7 +96,7 @@ export const _getAccessTokenWithKakao = ({ code, redirect_uri }) =>
         try {
             const getAccessTokenWithKakao = httpsCallable(
                 functions,
-                "auth-caller-getAccessTokenWithKakao"
+                "caller-auth-getAccessTokenWithKakao"
             );
             getAccessTokenWithKakao({
                 code,
@@ -108,6 +119,27 @@ export const _getAccessTokenWithKakao = ({ code, redirect_uri }) =>
                 }
             );
         } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _createFirebaseToken = ({ accessToken }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const createFirebaseToken = httpsCallable(
+                functions,
+                "caller-auth-createFirebaseToken"
+            );
+
+            console.log("Kakao access_token: ", accessToken);
+            const { data: firebaseToken } = await createFirebaseToken({
+                accessToken,
+            });
+            return resolve({
+                firebaseToken,
+            });
+        } catch (e) {
+            console.dir(e);
             return reject(e);
         }
     });

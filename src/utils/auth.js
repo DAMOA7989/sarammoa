@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
 
     React.useEffect(() => {
         auth.onAuthStateChanged(async (user) => {
+            console.log("d user", user);
             setInit(true);
             window.sessionStorage.removeItem("sm_sign_in");
             task.finish();

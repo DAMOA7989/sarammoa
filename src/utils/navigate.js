@@ -8,12 +8,21 @@ export const NavigateProvider = ({ children }) => {
     const [pathname, setPathname] = React.useState("");
     const [mode, setMode] = React.useState(null);
     const [screenTitle, setScreenTitle] = React.useState("");
+    const [isReplace, setIsReplace] = React.useState(false);
     const [isRouting, setIsRouting] = React.useState(false);
 
-    const push = ({ pathname: _pathname, mode, screenTitle, replace }) => {
+    const push = ({ pathname: _pathname, mode, screenTitle }) => {
         setPathname(_pathname);
         setScreenTitle(screenTitle || "");
         setMode(mode || "main");
+        setIsRouting(true);
+    };
+
+    const replace = ({ pathname: _pathname, mode, screenTitle }) => {
+        setPathname(_pathname);
+        setScreenTitle(screenTitle || "");
+        setMode(mode || "main");
+        setIsReplace(true);
         setIsRouting(true);
     };
 
@@ -22,17 +31,37 @@ export const NavigateProvider = ({ children }) => {
         if (typeof pathname === "number") {
             navigate(pathname);
         } else if (mode === "sub") {
-            navigate(
-                `${
-                    mode === "main" ? "" : mode === "sub" ? "/sub" : ""
-                }${pathname}`
-            );
+            if (isReplace) {
+                navigate(
+                    `${
+                        mode === "main" ? "" : mode === "sub" ? "/sub" : ""
+                    }${pathname}`,
+                    { replace: true }
+                );
+                setIsReplace(false);
+            } else {
+                navigate(
+                    `${
+                        mode === "main" ? "" : mode === "sub" ? "/sub" : ""
+                    }${pathname}`
+                );
+            }
         } else {
-            navigate(
-                `${
-                    mode === "main" ? "" : mode === "sub" ? "/sub" : ""
-                }${pathname}`
-            );
+            if (isReplace) {
+                navigate(
+                    `${
+                        mode === "main" ? "" : mode === "sub" ? "/sub" : ""
+                    }${pathname}`,
+                    { replace: true }
+                );
+                setIsReplace(false);
+            } else {
+                navigate(
+                    `${
+                        mode === "main" ? "" : mode === "sub" ? "/sub" : ""
+                    }${pathname}`
+                );
+            }
         }
         setMode(null);
         // setScreenTitle("");
@@ -49,6 +78,7 @@ export const NavigateProvider = ({ children }) => {
         screenTitle,
         isRouting,
         push,
+        replace,
         goBack,
     };
 
