@@ -1,21 +1,19 @@
 import React from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
-import { useStatusContext } from "utils/status";
 import {
     _getAccessTokenWithKakao,
     _createFirebaseToken,
     _signInWithCustomToken,
 } from "utils/firebase/auth";
 import { useNavigateContext } from "utils/navigate";
+import { CircularProgress } from "@mui/material";
 
 const KakaoSignin = () => {
-    const { task } = useStatusContext();
     const [search, setSearch] = useSearchParams();
     const location = useLocation();
     const navigate = useNavigateContext();
 
     React.useEffect(() => {
-        task.run();
         const code = search.get("code");
 
         _getAccessTokenWithKakao({
@@ -50,13 +48,13 @@ const KakaoSignin = () => {
                         console.dir(e);
                     });
             });
-
-        return () => {
-            task.finish();
-        };
     }, []);
 
-    return <main className="pages-auth-kakao-signin"></main>;
+    return (
+        <main className="pages-auth-kakao-signin">
+            <CircularProgress size={45} color="primary" />
+        </main>
+    );
 };
 
 export default KakaoSignin;

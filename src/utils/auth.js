@@ -1,9 +1,9 @@
 import React from "react";
 import { useLocation, Navigate } from "react-router-dom";
 import {
+    _logAccess,
     _signInWithRedirect,
     _signOut,
-    _setUserInfo,
     _getUserInfo,
 } from "utils/firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -52,15 +52,8 @@ export const AuthProvider = ({ children }) => {
         } else {
             const _user = user?.payload?.user;
             setUser(user);
-            _setUserInfo({
-                uid: _user?.uid,
-                payload: {},
-            })
-                .then(() => {})
-                .catch((e) => {
-                    console.dir(e);
-                    setUserInfo(null);
-                });
+
+            _logAccess({ uid: _user?.uid });
 
             const unsubscribe = onSnapshot(
                 doc(db, "users", _user?.uid),

@@ -20,6 +20,24 @@ import { httpsCallable } from "firebase/functions";
 
 export const _getRedirectResult = async () => await getRedirectResult(auth);
 
+export const _logAccess = ({ uid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await setDoc(
+                doc(db, "users", uid),
+                {
+                    accessedAt: Timestamp.now(),
+                },
+                {
+                    replace: true,
+                }
+            );
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
 export const _signInWithRedirect = () => {
     const provider = new GoogleAuthProvider();
     signInWithRedirect(auth, provider);
