@@ -8,3 +8,47 @@
     align-items: center;
     background-color: rgba(0, 0, 0, 0.2);
 }
+
+.pages-auth-email-signin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url("/assets/images/background/email_signin_background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    > .container {
+        width: calc(100% - 2.5em);
+
+        > .welcome-message {
+            font-size: 18px;
+            font-weight: 500;
+            color: $primary_color;
+            margin-bottom: 5em;
+            line-height: 40px;
+        }
+
+        > .input-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75em;
+            margin-bottom: 5em;
+        }
+
+        > .buttons {
+            > .start-button {
+                width: 100%;
+                margin-bottom: 1.5em;
+            }
+
+            > .redirects {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+    }
+}

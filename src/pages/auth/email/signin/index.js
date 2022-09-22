@@ -23,54 +23,72 @@ const EmailSignin = () => {
     const onSubmitHandler = () => {
         setIsLoading(true);
 
-        setIsLoading(false);
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 1000);
     };
 
     return (
         <main className="pages-auth-email-signin">
-            <p className="welcome-message">
-                <Trans
-                    t={t}
-                    i18nKey="text.auth.email.signin.welcome_message"
-                    components={{
-                        big: (
-                            <span
-                                style={{ fontSize: "32px", fontWeight: 700 }}
-                            />
-                        ),
-                    }}
-                />
-            </p>
-            <div className="input-fields">
-                <WoilonnInput
-                    type="email"
-                    label={t("label.auth.email.signin.input_email")}
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                />
-                <WoilonnInput
-                    type="password"
-                    label={t("label.auth.email.signin.input_password")}
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                />
-            </div>
-            <div className="buttons">
-                <CommonButton
-                    color="primary"
-                    loading={isLoading}
-                    onClick={onSubmitHandler}
-                    disabled={!canSubmit}
-                >
-                    {t("btn.start")}
-                </CommonButton>
-                <div className="redirects">
-                    <CommonButton type="text" color="primary" disabled={false}>
-                        {t("btn.forget_password")}
+            <div className="container">
+                <p className="welcome-message">
+                    <Trans
+                        t={t}
+                        i18nKey="text.auth.email.signin.welcome_message"
+                        components={{
+                            big: (
+                                <span
+                                    style={{
+                                        fontSize: "32px",
+                                        fontWeight: 700,
+                                    }}
+                                />
+                            ),
+                        }}
+                    />
+                </p>
+                <div className="input-fields">
+                    <WoilonnInput
+                        type="email"
+                        label={t("label.auth.email.signin.input_email")}
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                    />
+                    <WoilonnInput
+                        type="password"
+                        label={t("label.auth.email.signin.input_password")}
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                    />
+                </div>
+                <div className="buttons">
+                    <CommonButton
+                        className="start-button"
+                        color="primary"
+                        loading={isLoading}
+                        onClick={onSubmitHandler}
+                        disabled={!canSubmit}
+                    >
+                        {t("btn.start")}
                     </CommonButton>
-                    <CommonButton type="text" color="white" disabled={false}>
-                        {t("btn.signup")}
-                    </CommonButton>
+                    <div className="redirects">
+                        <CommonButton
+                            className="forget-password-button"
+                            type="text"
+                            color="primary"
+                            disabled={false}
+                        >
+                            {t("btn.forget_password")}
+                        </CommonButton>
+                        <CommonButton
+                            className="signup-button"
+                            type="text"
+                            color="white"
+                            disabled={false}
+                        >
+                            {t("btn.signup")}
+                        </CommonButton>
+                    </div>
                 </div>
             </div>
         </main>
