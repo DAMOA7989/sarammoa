@@ -26,15 +26,29 @@
             font-size: 18px;
             font-weight: 500;
             color: $primary_color;
-            margin-bottom: 5em;
             line-height: 40px;
+
+            &::after {
+                content: "";
+                display: block;
+                min-height: 2.5em;
+                height: 10vh;
+                max-height: 5em;
+            }
         }
 
         > .input-fields {
             display: flex;
             flex-direction: column;
             gap: 0.75em;
-            margin-bottom: 5em;
+
+            &::after {
+                content: "";
+                display: block;
+                min-height: 2.5em;
+                height: 10vh;
+                max-height: 5em;
+            }
         }
 
         > .buttons {
