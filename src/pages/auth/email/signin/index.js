@@ -3,6 +3,7 @@ import { Trans, useTranslation } from "react-i18next";
 import WoilonnInput from "components/input/WoilonnInput";
 import CommonButton from "components/button/CommonButton";
 import { useAuthContext } from "utils/auth";
+import { validateEmail, validatePassword } from "utils/validator";
 
 const EmailSignin = () => {
     const { t } = useTranslation();
@@ -13,7 +14,16 @@ const EmailSignin = () => {
     const [canSubmit, setCanSubmit] = React.useState(false);
 
     React.useEffect(() => {
-        if (!Boolean(email) || !Boolean(password)) {
+        if (
+            !validateEmail(email).success ||
+            !validatePassword(password, {
+                lower: 1,
+                upper: 1,
+                numeric: 1,
+                special: 1,
+                length: [9, Infinity],
+            }).success
+        ) {
             return setCanSubmit(false);
         } else {
             return setCanSubmit(true);
