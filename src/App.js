@@ -146,8 +146,8 @@ const App = () => {
             <Pending />
             <ToastContainer
                 position="bottom-center"
-                autoClose={5000}
-                hideProgressBar={true}
+                autoClose={2000}
+                hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick={true}
                 rtl={false}

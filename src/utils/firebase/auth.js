@@ -1,6 +1,7 @@
 import { auth, db, storage, functions } from "./index";
 import {
     getAuth,
+    createUserWithEmailAndPassword,
     signInWithRedirect,
     signInWithCustomToken,
     GoogleAuthProvider,
@@ -32,6 +33,16 @@ export const _logAccess = ({ uid }) =>
                     merge: true,
                 }
             );
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _createUserWithEmailAndPassword = ({ email, password }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
             return resolve();
         } catch (e) {
             return reject(e);

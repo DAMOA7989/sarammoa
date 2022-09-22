@@ -5,11 +5,11 @@ import {
     _signInWithRedirect,
     _signOut,
     _getUserInfo,
+    _createUserWithEmailAndPassword,
 } from "utils/firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "utils/firebase";
 import { useStatusContext } from "utils/status";
-import axios from "axios";
 
 const AuthContext = React.createContext(null);
 
@@ -89,7 +89,35 @@ export const AuthProvider = ({ children }) => {
         }
     }, [init]);
 
-    const signUp = () => new Promise(async (resolve, reject) => {});
+    const signUp = ({ type, email, password }) =>
+        new Promise(async (resolve, reject) => {
+            try {
+                setUser({
+                    status: "pending",
+                    payload: {
+                        provider: type,
+                    },
+                });
+                window.sessionStorage.setItem("sm_sign_in", type);
+                // task.run();
+                switch (type) {
+                    case "email":
+                        await signUpWithEmailAndPassword({ email, password });
+                        break;
+                }
+                return resolve();
+            } catch (e) {
+                setUser({
+                    status: "rejected",
+                    payload: null,
+                });
+                return reject(e);
+            }
+        });
+
+    const signUpWithEmailAndPassword = ({ email, password }) => {
+        return _createUserWithEmailAndPassword({ email, password });
+    };
 
     const signIn = ({ type }) =>
         new Promise(async (resolve, reject) => {
@@ -114,6 +142,11 @@ export const AuthProvider = ({ children }) => {
                 }
                 return resolve();
             } catch (e) {
+                setUser({
+                    status: "rejected",
+                    payload: null,
+                });
+                task.finish();
                 return reject(e);
             }
         });

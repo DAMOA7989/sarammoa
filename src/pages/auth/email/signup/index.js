@@ -7,9 +7,14 @@ import {
     validatePassword,
     validatePasswordConfirm,
 } from "utils/validator";
+import { useAuthContext } from "utils/auth";
+import { useNavigateContext } from "utils/navigate";
+import { toast } from "react-toastify";
 
 const EmailSignup = () => {
     const { t } = useTranslation();
+    const { signUp } = useAuthContext();
+    const navigate = useNavigateContext();
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [passwordConfirm, setPasswordConfirm] = React.useState("");
@@ -40,8 +45,25 @@ const EmailSignup = () => {
 
     const onSubmitHandler = () => {
         setIsLoading(true);
-
-        setIsLoading(false);
+        signUp({ type: "email", email, password })
+            .then(() => {
+                setIsLoading(false);
+                navigate.replace({
+                    pathname: "/",
+                    mode: "main",
+                });
+            })
+            .catch((e) => {
+                console.dir(e);
+                switch (e?.code) {
+                    case "auth/email-already-in-use":
+                        toast.error(t("toast.auth/email-already-in-use"));
+                        break;
+                    default:
+                        break;
+                }
+                setIsLoading(false);
+            });
     };
 
     return (
