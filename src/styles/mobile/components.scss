@@ -201,6 +201,12 @@
     position: relative;
     font-size: 0.875rem;
 
+    > .container {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     > svg {
         position: absolute;
         left: 1em;
@@ -237,51 +243,53 @@
         }
     }
 
-    &.active {
-        cursor: pointer;
+    &.common {
+        &.active {
+            cursor: pointer;
 
-        &.primary {
-            background-color: $primary_color;
-            color: white;
+            &.primary {
+                background-color: $primary_color;
+                color: white;
 
-            @media (hover: hover) {
-                &:hover {
-                    background-color: rgba($primary_color, 0.6);
+                @media (hover: hover) {
+                    &:hover {
+                        background-color: rgba($primary_color, 0.6);
+                    }
+                }
+
+                &:active {
+                    background-color: rgba($primary_color, 0.8);
                 }
             }
 
-            &:active {
-                background-color: rgba($primary_color, 0.8);
-            }
-        }
+            &.secondary {
+                background-color: $secondary_color;
+                color: white;
 
-        &.secondary {
-            background-color: $secondary_color;
-            color: white;
+                @media (hover: hover) {
+                    &:hover {
+                        background-color: rgba($secondary_color, 0.6);
+                    }
+                }
 
-            @media (hover: hover) {
-                &:hover {
-                    background-color: rgba($secondary_color, 0.6);
+                &:active {
+                    background-color: rgba($secondary_color, 0.8);
                 }
             }
 
-            &:active {
-                background-color: rgba($secondary_color, 0.8);
-            }
-        }
+            &.tertiary {
+                background-color: $tertiary_color;
+                color: white;
 
-        &.tertiary {
-            background-color: $tertiary_color;
-            color: white;
-
-            @media (hover: hover) {
-                &:hover {
-                    background-color: rgba($tertiary_color, 0.6);
+                @media (hover: hover) {
+                    &:hover {
+                        background-color: rgba($tertiary_color, 0.6);
+                    }
                 }
-            }
 
-            &:active {
-                background-color: rgba($tertiary_color, 0.8);
+                &:active {
+                    background-color: rgba($tertiary_color, 0.8);
+                }
             }
         }
     }
@@ -317,58 +325,73 @@
             }
         }
     }
-}
 
-.text-button {
-    cursor: default;
-    color: $x11_dark_gray_color;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.75em 1em;
-    border-radius: 1rem;
+    &.text {
+        cursor: default;
+        color: $x11_dark_gray_color;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0.75em 1em;
+        border-radius: 1rem;
+        background-color: transparent;
 
-    &.active {
-        cursor: pointer;
+        &.active {
+            cursor: pointer;
 
-        &.primary {
-            color: $primary_color;
+            &.primary {
+                color: $primary_color;
 
-            @media (hover: hover) {
-                &:hover {
-                    color: rgba($primary_color, 0.6);
+                @media (hover: hover) {
+                    &:hover {
+                        color: rgba($primary_color, 0.6);
+                    }
+                }
+
+                &:active {
+                    color: rgba($primary_color, 0.8);
                 }
             }
 
-            &:active {
-                color: rgba($primary_color, 0.8);
-            }
-        }
+            &.secondary {
+                color: $secondary_color;
 
-        &.secondary {
-            color: $secondary_color;
+                @media (hover: hover) {
+                    &:hover {
+                        color: rgba($secondary_color, 0.6);
+                    }
+                }
 
-            @media (hover: hover) {
-                &:hover {
-                    color: rgba($secondary_color, 0.6);
+                &:active {
+                    color: rgba($secondary_color, 0.8);
                 }
             }
 
-            &:active {
-                color: rgba($secondary_color, 0.8);
-            }
-        }
+            &.tertiary {
+                color: $tertiary_color;
 
-        &.tertiary {
-            color: $tertiary_color;
+                @media (hover: hover) {
+                    &:hover {
+                        color: rgba($tertiary_color, 0.6);
+                    }
+                }
 
-            @media (hover: hover) {
-                &:hover {
-                    color: rgba($tertiary_color, 0.6);
+                &:active {
+                    color: rgba($tertiary_color, 0.8);
                 }
             }
 
-            &:active {
-                color: rgba($tertiary_color, 0.8);
+            &.white {
+                color: white;
+
+                @media (hover: hover) {
+                    &:hover {
+                        color: rgba(white, 0.6);
+                    }
+                }
+
+                &:active {
+                    color: rgba(white, 0.8);
+                }
             }
         }
     }

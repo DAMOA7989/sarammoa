@@ -14,6 +14,7 @@ const CommonButton = ({
     const timerRef = React.useRef(null);
     const buttonRef = React.useRef(null);
     const rippleEffectRef = React.useRef(null);
+    const containerRef = React.useRef(null);
 
     React.useEffect(() => {
         const eventHandler = (event) => {
@@ -48,16 +49,26 @@ const CommonButton = ({
         };
     }, []);
 
+    React.useEffect(() => {
+        containerRef.current.style.width = `${containerRef.current.offsetWidth}px`;
+    }, []);
+
     return (
         <button
             ref={buttonRef}
-            className={`common-button ${type} ${color} ${
-                !disabled && "active"
+            className={`common-button ${type || "common"} ${color} ${
+                !disabled && !loading && "active"
             } ${className}`}
-            onClick={disabled ? null : onClick}
+            onClick={!disabled && !loading ? onClick : null}
         >
             {icon && icon}
-            {loading ? <CircularProgress color="black" size={20} /> : children}
+            <div ref={containerRef} className="container">
+                {loading ? (
+                    <CircularProgress color="black" size={25} />
+                ) : (
+                    children
+                )}
+            </div>
             <div ref={rippleEffectRef} className="ripple-effect" />
         </button>
     );

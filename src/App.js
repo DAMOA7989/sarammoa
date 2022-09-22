@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import {
+    EmailSignin,
     KakaoSignin,
     Protected,
     Connect,
@@ -131,6 +132,11 @@ const App = () => {
                 <Route path="/oauth">
                     <Route path="kakao">
                         <Route path="signin" element={<KakaoSignin />} />
+                    </Route>
+                </Route>
+                <Route path="/auth" element={<SubLayout />}>
+                    <Route path="email">
+                        <Route path="signin" element={<EmailSignin />} />
                     </Route>
                 </Route>
             </Routes>

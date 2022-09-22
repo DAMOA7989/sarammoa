@@ -2,7 +2,7 @@ import React from "react";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useTranslation, Trans } from "react-i18next";
 import { useAuthContext } from "utils/auth";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ReactComponent as KakaoIcon } from "assets/images/oauth/kakao.svg";
 import { ReactComponent as GoogleIcon } from "assets/images/oauth/google.svg";
 import { ReactComponent as AppleIcon } from "assets/images/oauth/apple.svg";
@@ -20,7 +20,6 @@ import { ReactComponent as ProfileActiveIcon } from "assets/images/tabs/profile_
 import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
 import CommonButton from "components/button/CommonButton";
-import TextButton from "components/button/TextButton";
 
 const __OAUTH_BUTTONS__ = [
     {
@@ -53,7 +52,13 @@ const __OAUTH_BUTTONS__ = [
         key: "email",
         i18nKey: "btn.oauth.email",
         icon: <EmailIcon />,
-        onClick: ({ signIn }) => {},
+        onClick: ({ navigate }) => {
+            navigate.push({
+                pathname: "/auth/email/signin",
+                mode: "main",
+                screenTitle: "title.auth.email.signin",
+            });
+        },
     },
 ];
 
@@ -67,8 +72,8 @@ const __TABS__ = [
             active: <NewsFeedActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ push }) => {
-            push({
+        onClick: ({ navigate }) => {
+            navigate.push({
                 pathname: "/",
                 mode: "main",
             });
@@ -83,8 +88,8 @@ const __TABS__ = [
             active: <SupportActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ push }) => {
-            push({
+        onClick: ({ navigate }) => {
+            navigate.push({
                 pathname: "/support",
                 mode: "main",
             });
@@ -99,8 +104,8 @@ const __TABS__ = [
             active: <ConnectActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ push }) => {
-            push({
+        onClick: ({ navigate }) => {
+            navigate.push({
                 pathname: "/connect",
                 mode: "main",
             });
@@ -115,8 +120,8 @@ const __TABS__ = [
             active: <NoticeActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ push }) => {
-            push({
+        onClick: ({ navigate }) => {
+            navigate.push({
                 pathname: "/notice",
                 mode: "main",
             });
@@ -124,15 +129,13 @@ const __TABS__ = [
     },
     {
         key: "profile",
-        path: "/profile",
-        i18nKey: "tab.profile",
         icon: {
             inactive: <ProfileIcon />,
             active: <ProfileActiveIcon />,
         },
         color: styles?.primaryColor,
-        onClick: ({ push }) => {
-            push({
+        onClick: ({ navigate }) => {
+            navigate.push({
                 pathname: "/profile",
                 mode: "main",
             });
@@ -146,8 +149,7 @@ const PADDING = 20;
 const BottomNavigation = () => {
     const { t } = useTranslation();
     const { init, user, signIn } = useAuthContext();
-    const { push } = useNavigateContext();
-    const navigate = useNavigate();
+    const navigate = useNavigateContext();
     const location = useLocation();
     const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
     const [canOpenBottomSheet, setCanOpenBottomSheet] = React.useState(false);
@@ -216,7 +218,7 @@ const BottomNavigation = () => {
                             >
                                 <div
                                     className="container"
-                                    onClick={() => tab.onClick({ push })}
+                                    onClick={() => tab.onClick({ navigate })}
                                 >
                                     {tab.icon.inactive}
                                     <span>{t(tab.i18nKey)}</span>
@@ -264,7 +266,10 @@ const BottomNavigation = () => {
                                                 className={`${x.key}`}
                                                 onClick={() => {
                                                     setOpenBottomSheet(false);
-                                                    x.onClick({ signIn });
+                                                    x.onClick({
+                                                        signIn,
+                                                        navigate,
+                                                    });
                                                 }}
                                             >
                                                 {x.icon}

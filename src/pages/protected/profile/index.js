@@ -5,7 +5,6 @@ import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useAuthContext } from "utils/auth";
-import TextButton from "components/button/TextButton";
 import CommonButton from "components/button/CommonButton";
 import { useModalContext } from "utils/modal";
 import { ReactComponent as EditIcon } from "assets/images/icons/profile/edit.svg";
@@ -419,14 +418,15 @@ const Profile = () => {
                                     }`}
                                     ref={tabRefs[tab.key]}
                                 >
-                                    <TextButton
+                                    <CommonButton
+                                        type="text"
                                         color="primary"
                                         onClick={() =>
                                             tab.onClick({ push: navigate.push })
                                         }
                                     >
                                         {t(tab.i18nKey)}
-                                    </TextButton>
+                                    </CommonButton>
                                 </li>
                             ))}
                             <div
