@@ -9,7 +9,8 @@
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-.pages-auth-email-signin {
+.pages-auth-email-signin,
+.pages-auth-email-signup {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -55,6 +56,10 @@
             > .start-button {
                 width: 100%;
                 margin-bottom: 1.5em;
+            }
+
+            > .submit-button {
+                width: 100%;
             }
 
             > .redirects {

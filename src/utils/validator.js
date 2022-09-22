@@ -113,3 +113,17 @@ export const validatePassword = (password, options = {}) => {
         };
     }
 };
+
+export const validatePasswordConfirm = (password, passwordConfirm) => {
+    try {
+        return {
+            success: password === passwordConfirm,
+            payload: null,
+        };
+    } catch (e) {
+        return {
+            success: false,
+            payload: e,
+        };
+    }
+};

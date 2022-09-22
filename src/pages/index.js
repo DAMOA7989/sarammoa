@@ -1,4 +1,5 @@
 export { default as EmailSignin } from "./auth/email/signin";
+export { default as EmailSignup } from "./auth/email/signup";
 export { default as KakaoSignin } from "./auth/kakao/signin";
 
 export { default as Protected } from "./protected";

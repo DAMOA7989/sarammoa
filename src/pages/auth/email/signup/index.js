@@ -1,23 +1,26 @@
 import React from "react";
-import { Trans, useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import WoilonnInput from "components/input/WoilonnInput";
 import CommonButton from "components/button/CommonButton";
-import { useAuthContext } from "utils/auth";
-import { validateEmail, validatePassword } from "utils/validator";
-import { useNavigateContext } from "utils/navigate";
+import {
+    validateEmail,
+    validatePassword,
+    validatePasswordConfirm,
+} from "utils/validator";
 
-const EmailSignin = () => {
+const EmailSignup = () => {
     const { t } = useTranslation();
-    const { signIn } = useAuthContext();
-    const navigate = useNavigateContext();
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [passwordConfirm, setPasswordConfirm] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(false);
     const [canSubmit, setCanSubmit] = React.useState(false);
 
     React.useEffect(() => {
+        if (!validateEmail(email).success) {
+            return setCanSubmit(false);
+        }
         if (
-            !validateEmail(email).success ||
             !validatePassword(password, {
                 lower: 1,
                 upper: 1,
@@ -27,26 +30,27 @@ const EmailSignin = () => {
             }).success
         ) {
             return setCanSubmit(false);
-        } else {
-            return setCanSubmit(true);
         }
-    }, [email, password]);
+        if (!validatePasswordConfirm(password, passwordConfirm).success) {
+            return setCanSubmit(false);
+        }
+
+        return setCanSubmit(true);
+    }, [email, password, passwordConfirm]);
 
     const onSubmitHandler = () => {
         setIsLoading(true);
 
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
+        setIsLoading(false);
     };
 
     return (
-        <main className="pages-auth-email-signin">
+        <main className="pages-auth-email-signup">
             <div className="container">
                 <p className="welcome-message">
                     <Trans
                         t={t}
-                        i18nKey="text.auth.email.signin.welcome_message"
+                        i18nKey="text.auth.email.signup.welcome_messag"
                         components={{
                             big: (
                                 <span
@@ -72,46 +76,31 @@ const EmailSignin = () => {
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
                     />
+                    <WoilonnInput
+                        type="password"
+                        label={t(
+                            "label.auth.email.signup.input_password_confirm"
+                        )}
+                        value={passwordConfirm}
+                        onChange={(event) =>
+                            setPasswordConfirm(event.target.value)
+                        }
+                    />
                 </div>
                 <div className="buttons">
                     <CommonButton
-                        className="start-button"
+                        className="submit-button"
                         color="primary"
                         loading={isLoading}
                         onClick={onSubmitHandler}
                         disabled={!canSubmit}
                     >
-                        {t("btn.start")}
+                        {t("btn.signup_submit")}
                     </CommonButton>
-                    <div className="redirects">
-                        <CommonButton
-                            className="forget-password-button"
-                            type="text"
-                            color="primary"
-                            disabled={false}
-                        >
-                            {t("btn.forget_password")}
-                        </CommonButton>
-                        <CommonButton
-                            className="signup-button"
-                            type="text"
-                            color="white"
-                            disabled={false}
-                            onClick={() => {
-                                navigate.push({
-                                    pathname: "/auth/email/signup",
-                                    mode: "main",
-                                    screenTitle: "title.auth.email.signup",
-                                });
-                            }}
-                        >
-                            {t("btn.signup")}
-                        </CommonButton>
-                    </div>
                 </div>
             </div>
         </main>
     );
 };
 
-export default EmailSignin;
+export default EmailSignup;
