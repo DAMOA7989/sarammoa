@@ -190,7 +190,7 @@
 
 .common-button {
     cursor: default;
-    background-color: $auro_metal_saurus_color;
+    background-color: $link_water_color;
     padding: 0 1em;
     height: 3.5em;
     border-radius: 1em;
@@ -464,6 +464,7 @@
         border: 1px solid $auro_metal_saurus_color;
         border-radius: 8px;
         padding: 0 1.25em;
+        box-sizing: border-box;
 
         > input {
             flex: 1;

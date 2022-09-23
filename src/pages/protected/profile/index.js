@@ -464,7 +464,6 @@ const Profile = () => {
             </main>
             <BottomSheet
                 open={openExpand}
-                header={<div></div>}
                 onDismiss={() => setOpenExpand(false)}
             >
                 <div className="bottom-sheet expand">

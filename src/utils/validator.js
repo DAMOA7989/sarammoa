@@ -127,3 +127,18 @@ export const validatePasswordConfirm = (password, passwordConfirm) => {
         };
     }
 };
+
+export const validateVerifyCode = (code) => {
+    try {
+        const regexp = new RegExp("^[0-9]{6,6}$");
+        return {
+            success: regexp.test(code),
+            payload: null,
+        };
+    } catch (e) {
+        return {
+            success: false,
+            payload: e,
+        };
+    }
+};
