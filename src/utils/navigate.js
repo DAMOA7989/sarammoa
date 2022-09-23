@@ -1,44 +1,188 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NavigateContext = React.createContext(null);
 
 export const NavigateProvider = ({ children }) => {
     const navigate = useNavigate();
-    const [pathname, setPathname] = React.useState("");
-    const [mode, setMode] = React.useState(null);
-    const [screenTitle, setScreenTitle] = React.useState("");
-    const [isReplace, setIsReplace] = React.useState(false);
-    const [isRouting, setIsRouting] = React.useState(false);
+    const location = useLocation();
 
-    const push = ({ pathname: _pathname, mode, screenTitle }) => {
-        setPathname(_pathname);
-        setScreenTitle(screenTitle || "");
-        setMode(mode || "main");
-        setIsRouting(true);
+    const reducer = (state, action) => {
+        switch (action.type) {
+            case "PUSH":
+                return {
+                    ...state,
+                    pathname: action.payload?.pathname,
+                    mode: action.payload?.mode,
+                    screenTitle: action.payload?.screenTitle,
+                    routing: true,
+                };
+            case "REPLACE":
+                return {
+                    ...state,
+                    pathname: action.payload?.pathname,
+                    mode: action.payload?.mode,
+                    screenTitle: action.payload?.screenTitle,
+                    replace: true,
+                    routing: true,
+                };
+            case "REPLACE_FINISH":
+                return {
+                    ...state,
+                    replace: false,
+                };
+            case "GO_BACK":
+                return {
+                    ...state,
+                    pathname: action.payload?.pathname,
+                    mode: action.payload?.mode,
+                    screenTitle: action.payload?.screenTitle,
+                    routing: true,
+                };
+            case "ROUTING_START":
+                return {
+                    ...state,
+                    routing: true,
+                };
+            case "ROUTING_FINISH":
+                return {
+                    ...state,
+                    routing: false,
+                };
+            default:
+                return state;
+        }
     };
 
-    const replace = ({ pathname: _pathname, mode, screenTitle }) => {
-        setPathname(_pathname);
-        setScreenTitle(screenTitle || "");
-        setMode(mode || "main");
-        setIsReplace(true);
-        setIsRouting(true);
+    const [state, dispatch] = React.useReducer(reducer, {
+        pathname: "",
+        mode: "",
+        screenTitle: "",
+        replace: false,
+        routing: false,
+    });
+
+    React.useEffect(() => {
+        const navigateStack =
+            window.sessionStorage.getItem("sm_navigate_stack");
+        if (!navigateStack) {
+            window.sessionStorage.setItem(
+                "sm_navigate_stack",
+                JSON.stringify([
+                    {
+                        pathname: location.pathname,
+                    },
+                ])
+            );
+        }
+    }, []);
+
+    React.useEffect(() => {
+        console.log("d state", state);
+    }, [state]);
+
+    const push = ({
+        pathname: _pathname,
+        mode: _mode,
+        screenTitle: _screenTitle,
+    }) => {
+        const navigateStack = JSON.parse(
+            window.sessionStorage.getItem("sm_navigate_stack")
+        );
+        window.sessionStorage.setItem(
+            "sm_navigate_stack",
+            JSON.stringify([
+                ...navigateStack,
+                {
+                    pathname: _pathname,
+                    mode: _mode,
+                    screenTitle: _screenTitle,
+                },
+            ])
+        );
+
+        dispatch({
+            type: "PUSH",
+            payload: {
+                pathname: _pathname,
+                mode: _mode,
+                screenTitle: _screenTitle,
+            },
+        });
+    };
+
+    const replace = ({
+        pathname: _pathname,
+        mode: _mode,
+        screenTitle: _screenTitle,
+    }) => {
+        const navigateStack = JSON.parse(
+            window.sessionStorage.getItem("sm_navigate_stack")
+        );
+        window.sessionStorage.setItem(
+            "sm_navigate_stack",
+            JSON.stringify([
+                ...navigateStack.slice(0, navigateStack.length - 1),
+                {
+                    pathname: _pathname,
+                    mode: _mode,
+                    screenTitle: _screenTitle,
+                },
+            ])
+        );
+        dispatch({
+            type: "REPLACE",
+            payload: {
+                pathname: _pathname || "",
+                mode: _mode || "main",
+                screenTitle: _screenTitle || "",
+            },
+        });
+    };
+
+    const goBack = () => {
+        const navigateStack = JSON.parse(
+            window.sessionStorage.getItem("sm_navigate_stack")
+        );
+        const newNavigateStack = [
+            ...navigateStack.slice(0, navigateStack.length - 1),
+        ];
+        window.sessionStorage.setItem(
+            "sm_navigate_stack",
+            JSON.stringify(newNavigateStack)
+        );
+        dispatch({
+            type: "GO_BACK",
+            payload: {
+                pathname:
+                    newNavigateStack?.[newNavigateStack.length - 1]?.pathname ||
+                    "/",
+                mode:
+                    newNavigateStack?.[newNavigateStack.length - 1]?.mode ||
+                    "main",
+                screenTitle:
+                    newNavigateStack?.[newNavigateStack.length - 1]
+                        ?.screenTitle || "",
+            },
+        });
     };
 
     React.useEffect(() => {
-        if (!isRouting) return;
+        if (!state.routing) return;
+        const { pathname, mode, screenTitle, replace } = state;
         if (typeof pathname === "number") {
             navigate(pathname);
         } else if (mode === "sub") {
-            if (isReplace) {
+            if (replace) {
                 navigate(
                     `${
                         mode === "main" ? "" : mode === "sub" ? "/sub" : ""
                     }${pathname}`,
                     { replace: true }
                 );
-                setIsReplace(false);
+                dispatch({
+                    type: "REPLACE_FINISH",
+                });
             } else {
                 navigate(
                     `${
@@ -47,14 +191,16 @@ export const NavigateProvider = ({ children }) => {
                 );
             }
         } else {
-            if (isReplace) {
+            if (replace) {
                 navigate(
                     `${
                         mode === "main" ? "" : mode === "sub" ? "/sub" : ""
                     }${pathname}`,
                     { replace: true }
                 );
-                setIsReplace(false);
+                dispatch({
+                    type: "REPLACE_FINISH",
+                });
             } else {
                 navigate(
                     `${
@@ -63,20 +209,13 @@ export const NavigateProvider = ({ children }) => {
                 );
             }
         }
-        setMode(null);
-        // setScreenTitle("");
-        setIsRouting(false);
-    }, [isRouting]);
-
-    const goBack = () => {
-        setPathname(-1);
-        setIsRouting(true);
-    };
+        dispatch({
+            type: "ROUTING_FINISH",
+        });
+    }, [state.routing]);
 
     const value = {
-        mode,
-        screenTitle,
-        isRouting,
+        state,
         push,
         replace,
         goBack,

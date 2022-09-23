@@ -221,7 +221,7 @@
 
                     &.selected {
                         > button {
-                            color: white;
+                            color: white !important;
 
                             @media (hover: hover) {
                                 &:hover {

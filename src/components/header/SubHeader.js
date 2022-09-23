@@ -1,21 +1,19 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useNavigateContext } from "utils/navigate";
 
 const SubHeader = () => {
     const { t } = useTranslation();
-    const { goBack, screenTitle } = useNavigateContext();
-    const navigate = useNavigate();
+    const navigate = useNavigateContext();
 
     return (
         <header className="components-header-sub-header">
             <div className="container">
                 <div
                     className="go-back-icon"
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate.goBack()}
                 ></div>
-                <h3 className="title">{t(screenTitle)}</h3>
+                <h3 className="title">{t(navigate.state.screenTitle)}</h3>
             </div>
         </header>
     );
