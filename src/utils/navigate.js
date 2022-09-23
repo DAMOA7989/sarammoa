@@ -9,15 +9,31 @@ export const NavigateProvider = ({ children }) => {
     const location = useLocation();
 
     useBackListener(({ location }) => {
-        const navigationStack = JSON.parse(
+        const navigateStack = JSON.parse(
             window.sessionStorage.getItem("sm_navigate_stack")
         );
+        const newNavigateStack = [
+            ...navigateStack.splice(0, navigateStack.length - 1),
+        ];
+
         window.sessionStorage.setItem(
             "sm_navigate_stack",
-            JSON.stringify([
-                ...navigationStack.splice(0, navigationStack.length - 1),
-            ])
+            JSON.stringify(newNavigateStack)
         );
+        dispatch({
+            type: "GO_BACK",
+            payload: {
+                pathname:
+                    newNavigateStack?.[newNavigateStack.length - 1]?.pathname ||
+                    "/",
+                mode:
+                    newNavigateStack?.[newNavigateStack.length - 1]?.mode ||
+                    "main",
+                screenTitle:
+                    newNavigateStack?.[newNavigateStack.length - 1]
+                        ?.screenTitle || "",
+            },
+        });
     });
 
     const reducer = (state, action) => {
@@ -68,9 +84,15 @@ export const NavigateProvider = ({ children }) => {
     };
 
     const [state, dispatch] = React.useReducer(reducer, {
-        pathname: "",
-        mode: "",
-        screenTitle: "",
+        pathname:
+            JSON.parse(window.sessionStorage.getItem("sm_navigate_stack"))
+                ?.pathname || "/",
+        mode:
+            JSON.parse(window.sessionStorage.getItem("sm_navigate_stack"))
+                ?.mode || "main",
+        screenTitle:
+            JSON.parse(window.sessionStorage.getItem("sm_navigate_stack"))
+                ?.screenTitle || "",
         replace: false,
         routing: false,
     });
@@ -78,7 +100,11 @@ export const NavigateProvider = ({ children }) => {
     React.useEffect(() => {
         const navigateStack =
             window.sessionStorage.getItem("sm_navigate_stack");
-        if (!navigateStack) {
+        if (
+            !navigateStack ||
+            (Array.isArray(navigateStack) && navigateStack.length === 0)
+        ) {
+            window.location.reload();
             window.sessionStorage.setItem(
                 "sm_navigate_stack",
                 JSON.stringify([
