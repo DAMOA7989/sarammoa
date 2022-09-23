@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }) => {
         return _createUserWithEmailAndPassword({ email, password });
     };
 
-    const signIn = ({ type, payload: { email, password } }) =>
+    const signIn = ({ type, payload = {} }) =>
         new Promise(async (resolve, reject) => {
             try {
                 setUser({
@@ -139,7 +139,10 @@ export const AuthProvider = ({ children }) => {
                         signInWithGoogle();
                         break;
                     case "email":
-                        await signInWithEmail({ email, password });
+                        await signInWithEmail({
+                            email: payload?.email,
+                            password: payload?.password,
+                        });
                         break;
                     default:
                         break;

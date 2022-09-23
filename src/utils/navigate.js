@@ -1,11 +1,24 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useBackListener } from "utils/hook";
 
 const NavigateContext = React.createContext(null);
 
 export const NavigateProvider = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation();
+
+    useBackListener(({ location }) => {
+        const navigationStack = JSON.parse(
+            window.sessionStorage.getItem("sm_navigate_stack")
+        );
+        window.sessionStorage.setItem(
+            "sm_navigate_stack",
+            JSON.stringify([
+                ...navigationStack.splice(0, navigationStack.length - 1),
+            ])
+        );
+    });
 
     const reducer = (state, action) => {
         switch (action.type) {
@@ -76,10 +89,6 @@ export const NavigateProvider = ({ children }) => {
             );
         }
     }, []);
-
-    React.useEffect(() => {
-        console.log("d state", state);
-    }, [state]);
 
     const push = ({
         pathname: _pathname,
@@ -174,9 +183,7 @@ export const NavigateProvider = ({ children }) => {
             navigate(pathname);
         } else if (mode === "sub") {
             if (replace) {
-                navigate(
-                    `${
-                        mode === "main" ? "" : mode === "sub" ? "/sub" : ""
+                navigate(mpt가 사라졌기에 직접  : ""
                     }${pathname}`,
                     { replace: true }
                 );
