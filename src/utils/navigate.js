@@ -183,7 +183,9 @@ export const NavigateProvider = ({ children }) => {
             navigate(pathname);
         } else if (mode === "sub") {
             if (replace) {
-                navigate(mpt가 사라졌기에 직접  : ""
+                navigate(
+                    `${
+                        mode === "main" ? "" : mode === "sub" ? "/sub" : ""
                     }${pathname}`,
                     { replace: true }
                 );
