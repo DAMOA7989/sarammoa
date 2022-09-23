@@ -2,6 +2,7 @@ import { auth, db, storage, functions } from "./index";
 import {
     getAuth,
     createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
     signInWithRedirect,
     signInWithCustomToken,
     GoogleAuthProvider,
@@ -43,6 +44,16 @@ export const _createUserWithEmailAndPassword = ({ email, password }) =>
     new Promise(async (resolve, reject) => {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _signInWithEmailAndPassword = ({ email, password }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
             return resolve();
         } catch (e) {
             return reject(e);

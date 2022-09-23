@@ -8,7 +8,7 @@ import { useNavigateContext } from "utils/navigate";
 
 const EmailSignin = () => {
     const { t } = useTranslation();
-    const { signIn } = useAuthContext();
+    const auth = useAuthContext();
     const navigate = useNavigateContext();
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -35,9 +35,30 @@ const EmailSignin = () => {
     const onSubmitHandler = () => {
         setIsLoading(true);
 
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
+        auth.signIn({
+            type: "email",
+            payload: {
+                email,
+                password,
+            },
+        })
+            .then((result) => {
+                navigate.replace({
+                    pathname: "/",
+                    mode: "main",
+                });
+                setIsLoading(false);
+            })
+            .catch((e) => {
+                console.dir(e);
+                switch (e.code) {
+                    case "auth/wrong-password":
+                        break;
+                    default:
+                        break;
+                }
+                setIsLoading(false);
+            });
     };
 
     return (

@@ -6,6 +6,7 @@ import {
     _signOut,
     _getUserInfo,
     _createUserWithEmailAndPassword,
+    _signInWithEmailAndPassword,
 } from "utils/firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "utils/firebase";
@@ -26,7 +27,6 @@ export const AuthProvider = ({ children }) => {
         auth.onAuthStateChanged(async (user) => {
             setInit(true);
             window.sessionStorage.removeItem("sm_sign_in");
-            task.finish();
             if (user) {
                 setUser({
                     status: "fulfilled",
@@ -65,6 +65,7 @@ export const AuthProvider = ({ children }) => {
                     } else {
                         setUserInfo(null);
                     }
+                    task.finish();
                 }
             );
 
@@ -119,7 +120,7 @@ export const AuthProvider = ({ children }) => {
         return _createUserWithEmailAndPassword({ email, password });
     };
 
-    const signIn = ({ type }) =>
+    const signIn = ({ type, payload: { email, password } }) =>
         new Promise(async (resolve, reject) => {
             try {
                 setUser({
@@ -136,6 +137,9 @@ export const AuthProvider = ({ children }) => {
                         break;
                     case "google":
                         signInWithGoogle();
+                        break;
+                    case "email":
+                        await signInWithEmail({ email, password });
                         break;
                     default:
                         break;
@@ -168,6 +172,12 @@ export const AuthProvider = ({ children }) => {
     };
 
     const signInWithGoogle = () => _signInWithRedirect();
+
+    const signInWithEmail = ({ email, password }) =>
+        _signInWithEmailAndPassword({
+            email,
+            password,
+        });
 
     const signOut = () =>
         new Promise(async (resolve, reject) => {
