@@ -92,6 +92,12 @@ const EmailSignin = () => {
                         label={t("label.auth.email.signin.input_password")}
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
+                        onKeyPress={(event) => {
+                            console.log("d event key", event.key);
+                            if (event.key === "Enter") {
+                                onSubmitHandler();
+                            }
+                        }}
                     />
                 </div>
                 <div className="buttons">

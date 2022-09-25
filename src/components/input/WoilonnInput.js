@@ -1,6 +1,13 @@
 import React from "react";
 
-const WoilonnInput = ({ label, type, placeholder, value, onChange }) => {
+const WoilonnInput = ({
+    label,
+    type,
+    placeholder,
+    value,
+    onChange,
+    onKeyPress,
+}) => {
     return (
         <div className="woilonn-input">
             <div className="label">{label}</div>
@@ -10,6 +17,7 @@ const WoilonnInput = ({ label, type, placeholder, value, onChange }) => {
                     placeholder={placeholder || null}
                     value={value}
                     onChange={onChange}
+                    onKeyPress={onKeyPress}
                 />
             </div>
         </div>

@@ -276,6 +276,11 @@ const EmailSignup = () => {
                             onChange={(event) =>
                                 setPasswordConfirm(event.target.value)
                             }
+                            onKeyPress={(event) => {
+                                if (event.key === "Enter") {
+                                    onSendEmailHandler();
+                                }
+                            }}
                         />
                     </div>
                     <div className="buttons">

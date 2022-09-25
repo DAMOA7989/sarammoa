@@ -24,6 +24,7 @@ yarn-error.log*
 
 # config
 /src/config/ignore
+/functions/config
 
 # env
 .env
