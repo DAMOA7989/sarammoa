@@ -277,6 +277,7 @@ const EmailSignup = () => {
                                 setPasswordConfirm(event.target.value)
                             }
                             onKeyPress={(event) => {
+                                if (!emailVerify.canSend) return;
                                 if (event.key === "Enter") {
                                     onSendEmailHandler();
                                 }
@@ -323,6 +324,12 @@ const EmailSignup = () => {
                                     },
                                 })
                             }
+                            onKeyPress={(event) => {
+                                if (!emailVerify.canVerify) return;
+                                if (event.key === "Enter") {
+                                    onVerifyHandler();
+                                }
+                            }}
                         />
                         <CommonButton
                             className="resend-button"

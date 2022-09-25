@@ -93,7 +93,7 @@ const EmailSignin = () => {
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
                         onKeyPress={(event) => {
-                            console.log("d event key", event.key);
+                            if (!canSubmit) return;
                             if (event.key === "Enter") {
                                 onSubmitHandler();
                             }
