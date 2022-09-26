@@ -3,6 +3,7 @@ import { Routes, Route, Link, useLocation } from "react-router-dom";
 import {
     EmailSignin,
     EmailSignup,
+    EmailFind,
     KakaoSignin,
     Protected,
     Connect,
@@ -139,6 +140,7 @@ const App = () => {
                     <Route path="email">
                         <Route path="signin" element={<EmailSignin />} />
                         <Route path="signup" element={<EmailSignup />} />
+                        <Route path="find" element={<EmailFind />} />
                     </Route>
                 </Route>
             </Routes>

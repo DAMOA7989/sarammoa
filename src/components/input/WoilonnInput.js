@@ -7,6 +7,7 @@ const WoilonnInput = ({
     value,
     onChange,
     onKeyPress,
+    disabled,
 }) => {
     return (
         <div className="woilonn-input">
@@ -18,6 +19,7 @@ const WoilonnInput = ({
                     value={value}
                     onChange={onChange}
                     onKeyPress={onKeyPress}
+                    disabled={disabled}
                 />
             </div>
         </div>

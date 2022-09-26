@@ -116,6 +116,13 @@ const EmailSignin = () => {
                             type="text"
                             color="primary"
                             disabled={false}
+                            onClick={() => {
+                                navigate.push({
+                                    pathname: "/auth/email/find",
+                                    mode: "main",
+                                    screenTitle: "title.auth.email.find",
+                                });
+                            }}
                         >
                             {t("btn.forget_password")}
                         </CommonButton>
