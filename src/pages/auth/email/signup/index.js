@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useStatusContext } from "utils/status";
 import { generateRandomNumberString } from "utils/string";
+import { _sendVerificationEmail } from "utils/firebase/auth";
 
 const EmailSignup = () => {
     const { t } = useTranslation();
@@ -41,6 +42,8 @@ const EmailSignup = () => {
                     return {
                         ...state,
                         sendLoading: true,
+                        send: false,
+                        realCode: action.payload?.realCode,
                     };
                 case "SEND_EMAIL_FULFILLED":
                     return {
@@ -53,6 +56,7 @@ const EmailSignup = () => {
                         ...state,
                         sendLoading: false,
                         send: false,
+                        realCode: "",
                     };
                 case "TYPE_CODE":
                     return {
@@ -81,6 +85,7 @@ const EmailSignup = () => {
                         verify: true,
                         verifyLoading: false,
                         code: "",
+                        realCode: "",
                         submitLoading: true,
                     };
                 case "VERIFY_REJECTED":
@@ -110,6 +115,7 @@ const EmailSignup = () => {
         },
         {
             code: "",
+            realCode: "",
             canSend: false,
             send: false,
             sendLoading: false,
@@ -163,24 +169,60 @@ const EmailSignup = () => {
     }, [emailVerify.code]);
 
     const onSendEmailHandler = () => {
-        dispatch({
-            type: "SEND_EMAIL_PENDING",
-        });
-
         const randomNumberString = generateRandomNumberString(6);
 
-        setTimeout(() => {
-            dispatch({
-                type: "SEND_EMAIL_FULFILLED",
+        dispatch({
+            type: "SEND_EMAIL_PENDING",
+            payload: {
+                realCode: randomNumberString,
+            },
+        });
+
+        _sendVerificationEmail({
+            code: randomNumberString,
+            email,
+        })
+            .then(() => {
+                dispatch({
+                    type: "SEND_EMAIL_FULFILLED",
+                });
+                toast.success(t("toast.auth.email.signup.bottom_sheet"));
+                setOpenBottomSheet(true);
+            })
+            .catch((e) => {
+                console.dir(e);
+                dispatch({
+                    type: "SEND_EMAIL_REJECTED",
+                });
             });
-            setOpenBottomSheet(true);
-        }, 1000);
     };
 
     const onResendEmailHandler = () => {
+        const randomNumberString = generateRandomNumberString(6);
+
         dispatch({
             type: "SEND_EMAIL_PENDING",
+            payload: {
+                realCode: randomNumberString,
+            },
         });
+
+        _sendVerificationEmail({
+            code: randomNumberString,
+            email,
+        })
+            .then(() => {
+                dispatch({
+                    type: "SEND_EMAIL_FULFILLED",
+                });
+                toast.success(t("toast.auth.email.signup.bottom_sheet"));
+            })
+            .catch((e) => {
+                console.dir(e);
+                dispatch({
+                    type: "SEND_EMAIL_REJECTED",
+                });
+            });
 
         setTimeout(() => {
             dispatch({
@@ -195,7 +237,11 @@ const EmailSignup = () => {
         });
 
         // verify success
-        setTimeout(() => {
+        if (
+            emailVerify.code === emailVerify.realCode &&
+            Boolean(emailVerify.code) &&
+            Boolean(emailVerify.realCode)
+        ) {
             dispatch({
                 type: "VERIFY_FULFILLED",
             });
@@ -226,11 +272,12 @@ const EmailSignup = () => {
                             break;
                     }
                 });
-        }, 2000);
-        // verify error
-        // dispatch({
-        //     type: "VERIFY_REJECTED",
-        // });
+        } else {
+            toast.error(t("toast.auth.email.signup.verify_rejected"));
+            dispatch({
+                type: "VERIFY_REJECTED",
+            });
+        }
     };
 
     return (
@@ -299,7 +346,12 @@ const EmailSignup = () => {
                 </div>
             </main>
             <BottomSheet
-                header={t("title.bottom_sheet.verify_email")}
+                header={
+                    <>
+                        <h5>{t("title.bottom_sheet.verify_email")}</h5>
+                        <p>{t("text.auth.email.signup.bottom_sheet_header")}</p>
+                    </>
+                }
                 open={openBottomSheet}
                 onDismiss={() => {
                     setOpenBottomSheet(false);

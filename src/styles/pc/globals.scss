@@ -5,6 +5,16 @@ div[data-rsbs-header] {
     box-shadow: none;
     font-size: 1.125rem;
     font-weight: 600;
+
+    > h5 {
+        font-size: 20px;
+        margin-bottom: 0.375em;
+    }
+
+    > p {
+        font-size: 14px;
+        font-weight: 500;
+    }
 }
 
 .bottom-sheet {

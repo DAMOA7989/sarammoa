@@ -122,7 +122,7 @@ const EmailSignin = () => {
                         <CommonButton
                             className="signup-button"
                             type="text"
-                            color="white"
+                            color="black"
                             disabled={false}
                             onClick={() => {
                                 navigate.push({

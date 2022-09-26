@@ -113,65 +113,65 @@ exports.createFirebaseToken = functions.https.onCall(
         })
 );
 
-exports.getAuthorizationCodeWithGmailApi = functions.https.onCall(
-    (data, context) => {
-        const { google } = require("googleapis");
-        const credentials = require("../../config/gmail_api.json");
-        credentials["installed"]["client_id"] = process.env.GMAIL_API_CLIENT_ID;
-        credentials["installed"]["client_secret"] =
-            process.env.GMAIL_API_CLIENT_SECRET;
+// exports.getAuthorizationCodeWithGmailApi = functions.https.onCall(
+//     (data, context) => {
+//         const { google } = require("googleapis");
+//         const credentials = require("../../config/gmail_api.json");
+//         credentials["installed"]["client_id"] = process.env.GMAIL_API_CLIENT_ID;
+//         credentials["installed"]["client_secret"] =
+//             process.env.GMAIL_API_CLIENT_SECRET;
 
-        const { client_secret, client_id, redirect_uris } =
-            credentials.installed;
-        const oAuth2Client = new google.auth.OAuth2(
-            client_id,
-            client_secret,
-            redirect_uris[0]
-        );
+//         const { client_secret, client_id, redirect_uris } =
+//             credentials.installed;
+//         const oAuth2Client = new google.auth.OAuth2(
+//             client_id,
+//             client_secret,
+//             redirect_uris[0]
+//         );
 
-        const GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.send"];
+//         const GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.send"];
 
-        const url = oAuth2Client.generateAuthUrl({
-            access_type: "offline",
-            prompt: "consent",
-            scope: GMAIL_SCOPES,
-        });
+//         const url = oAuth2Client.generateAuthUrl({
+//             access_type: "offline",
+//             prompt: "consent",
+//             scope: GMAIL_SCOPES,
+//         });
 
-        return "Authorize this app by visiting this url: " + url;
-    }
-);
+//         return "Authorize this app by visiting this url: " + url;
+//     }
+// );
 
-exports.createAuthorizedOAuth2ClientWithGmailApi = functions.https.onCall(
-    (data, context) => {
-        const { google } = require("googleapis");
-        const path = require("path");
-        const fs = require("fs");
-        const credentials = require("../../config/gmail_api.json");
-        credentials["installed"]["client_id"] = process.env.GMAIL_API_CLIENT_ID;
-        credentials["installed"]["client_secret"] =
-            process.env.GMAIL_API_CLIENT_SECRET;
+// exports.createAuthorizedOAuth2ClientWithGmailApi = functions.https.onCall(
+//     (data, context) => {
+//         const { google } = require("googleapis");
+//         const path = require("path");
+//         const fs = require("fs");
+//         const credentials = require("../../config/gmail_api.json");
+//         credentials["installed"]["client_id"] = process.env.GMAIL_API_CLIENT_ID;
+//         credentials["installed"]["client_secret"] =
+//             process.env.GMAIL_API_CLIENT_SECRET;
 
-        const code =
-            "4/0ARtbsJqh5zl3xcuqRYtORqO5uEHrzbm8SM77D1DsDmfWUvY0RqsBcAnc5kvBJSJWnJCxfQ";
-        const { client_secret, client_id, redirect_uris } =
-            credentials.installed;
-        const oAuth2Client = new google.auth.OAuth2(
-            client_id,
-            client_secret,
-            redirect_uris[0]
-        );
+//         const code =
+//             "4/0ARtbsJqh5zl3xcuqRYtORqO5uEHrzbm8SM77D1DsDmfWUvY0RqsBcAnc5kvBJSJWnJCxfQ";
+//         const { client_secret, client_id, redirect_uris } =
+//             credentials.installed;
+//         const oAuth2Client = new google.auth.OAuth2(
+//             client_id,
+//             client_secret,
+//             redirect_uris[0]
+//         );
 
-        oAuth2Client.getToken(code).then(({ tokens }) => {
-            const tokenPath = path.join(
-                __dirname,
-                "../../config",
-                "token.json"
-            );
-            fs.writeFileSync(tokenPath, JSON.stringify(tokens));
-            console.log("Access token and refresh token stored to token.json");
-        });
-    }
-);
+//         oAuth2Client.getToken(code).then(({ tokens }) => {
+//             const tokenPath = path.join(
+//                 __dirname,
+//                 "../../config",
+//                 "token.json"
+//             );
+//             fs.writeFileSync(tokenPath, JSON.stringify(tokens));
+//             console.log("Access token and refresh token stored to token.json");
+//         });
+//     }
+// );
 
 const gmail = () => {
     const { google } = require("googleapis");
@@ -227,6 +227,7 @@ exports.sendVerificationEmail = functions.https.onCall(
     (data, context) =>
         new Promise(async (resolve, reject) => {
             const toAddress = data.toAddress;
+            const code = data.code;
 
             const fs = require("fs");
             const path = require("path");
@@ -255,14 +256,27 @@ exports.sendVerificationEmail = functions.https.onCall(
                 to: toAddress,
                 // cc: '',
                 // replyTo: '',
-                subject: "Hello Amit 🚀",
-                text: "This email is sent from the command line",
-                html: `<p>🙋🏻‍♀️  &mdash; This is a <b>test email</b> from <a href="https://digitalinspiration.com">Digital Inspiration</a>.</p>`,
+                subject: "[Sarammoa] Please verify your email address.",
+                // text: "This email is sent from the command line",
+                html: `
+                    <div>
+                        <h5>Almost done, @${toAddress}</h5>
+                        <br/>
+                        <p>CODE: ${code}</p>
+                        <br/>
+                        <p>
+                            This will let you receive notifications and password resets from Sarammoa.
+                        </p>
+                    </div>
+                `,
                 // attachments: fileAttachments,
                 textEncoding: "base64",
                 headers: [
-                    { key: "X-Application-Developer", value: "Amit Agarwal" },
-                    { key: "X-Application-Version", value: "v1.0.0.2" },
+                    {
+                        key: "X-Application-Developer",
+                        value: "Hansol Yoon",
+                    },
+                    { key: "X-Application-Version", value: "v0.0.1" },
                 ],
             };
 

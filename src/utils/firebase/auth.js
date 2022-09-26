@@ -179,7 +179,24 @@ export const _createFirebaseToken = ({ accessToken }) =>
                 firebaseToken,
             });
         } catch (e) {
-            console.dir(e);
+            return reject(e);
+        }
+    });
+
+export const _sendVerificationEmail = ({ code, email }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const sendVerificationEmail = httpsCallable(
+                functions,
+                "caller-auth-sendVerificationEmail"
+            );
+
+            const { data: messageId } = await sendVerificationEmail({
+                code,
+                toAddress: email,
+            });
+            return resolve(messageId);
+        } catch (e) {
             return reject(e);
         }
     });
