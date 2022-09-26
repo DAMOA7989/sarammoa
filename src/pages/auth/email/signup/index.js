@@ -13,7 +13,7 @@ import { useNavigateContext } from "utils/navigate";
 import { toast } from "react-toastify";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useStatusContext } from "utils/status";
-import { generateRandomNumberString } from "utils/string";
+import { generateRandomNumberString, displayTime } from "utils/string";
 import { _sendVerificationEmail } from "utils/firebase/auth";
 
 const EmailSignup = () => {
@@ -44,12 +44,14 @@ const EmailSignup = () => {
                         sendLoading: true,
                         send: false,
                         realCode: action.payload?.realCode,
+                        restTime: -1,
                     };
                 case "SEND_EMAIL_FULFILLED":
                     return {
                         ...state,
                         sendLoading: false,
                         send: true,
+                        restTime: 60 * 5,
                     };
                 case "SEND_EMAIL_REJECTED":
                     return {
@@ -57,6 +59,12 @@ const EmailSignup = () => {
                         sendLoading: false,
                         send: false,
                         realCode: "",
+                        restTime: -1,
+                    };
+                case "TICK":
+                    return {
+                        ...state,
+                        restTime: state.restTime - 1,
                     };
                 case "TYPE_CODE":
                     return {
@@ -123,8 +131,22 @@ const EmailSignup = () => {
             verify: false,
             verifyLoading: false,
             submitLoading: false,
+            restTime: -1,
         }
     );
+    const timerId = React.useRef(null);
+
+    React.useEffect(() => {
+        if (emailVerify.send) {
+            timerId.current = setInterval(() => {
+                dispatch({
+                    type: "TICK",
+                });
+            }, 1000);
+        }
+
+        return () => clearTimeout(timerId.current);
+    }, [emailVerify.send]);
 
     React.useEffect(() => {
         if (!validateEmail(email).success) {
@@ -236,7 +258,6 @@ const EmailSignup = () => {
             type: "VERIFY_PENDING",
         });
 
-        // verify success
         if (
             emailVerify.code === emailVerify.realCode &&
             Boolean(emailVerify.code) &&
@@ -367,7 +388,10 @@ const EmailSignup = () => {
                     <div className="send">
                         <WoilonnInput
                             type="number"
-                            label={t(`label.verify_code`)}
+                            label={`${t(`label.verify_code`)} (${t(
+                                "label.verify_code_rest_time",
+                                { time: displayTime(emailVerify.restTime) }
+                            )})`}
                             value={emailVerify.code}
                             onChange={(event) =>
                                 dispatch({
@@ -378,7 +402,11 @@ const EmailSignup = () => {
                                 })
                             }
                             onKeyPress={(event) => {
-                                if (!emailVerify.canVerify) return;
+                                if (
+                                    !emailVerify.canVerify ||
+                                    emailVerify.restTime < 0
+                                )
+                                    return;
                                 if (event.key === "Enter") {
                                     onVerifyHandler();
                                 }
@@ -400,7 +428,9 @@ const EmailSignup = () => {
                             emailVerify.verifyLoading ||
                             emailVerify.submitLoading
                         }
-                        disabled={!emailVerify.canVerify}
+                        disabled={
+                            !emailVerify.canVerify || emailVerify.restTime < 0
+                        }
                         onClick={onVerifyHandler}
                     >
                         {t("btn.verify_complete")}

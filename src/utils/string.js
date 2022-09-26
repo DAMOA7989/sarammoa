@@ -21,3 +21,21 @@ export const pasteText = ({}) =>
 export const generateRandomNumberString = (cipher) => {
     return Math.random().toString().substr(2, cipher);
 };
+
+export const displayTime = (sec) => {
+    if (sec < 0) {
+        return "0:00";
+    }
+    let mm = String(Math.floor(sec / 60));
+
+    sec %= 60;
+    let ss = String(Math.floor(sec));
+    if (ss.length === 0) {
+        ss = "0" + ss;
+    }
+    if (ss.length === 1) {
+        ss = "0" + ss;
+    }
+
+    return `${mm}:${ss}`;
+};
