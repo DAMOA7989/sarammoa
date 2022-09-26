@@ -13,6 +13,7 @@ import { useNavigateContext } from "utils/navigate";
 import { toast } from "react-toastify";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useStatusContext } from "utils/status";
+import { generateRandomNumberString } from "utils/string";
 
 const EmailSignup = () => {
     const { t } = useTranslation();
@@ -166,6 +167,8 @@ const EmailSignup = () => {
             type: "SEND_EMAIL_PENDING",
         });
 
+        const randomNumberString = generateRandomNumberString(6);
+
         setTimeout(() => {
             dispatch({
                 type: "SEND_EMAIL_FULFILLED",
@@ -197,7 +200,6 @@ const EmailSignup = () => {
                 type: "VERIFY_FULFILLED",
             });
             setOpenBottomSheet(false);
-
             task.run();
             signUp({ type: "email", email, password })
                 .then(() => {
@@ -225,7 +227,6 @@ const EmailSignup = () => {
                     }
                 });
         }, 2000);
-
         // verify error
         // dispatch({
         //     type: "VERIFY_REJECTED",

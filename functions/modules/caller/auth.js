@@ -112,3 +112,161 @@ exports.createFirebaseToken = functions.https.onCall(
                 });
         })
 );
+
+exports.getAuthorizationCodeWithGmailApi = functions.https.onCall(
+    (data, context) => {
+        const { google } = require("googleapis");
+        const credentials = require("../../config/gmail_api.json");
+        credentials["installed"]["client_id"] = process.env.GMAIL_API_CLIENT_ID;
+        credentials["installed"]["client_secret"] =
+            process.env.GMAIL_API_CLIENT_SECRET;
+
+        const { client_secret, client_id, redirect_uris } =
+            credentials.installed;
+        const oAuth2Client = new google.auth.OAuth2(
+            client_id,
+            client_secret,
+            redirect_uris[0]
+        );
+
+        const GMAIL_SCOPES = ["https://www.googleapis.com/auth/gmail.send"];
+
+        const url = oAuth2Client.generateAuthUrl({
+            access_type: "offline",
+            prompt: "consent",
+            scope: GMAIL_SCOPES,
+        });
+
+        return "Authorize this app by visiting this url: " + url;
+    }
+);
+
+exports.createAuthorizedOAuth2ClientWithGmailApi = functions.https.onCall(
+    (data, context) => {
+        const { google } = require("googleapis");
+        const path = require("path");
+        const fs = require("fs");
+        const credentials = require("../../config/gmail_api.json");
+        credentials["installed"]["client_id"] = process.env.GMAIL_API_CLIENT_ID;
+        credentials["installed"]["client_secret"] =
+            process.env.GMAIL_API_CLIENT_SECRET;
+
+        const code =
+            "4/0ARtbsJqh5zl3xcuqRYtORqO5uEHrzbm8SM77D1DsDmfWUvY0RqsBcAnc5kvBJSJWnJCxfQ";
+        const { client_secret, client_id, redirect_uris } =
+            credentials.installed;
+        const oAuth2Client = new google.auth.OAuth2(
+            client_id,
+            client_secret,
+            redirect_uris[0]
+        );
+
+        oAuth2Client.getToken(code).then(({ tokens }) => {
+            const tokenPath = path.join(
+                __dirname,
+                "../../config",
+                "token.json"
+            );
+            fs.writeFileSync(tokenPath, JSON.stringify(tokens));
+            console.log("Access token and refresh token stored to token.json");
+        });
+    }
+);
+
+const gmail = () => {
+    const { google } = require("googleapis");
+    const MailComposer = require("nodemailer/lib/mail-composer");
+    const credentials = require("../../config/gmail_api.json");
+    credentials["installed"]["client_id"] = process.env.GMAIL_API_CLIENT_ID;
+    credentials["installed"]["client_secret"] =
+        process.env.GMAIL_API_CLIENT_SECRET;
+    const tokens = require("../../config/token.json");
+
+    const getGmailService = () => {
+        const { client_secret, client_id, redirect_uris } =
+            credentials.installed;
+        const oAuth2Client = new google.auth.OAuth2(
+            client_id,
+            client_secret,
+            redirect_uris[0]
+        );
+        oAuth2Client.setCredentials(tokens);
+        const gmail = google.gmail({ version: "v1", auth: oAuth2Client });
+        return gmail;
+    };
+
+    const encodeMessage = (message) => {
+        return Buffer.from(message)
+            .toString("base64")
+            .replace(/\+/g, "-")
+            .replace(/\//g, "_")
+            .replace(/=+$/, "");
+    };
+
+    const createMail = async (options) => {
+        const mailComposer = new MailComposer(options);
+        const message = await mailComposer.compile().build();
+        return encodeMessage(message);
+    };
+
+    // sendMail
+    return async (options) => {
+        const gmail = getGmailService();
+        const rawMessage = await createMail(options);
+        const { data: { id } = {} } = await gmail.users.messages.send({
+            userId: "me",
+            resource: {
+                raw: rawMessage,
+            },
+        });
+        return id;
+    };
+};
+
+exports.sendVerificationEmail = functions.https.onCall(
+    (data, context) =>
+        new Promise(async (resolve, reject) => {
+            const toAddress = data.toAddress;
+
+            const fs = require("fs");
+            const path = require("path");
+            const sendMail = gmail();
+
+            // const fileAttachments = [
+            //     {
+            //       filename: 'attachment1.txt',
+            //       content: 'This is a plain text file sent as an attachment',
+            //     },
+            //     {
+            //       path: path.join(__dirname, './attachment2.txt'),
+            //     },
+            //     {
+            //       filename: 'websites.pdf',
+            //       path: 'https://www.labnol.org/files/cool-websites.pdf',
+            //     },
+
+            //     {
+            //       filename: 'image.png',
+            //       content: fs.createReadStream(path.join(__dirname, './attach.png')),
+            //     },
+            //   ];
+
+            const options = {
+                to: toAddress,
+                // cc: '',
+                // replyTo: '',
+                subject: "Hello Amit 🚀",
+                text: "This email is sent from the command line",
+                html: `<p>🙋🏻‍♀️  &mdash; This is a <b>test email</b> from <a href="https://digitalinspiration.com">Digital Inspiration</a>.</p>`,
+                // attachments: fileAttachments,
+                textEncoding: "base64",
+                headers: [
+                    { key: "X-Application-Developer", value: "Amit Agarwal" },
+                    { key: "X-Application-Version", value: "v1.0.0.2" },
+                ],
+            };
+
+            const messageId = await sendMail(options);
+            resolve(messageId);
+        })
+);

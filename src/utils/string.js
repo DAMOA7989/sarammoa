@@ -17,3 +17,7 @@ export const pasteText = ({}) =>
             return reject(e);
         }
     });
+
+export const generateRandomNumberString = (cipher) => {
+    return Math.random().toString().substr(2, cipher);
+};
