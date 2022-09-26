@@ -11,10 +11,20 @@ import {
     validateVerifyCode,
 } from "utils/validator";
 import { displayTime } from "utils/string";
-import { _sendVerificationEmail } from "utils/firebase/auth";
+import {
+    _sendVerificationEmail,
+    _sendPasswordResetEmail,
+    _verifyPasswordResetCode,
+    _confirmPasswordReset,
+} from "utils/firebase/auth";
+import { useSearchParams } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+import { useNavigateContext } from "utils/navigate";
 
 const EmailFind = () => {
     const { t } = useTranslation();
+    const [search] = useSearchParams();
+    const navigate = useNavigateContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -91,18 +101,21 @@ const EmailFind = () => {
                         ...state,
                         confirm: false,
                         confirmLoading: true,
+                        email: "",
                     };
                 case "CONFIRM_FULFILLED":
                     return {
                         ...state,
                         confirm: true,
                         confirmLoading: false,
+                        email: action.payload?.email,
                     };
                 case "CONFIRM_REJECTED":
                     return {
                         ...state,
                         confirm: false,
                         confirmLoading: false,
+                        email: "",
                     };
                 case "SUBMIT_PENDING":
                     return {
@@ -153,6 +166,31 @@ const EmailFind = () => {
         }
     );
     const timerId = React.useRef(null);
+
+    React.useEffect(() => {
+        const actionCode = search.get("oobCode");
+        if (Boolean(actionCode)) {
+            dispatch({
+                type: "CONFIRM_PENDING",
+            });
+
+            _verifyPasswordResetCode({ actionCode })
+                .then((email) => {
+                    dispatch({
+                        type: "CONFIRM_FULFILLED",
+                        payload: {
+                            email,
+                        },
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    dispatch({
+                        type: "CONFIRM_REJECTED",
+                    });
+                });
+        }
+    }, []);
 
     React.useEffect(() => {
         if (state.send) {
@@ -228,8 +266,8 @@ const EmailFind = () => {
     }, [state.email, state.newPassword, state.newPasswordConfirm]);
 
     const onSendEmailHandler = () => {
+        // In current, no use randomNumberString
         const randomNumberString = generateRandomNumberString(6);
-
         dispatch({
             type: "SEND_EMAIL_PENDING",
             payload: {
@@ -237,10 +275,7 @@ const EmailFind = () => {
             },
         });
 
-        _sendVerificationEmail({
-            code: randomNumberString,
-            email: state.email,
-        })
+        _sendPasswordResetEmail({ email: state.email })
             .then(() => {
                 dispatch({
                     type: "SEND_EMAIL_FULFILLED",
@@ -253,6 +288,23 @@ const EmailFind = () => {
                     type: "SEND_EMAIL_REJECTED",
                 });
             });
+
+        // _sendVerificationEmail({
+        //     code: randomNumberString,
+        //     email: state.email,
+        // })
+        //     .then(() => {
+        //         dispatch({
+        //             type: "SEND_EMAIL_FULFILLED",
+        //         });
+        //         toast.success(t("toast.auth.email.signup.bottom_sheet"));
+        //     })
+        //     .catch((e) => {
+        //         console.dir(e);
+        //         dispatch({
+        //             type: "SEND_EMAIL_REJECTED",
+        //         });
+        //     });
     };
 
     const onConfirmHandler = () => {
@@ -276,15 +328,36 @@ const EmailFind = () => {
     };
 
     const onSubmitHandler = () => {
+        const actionCode = search.get("oobCode");
+        if (!Boolean(actionCode)) {
+            dispatch({
+                type: "SUBMIT_REJECTED",
+            });
+            return;
+        }
+
         dispatch({
             type: "SUBMIT_PENDING",
         });
 
-        setTimeout(() => {
-            dispatch({
-                type: "SUBMIT_FULFILLED",
+        _confirmPasswordReset({ actionCode, newPassword: state.newPassword })
+            .then(() => {
+                dispatch({
+                    type: "SUBMIT_FULFILLED",
+                });
+                toast.success(t("toast.auth.email.find.submit_success"));
+                navigate.replace({
+                    pathname: "/auth/email/signin",
+                    mode: "main",
+                    screenTitle: "title.auth.email.signin",
+                });
+            })
+            .catch((e) => {
+                console.dir(e);
+                dispatch({
+                    type: "SUBMIT_REJECTED",
+                });
             });
-        }, 2000);
     };
 
     return (
@@ -306,30 +379,33 @@ const EmailFind = () => {
                         }}
                     />
                 </p>
-                <div className="fields">
-                    <div className="input-fields">
-                        <WoilonnInput
-                            type="email"
-                            label={t("label.email")}
-                            value={state.email}
-                            onChange={(event) =>
-                                dispatch({
-                                    type: "SET_EMAIL",
-                                    payload: {
-                                        email: event.target.value,
-                                    },
-                                })
-                            }
-                            disabled={state.send}
-                            onKeyPress={(event) => {
-                                if (!state.canSend) return;
-                                if (state.send) return;
-                                if (event.key === "Enter") {
-                                    onSendEmailHandler();
+                {state.confirmLoading ? (
+                    <CircularProgress color="primary" size={45} />
+                ) : (
+                    <div className="fields">
+                        <div className="input-fields">
+                            <WoilonnInput
+                                type="email"
+                                label={t("label.email")}
+                                value={state.email}
+                                onChange={(event) =>
+                                    dispatch({
+                                        type: "SET_EMAIL",
+                                        payload: {
+                                            email: event.target.value,
+                                        },
+                                    })
                                 }
-                            }}
-                        />
-                        {state.send && !state.confirm && (
+                                disabled={state.confirm}
+                                onKeyPress={(event) => {
+                                    if (!state.canSend) return;
+                                    if (state.send) return;
+                                    if (event.key === "Enter") {
+                                        onSendEmailHandler();
+                                    }
+                                }}
+                            />
+                            {/* {state.send && !state.confirm && (
                             <WoilonnInput
                                 type="number"
                                 label={`${t("label.verification_code")} (${t(
@@ -358,64 +434,65 @@ const EmailFind = () => {
                                     }
                                 }}
                             />
-                        )}
-                        {state.confirm && (
-                            <>
-                                <WoilonnInput
-                                    type="password"
-                                    label={t("label.new_password")}
-                                    value={state.newPassword}
-                                    onChange={(event) =>
-                                        dispatch({
-                                            type: "SET_NEW_PASSWORD",
-                                            payload: {
-                                                newPassword: event.target.value,
-                                            },
-                                        })
-                                    }
-                                    onKeyPress={(event) => {
-                                        if (!state.canSubmit) return;
-                                        if (event.key === "Enter") {
-                                            onSubmitHandler();
+                        )} */}
+                            {state.confirm && (
+                                <>
+                                    <WoilonnInput
+                                        type="password"
+                                        label={t("label.new_password")}
+                                        value={state.newPassword}
+                                        onChange={(event) =>
+                                            dispatch({
+                                                type: "SET_NEW_PASSWORD",
+                                                payload: {
+                                                    newPassword:
+                                                        event.target.value,
+                                                },
+                                            })
                                         }
-                                    }}
-                                />
-                                <WoilonnInput
-                                    type="password"
-                                    label={t("label.new_password_confirm")}
-                                    value={state.newPasswordConfirm}
-                                    onChange={(event) =>
-                                        dispatch({
-                                            type: "SET_NEW_PASSWORD_CONFIRM",
-                                            payload: {
-                                                newPasswordConfirm:
-                                                    event.target.value,
-                                            },
-                                        })
-                                    }
-                                    onKeyPress={(event) => {
-                                        if (!state.canSubmit) return;
-                                        if (event.key === "Enter") {
-                                            onSubmitHandler();
+                                        onKeyPress={(event) => {
+                                            if (!state.canSubmit) return;
+                                            if (event.key === "Enter") {
+                                                onSubmitHandler();
+                                            }
+                                        }}
+                                    />
+                                    <WoilonnInput
+                                        type="password"
+                                        label={t("label.new_password_confirm")}
+                                        value={state.newPasswordConfirm}
+                                        onChange={(event) =>
+                                            dispatch({
+                                                type: "SET_NEW_PASSWORD_CONFIRM",
+                                                payload: {
+                                                    newPasswordConfirm:
+                                                        event.target.value,
+                                                },
+                                            })
                                         }
-                                    }}
-                                />
-                            </>
-                        )}
-                    </div>
-                    <div className="button-fields">
-                        {!state.send && (
-                            <CommonButton
-                                className="send-button"
-                                color="secondary"
-                                loading={state.sendLoading}
-                                disabled={state.send || !state.canSend}
-                                onClick={onSendEmailHandler}
-                            >
-                                {t("button.send_verification_code")}
-                            </CommonButton>
-                        )}
-                        {state.send && !state.confirm && (
+                                        onKeyPress={(event) => {
+                                            if (!state.canSubmit) return;
+                                            if (event.key === "Enter") {
+                                                onSubmitHandler();
+                                            }
+                                        }}
+                                    />
+                                </>
+                            )}
+                        </div>
+                        <div className="button-fields">
+                            {!state.confirm && (
+                                <CommonButton
+                                    className="send-button"
+                                    color="secondary"
+                                    loading={state.sendLoading}
+                                    disabled={state.send || !state.canSend}
+                                    onClick={onSendEmailHandler}
+                                >
+                                    {t("button.send_verification_code")}
+                                </CommonButton>
+                            )}
+                            {/* {state.send && !state.confirm && (
                             <CommonButton
                                 className="confirm-button"
                                 color="secondary"
@@ -429,9 +506,10 @@ const EmailFind = () => {
                             >
                                 {t("button.confirm_verification_code")}
                             </CommonButton>
-                        )}
+                        )} */}
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className="buttons">
                     <CommonButton
                         className="submit-button"

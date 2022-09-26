@@ -94,6 +94,10 @@
         height: 70vh;
         max-height: 32.375em;
 
+        > span[role="progressbar"] {
+            margin: 0 auto;
+        }
+
         > .welcome-message {
             font-size: 18px;
             font-weight: 500;

@@ -8,6 +8,9 @@ import {
     GoogleAuthProvider,
     getRedirectResult,
     signOut,
+    sendPasswordResetEmail,
+    verifyPasswordResetCode,
+    confirmPasswordReset,
 } from "firebase/auth";
 import {
     doc,
@@ -196,6 +199,41 @@ export const _sendVerificationEmail = ({ code, email }) =>
                 toAddress: email,
             });
             return resolve(messageId);
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _sendPasswordResetEmail = ({ email }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await sendPasswordResetEmail(auth, email);
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _verifyPasswordResetCode = ({ actionCode }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const email = await verifyPasswordResetCode(auth, actionCode);
+            return resolve(email);
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _confirmPasswordReset = ({ actionCode, newPassword }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await verifyPasswordResetCode(auth, actionCode);
+            const resp = await confirmPasswordReset(
+                auth,
+                actionCode,
+                newPassword
+            );
+            return resolve(resp);
         } catch (e) {
             return reject(e);
         }
