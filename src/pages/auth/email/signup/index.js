@@ -245,12 +245,6 @@ const EmailSignup = () => {
                     type: "SEND_EMAIL_REJECTED",
                 });
             });
-
-        setTimeout(() => {
-            dispatch({
-                type: "SEND_EMAIL_FULFILLED",
-            });
-        }, 1000);
     };
 
     const onVerifyHandler = () => {

@@ -10,6 +10,8 @@ import {
     validatePasswordConfirm,
     validateVerifyCode,
 } from "utils/validator";
+import { displayTime } from "utils/string";
+import { _sendVerificationEmail } from "utils/firebase/auth";
 
 const EmailFind = () => {
     const { t } = useTranslation();
@@ -52,12 +54,14 @@ const EmailFind = () => {
                         send: false,
                         sendLoading: true,
                         realCode: action.payload?.realCode,
+                        restTime: -1,
                     };
                 case "SEND_EMAIL_FULFILLED":
                     return {
                         ...state,
                         send: true,
                         sendLoading: false,
+                        restTime: 60 * 5,
                     };
                 case "SEND_EMAIL_REJECTED":
                     return {
@@ -65,6 +69,7 @@ const EmailFind = () => {
                         send: false,
                         sendLoading: false,
                         realCode: "",
+                        restTime: -1,
                     };
                 case "CAN_CONFIRM":
                     return {
@@ -75,6 +80,11 @@ const EmailFind = () => {
                     return {
                         ...state,
                         canConfirm: false,
+                    };
+                case "TICK":
+                    return {
+                        ...state,
+                        restTime: state.restTime - 1,
                     };
                 case "CONFIRM_PENDING":
                     return {
@@ -136,11 +146,25 @@ const EmailFind = () => {
             confirm: false,
             confirmLoading: false,
             canConfirm: false,
+            restTime: -1,
             submit: false,
             submitLoading: false,
             canSubmit: false,
         }
     );
+    const timerId = React.useRef(null);
+
+    React.useEffect(() => {
+        if (state.send) {
+            timerId.current = setInterval(() => {
+                dispatch({
+                    type: "TICK",
+                });
+            }, 1000);
+        }
+
+        return () => clearTimeout(timerId.current);
+    }, [state.send]);
 
     React.useEffect(() => {
         if (!validateEmail(state.email).success) {
@@ -173,7 +197,15 @@ const EmailFind = () => {
             });
         }
 
-        if (!validatePassword(state.newPassword).success) {
+        if (
+            !validatePassword(state.newPassword, {
+                lower: 1,
+                upper: 1,
+                numeric: 1,
+                special: 1,
+                length: [9, Infinity],
+            }).success
+        ) {
             return dispatch({
                 type: "CAN_NOT_SUBMIT",
             });
@@ -196,7 +228,8 @@ const EmailFind = () => {
     }, [state.email, state.newPassword, state.newPasswordConfirm]);
 
     const onSendEmailHandler = () => {
-        const randomNumberString = generateRandomNumberString();
+        const randomNumberString = generateRandomNumberString(6);
+
         dispatch({
             type: "SEND_EMAIL_PENDING",
             payload: {
@@ -204,11 +237,22 @@ const EmailFind = () => {
             },
         });
 
-        setTimeout(() => {
-            dispatch({
-                type: "SEND_EMAIL_FULFILLED",
+        _sendVerificationEmail({
+            code: randomNumberString,
+            email: state.email,
+        })
+            .then(() => {
+                dispatch({
+                    type: "SEND_EMAIL_FULFILLED",
+                });
+                toast.success(t("toast.auth.email.signup.bottom_sheet"));
+            })
+            .catch((e) => {
+                console.dir(e);
+                dispatch({
+                    type: "SEND_EMAIL_REJECTED",
+                });
             });
-        }, 2000);
     };
 
     const onConfirmHandler = () => {
@@ -216,11 +260,19 @@ const EmailFind = () => {
             type: "CONFIRM_PENDING",
         });
 
-        setTimeout(() => {
+        if (
+            state.verificationCode === state.realCode &&
+            Boolean(state.verificationCode && Boolean(state.realCode))
+        ) {
             dispatch({
                 type: "CONFIRM_FULFILLED",
             });
-        }, 2000);
+        } else {
+            toast.error(t("toast.auth.email.signup.verify_rejected"));
+            dispatch({
+                type: "CONFIRM_REJECTED",
+            });
+        }
     };
 
     const onSubmitHandler = () => {
@@ -280,7 +332,12 @@ const EmailFind = () => {
                         {state.send && !state.confirm && (
                             <WoilonnInput
                                 type="number"
-                                label={t("label.verification_code")}
+                                label={`${t("label.verification_code")} (${t(
+                                    "label.verify_code_rest_time",
+                                    {
+                                        time: displayTime(state.restTime),
+                                    }
+                                )})`}
                                 value={state.verificationCode}
                                 onChange={(event) =>
                                     dispatch({
@@ -293,6 +350,7 @@ const EmailFind = () => {
                                 }
                                 disabled={state.confirm}
                                 onKeyPress={(event) => {
+                                    if (state.restTime < 0) return;
                                     if (!state.canConfirm) return;
                                     if (state.confirm) return;
                                     if (event.key === "Enter") {
@@ -362,7 +420,11 @@ const EmailFind = () => {
                                 className="confirm-button"
                                 color="secondary"
                                 loading={state.confirmLoading}
-                                disabled={state.confirm || !state.canConfirm}
+                                disabled={
+                                    state.confirm ||
+                                    !state.canConfirm ||
+                                    state.restTime < 0
+                                }
                                 onClick={onConfirmHandler}
                             >
                                 {t("button.confirm_verification_code")}
