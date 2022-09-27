@@ -60,9 +60,15 @@ exports.onCreateUser = functions
         updateParams.position = "Person";
         updateParams.createdAt = serverTimeStamp;
 
-        db.doc(`users/${uid}`).set(updateParams, {
-            merge: true,
-        });
+        db.doc(`users/${uid}`).set(
+            {
+                ...updateParams,
+                init: false,
+            },
+            {
+                merge: true,
+            }
+        );
 
         db.collection("messages")
             .add({

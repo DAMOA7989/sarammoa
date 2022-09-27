@@ -11,11 +11,13 @@ import {
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "utils/firebase";
 import { useStatusContext } from "utils/status";
+import { useModalContext } from "utils/modal";
 
 const AuthContext = React.createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const { task } = useStatusContext();
+    const { displayModal } = useModalContext();
     const [init, setInit] = React.useState(false);
     const [user, setUser] = React.useState({
         status: "idle",
@@ -57,14 +59,33 @@ export const AuthProvider = ({ children }) => {
             const unsubscribe = onSnapshot(
                 doc(db, "users", _user?.uid),
                 (docSnap) => {
-                    if (docSnap.exists()) {
-                        setUserInfo({
-                            id: docSnap.id,
-                            ...docSnap.data(),
-                        });
-                    } else {
+                    try {
+                        if (docSnap.exists()) {
+                            if (docSnap.data()?.createdAt) {
+                                setUserInfo({
+                                    id: docSnap.id,
+                                    ...docSnap.data(),
+                                });
+
+                                if (!docSnap.data()?.init) {
+                                    displayModal({
+                                        pathname: "auth/InitUser",
+                                        params: {},
+                                        options: {
+                                            goBackButton: false,
+                                        },
+                                    });
+                                }
+                            } else {
+                                throw new Error();
+                            }
+                        } else {
+                            throw new Error();
+                        }
+                    } catch (e) {
                         setUserInfo(null);
                     }
+
                     task.finish();
                 }
             );
@@ -138,6 +159,9 @@ export const AuthProvider = ({ children }) => {
                     case "google":
                         signInWithGoogle();
                         break;
+                    case "apple":
+                        signInWithApple();
+                        break;
                     case "email":
                         await signInWithEmail({
                             email: payload?.email,
@@ -175,6 +199,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     const signInWithGoogle = () => _signInWithRedirect();
+
+    const signInWithApple = () => {};
 
     const signInWithEmail = ({ email, password }) =>
         _signInWithEmailAndPassword({

@@ -42,12 +42,16 @@ const __OAUTH_BUTTONS__ = [
                 .catch((e) => console.dir(e));
         },
     },
-    {
-        key: "apple",
-        i18nKey: "btn.oauth.apple",
-        icon: <AppleIcon />,
-        onClick: ({ signIn }) => {},
-    },
+    // {
+    //     key: "apple",
+    //     i18nKey: "btn.oauth.apple",
+    //     icon: <AppleIcon />,
+    //     onClick: ({ signIn }) => {
+    //         signIn({ type: "apple" })
+    //             .then(() => {})
+    //             .catch((e) => console.dir(e));
+    //     },
+    // },
     {
         key: "email",
         i18nKey: "btn.oauth.email",

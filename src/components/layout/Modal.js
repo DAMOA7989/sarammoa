@@ -91,7 +91,10 @@ const Modal = () => {
                 } ${optionsRef.current?.layout}`}
             >
                 <>
-                    <ModalHeader title={optionsRef.current?.title} />
+                    {(typeof options?.goBackButton === "boolean" &&
+                        !options?.goBackButton) || (
+                        <ModalHeader title={optionsRef.current?.title} />
+                    )}
                     <ModalComponentRef.current {...params} />
                 </>
             </div>
