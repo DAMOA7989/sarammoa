@@ -3,7 +3,7 @@ export const validateEmail = (email) => {
         if (!Boolean(email)) throw new Error("empty email");
         const regexp =
             /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (!regexp.test(email)) throw new Error("invalidate regexp");
+        if (!regexp.test(email)) throw new Error("invalidate regexp email");
         return {
             success: true,
             payload: null,
@@ -55,8 +55,20 @@ export const validatePassword = (password, options = {}) => {
 
         // enforce lower/upper/alpha/numeric/special rules
         for (rule in re) {
-            if ((password.match(re[rule]) || []).length < o[rule])
-                throw new Error("lower/upper/alpha/numeric/special rules");
+            if ((password.match(re[rule]) || []).length < o[rule]) {
+                switch (rule) {
+                    case "lower":
+                        throw new Error("lower rule");
+                    case "upper":
+                        throw new Error("upper rule");
+                    case "alpha":
+                        throw new Error("alpha rule");
+                    case "numeric":
+                        throw new Error("numeric rule");
+                    case "special":
+                        throw new Error("special rule");
+                }
+            }
         }
 
         // enforce word ban (case insensitive)
@@ -64,7 +76,7 @@ export const validatePassword = (password, options = {}) => {
             if (
                 password.toLowerCase().indexOf(o.badWords[i].toLowerCase()) > -1
             )
-                throw new Error("badWords");
+                throw new Error("bad words");
         }
 
         // enforce the no sequential, identical characters rule
@@ -116,6 +128,8 @@ export const validatePassword = (password, options = {}) => {
 
 export const validatePasswordConfirm = (password, passwordConfirm) => {
     try {
+        if (password !== passwordConfirm)
+            throw new Error("password confirm fail");
         return {
             success: password === passwordConfirm,
             payload: null,

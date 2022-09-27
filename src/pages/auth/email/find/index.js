@@ -25,6 +25,10 @@ const EmailFind = () => {
     const { t } = useTranslation();
     const [search] = useSearchParams();
     const navigate = useNavigateContext();
+    const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
+    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+    const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
+        React.useState("");
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -229,40 +233,75 @@ const EmailFind = () => {
     }, [state.verificationCode]);
 
     React.useEffect(() => {
-        if (!validateEmail(state.email).success) {
-            return dispatch({
-                type: "CAN_NOT_SUBMIT",
-            });
-        }
+        try {
+            const resultOfValidateEmail = validateEmail(state.email);
+            if (!resultOfValidateEmail.success) {
+                throw resultOfValidateEmail.payload;
+            }
 
-        if (
-            !validatePassword(state.newPassword, {
-                lower: 1,
-                upper: 1,
-                numeric: 1,
-                special: 1,
-                length: [9, Infinity],
-            }).success
-        ) {
-            return dispatch({
-                type: "CAN_NOT_SUBMIT",
-            });
-        }
+            const resultOfValidatePassword = validatePassword(
+                state.newPassword,
+                {
+                    lower: 1,
+                    upper: 1,
+                    numeric: 1,
+                    special: 1,
+                    length: [9, Infinity],
+                }
+            );
+            if (!resultOfValidatePassword.success) {
+                throw resultOfValidatePassword.payload;
+            }
 
-        if (
-            !validatePasswordConfirm(
+            const resultOfValidatePasswordConfirm = validatePasswordConfirm(
                 state.newPassword,
                 state.newPasswordConfirm
-            ).success
-        ) {
+            );
+            if (!resultOfValidatePasswordConfirm.success) {
+                throw resultOfValidatePasswordConfirm.payload;
+            }
+
+            return dispatch({
+                type: "CAN_SUBMIT",
+            });
+        } catch (e) {
+            switch (e?.message) {
+                case "empty email":
+                    setEmailErrorMessage("alert.empty_email");
+                    break;
+                case "invalidate regexp email":
+                    setEmailErrorMessage("alert.invalidate_regexp_email");
+                    break;
+                case "empty password":
+                    setPasswordErrorMessage("alert.empty_password");
+                    break;
+                case "min/max length":
+                    setPasswordErrorMessage("alert.min_max_length");
+                    break;
+                case "lower rule":
+                    setPasswordErrorMessage("alert.lower_rule");
+                    break;
+                case "upper rule":
+                    setPasswordErrorMessage("alert.upper_rule");
+                    break;
+                case "numeric rule":
+                    setPasswordErrorMessage("alert.numeric_rule");
+                    break;
+                case "special rule":
+                    setPasswordErrorMessage("alert.special_rule");
+                    break;
+                case "password confirm fail":
+                    setPasswordConfirmErrorMessage(
+                        "alert.password_confirm_fail"
+                    );
+                    break;
+                default:
+                    break;
+            }
             return dispatch({
                 type: "CAN_NOT_SUBMIT",
             });
         }
-
-        return dispatch({
-            type: "CAN_SUBMIT",
-        });
     }, [state.email, state.newPassword, state.newPasswordConfirm]);
 
     const onSendEmailHandler = () => {

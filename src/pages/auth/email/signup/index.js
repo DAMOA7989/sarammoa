@@ -22,8 +22,12 @@ const EmailSignup = () => {
     const navigate = useNavigateContext();
     const { task } = useStatusContext();
     const [email, setEmail] = React.useState("");
+    const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
     const [passwordConfirm, setPasswordConfirm] = React.useState("");
+    const [passwordConfirmErrorMessage, setPasswordConfirmErrorMessage] =
+        React.useState("");
     const [openBottomSheet, setOpenBottomSheet] = React.useState(false);
     const [emailVerify, dispatch] = React.useReducer(
         (state, action) => {
@@ -149,33 +153,75 @@ const EmailSignup = () => {
     }, [emailVerify.send]);
 
     React.useEffect(() => {
-        if (!validateEmail(email).success) {
-            return dispatch({
-                type: "CAN_NOT_SEND_EMAIL",
-            });
-        }
-        if (
-            !validatePassword(password, {
+        try {
+            const resultOfValidateEmail = validateEmail(email);
+            if (!resultOfValidateEmail.success) {
+                throw resultOfValidateEmail.payload;
+            }
+            setEmailErrorMessage("");
+
+            const resultOfValidatePassword = validatePassword(password, {
                 lower: 1,
                 upper: 1,
                 numeric: 1,
                 special: 1,
                 length: [9, Infinity],
-            }).success
-        ) {
-            return dispatch({
-                type: "CAN_NOT_SEND_EMAIL",
             });
-        }
-        if (!validatePasswordConfirm(password, passwordConfirm).success) {
-            return dispatch({
-                type: "CAN_NOT_SEND_EMAIL",
-            });
-        }
+            if (!resultOfValidatePassword.success) {
+                throw resultOfValidatePassword.payload;
+            }
+            setPasswordErrorMessage("");
 
-        return dispatch({
-            type: "CAN_SEND_EMAIL",
-        });
+            const resultOfValidatePasswordConfirm = validatePasswordConfirm(
+                password,
+                passwordConfirm
+            );
+            if (!resultOfValidatePasswordConfirm.success) {
+                throw resultOfValidatePasswordConfirm.payload;
+            }
+            setPasswordConfirmErrorMessage("");
+
+            return dispatch({
+                type: "CAN_SEND_EMAIL",
+            });
+        } catch (e) {
+            switch (e?.message) {
+                case "empty email":
+                    setEmailErrorMessage("alert.empty_email");
+                    break;
+                case "invalidate regexp email":
+                    setEmailErrorMessage("alert.invalidate_regexp_email");
+                    break;
+                case "empty password":
+                    setPasswordErrorMessage("alert.empty_password");
+                    break;
+                case "min/max length":
+                    setPasswordErrorMessage("alert.min_max_length");
+                    break;
+                case "lower rule":
+                    setPasswordErrorMessage("alert.lower_rule");
+                    break;
+                case "upper rule":
+                    setPasswordErrorMessage("alert.upper_rule");
+                    break;
+                case "numeric rule":
+                    setPasswordErrorMessage("alert.numeric_rule");
+                    break;
+                case "special rule":
+                    setPasswordErrorMessage("alert.special_rule");
+                    break;
+                case "password confirm fail":
+                    setPasswordConfirmErrorMessage(
+                        "alert.password_confirm_fail"
+                    );
+                    break;
+                default:
+                    break;
+            }
+            return dispatch({
+                type: "CAN_NOT_SEND_EMAIL",
+            });
+        }
     }, [email, password, passwordConfirm]);
 
     React.useEffect(() => {
