@@ -8,6 +8,7 @@ const WoilonnInput = ({
     onChange,
     onKeyPress,
     disabled,
+    alert,
 }) => {
     return (
         <div className="woilonn-input">
@@ -22,6 +23,7 @@ const WoilonnInput = ({
                     disabled={disabled}
                 />
             </div>
+            <div className="alert">{alert}</div>
         </div>
     );
 };

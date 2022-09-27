@@ -473,6 +473,14 @@
         }
     }
 
+    > .alert {
+        margin-top: 0.25em;
+        padding-left: 0.375em;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: $cancel_color;
+    }
+
     &:focus-within {
         > .label {
             color: $gunmetal_color;

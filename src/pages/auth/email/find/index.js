@@ -238,6 +238,7 @@ const EmailFind = () => {
             if (!resultOfValidateEmail.success) {
                 throw resultOfValidateEmail.payload;
             }
+            setEmailErrorMessage("");
 
             const resultOfValidatePassword = validatePassword(
                 state.newPassword,
@@ -252,6 +253,7 @@ const EmailFind = () => {
             if (!resultOfValidatePassword.success) {
                 throw resultOfValidatePassword.payload;
             }
+            setPasswordErrorMessage("");
 
             const resultOfValidatePasswordConfirm = validatePasswordConfirm(
                 state.newPassword,
@@ -260,6 +262,7 @@ const EmailFind = () => {
             if (!resultOfValidatePasswordConfirm.success) {
                 throw resultOfValidatePasswordConfirm.payload;
             }
+            setPasswordConfirmErrorMessage("");
 
             return dispatch({
                 type: "CAN_SUBMIT",
@@ -443,6 +446,7 @@ const EmailFind = () => {
                                         onSendEmailHandler();
                                     }
                                 }}
+                                alert={t(emailErrorMessage)}
                             />
                             {/* {state.send && !state.confirm && (
                             <WoilonnInput
@@ -495,6 +499,7 @@ const EmailFind = () => {
                                                 onSubmitHandler();
                                             }
                                         }}
+                                        alert={t(passwordErrorMessage)}
                                     />
                                     <WoilonnInput
                                         type="password"
@@ -515,6 +520,7 @@ const EmailFind = () => {
                                                 onSubmitHandler();
                                             }
                                         }}
+                                        alert={t(passwordConfirmErrorMessage)}
                                     />
                                 </>
                             )}
