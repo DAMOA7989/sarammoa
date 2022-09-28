@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-const ValidatePhoneNumber = () => {
+const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
     const { t } = useTranslation();
 
     return (

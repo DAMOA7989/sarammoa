@@ -496,7 +496,7 @@
     }
 }
 
-.woilonn-checkbox {
+.woilonn-toggle {
     position: relative;
     display: inline-flex;
     width: 2.5em;
@@ -529,6 +529,56 @@
         > .checkmark {
             transform: translateX(0.5em);
         }
+    }
+}
+
+.woilonn-checkbox {
+    display: flex;
+    align-items: center;
+
+    > .checkmark {
+        width: 21px;
+        height: 21px;
+        border-radius: 4px;
+        margin-right: 0.5em;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        &.common {
+            &.checked {
+                > svg {
+                    > path {
+                        stroke: $primary_color;
+                    }
+                }
+            }
+        }
+
+        &.fill {
+            border: 1.5px solid $primary_color;
+            background-color: transparent;
+
+            &.checked {
+                background-color: $primary_color;
+
+                > svg {
+                    > path {
+                        stroke: white;
+                    }
+                }
+            }
+        }
+    }
+
+    > .label {
+        font-size: 0.875rem;
+    }
+
+    > .required {
+        margin-left: 0.5rem;
+        font-size: 0.875rem;
+        color: $primary_color;
     }
 }
 

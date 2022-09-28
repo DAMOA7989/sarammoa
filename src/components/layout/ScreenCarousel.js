@@ -1,4 +1,5 @@
 import React from "react";
+import cx from "classnames";
 
 const ScreenCarousel = ({ screenIdx, setScreenIdx, screens }) => {
     return (
@@ -10,7 +11,9 @@ const ScreenCarousel = ({ screenIdx, setScreenIdx, screens }) => {
         >
             {(screens || []).map((screen, idx) => (
                 <div
-                    className="screen"
+                    className={`screen ${
+                        screenIdx === idx ? "active" : "inactive"
+                    }`}
                     key={idx}
                     style={{
                         opacity: screenIdx === idx ? "1" : "0",
@@ -19,6 +22,7 @@ const ScreenCarousel = ({ screenIdx, setScreenIdx, screens }) => {
                     {React.cloneElement(
                         screen,
                         {
+                            _idx: idx,
                             screenIdx,
                             setScreenIdx,
                         },
