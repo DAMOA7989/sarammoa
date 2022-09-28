@@ -238,3 +238,23 @@ export const _confirmPasswordReset = ({ actionCode, newPassword }) =>
             return reject(e);
         }
     });
+
+export const _agree = ({ uid, agrees }) =>
+    new Promise(async (resolve, reject) => {
+        console.log("d uid agrees", uid, agrees);
+        try {
+            const docRef = doc(db, "users", uid);
+            await setDoc(
+                docRef,
+                {
+                    agrees: agrees || {},
+                },
+                {
+                    merge: true,
+                }
+            );
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });

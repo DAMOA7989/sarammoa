@@ -70,7 +70,10 @@ export const AuthProvider = ({ children }) => {
                                 if (!docSnap.data()?.init) {
                                     displayModal({
                                         pathname: "auth/InitUser",
-                                        params: {},
+                                        params: {
+                                            ...docSnap.data(),
+                                            uid: docSnap.id,
+                                        },
                                         options: {
                                             goBackButton: false,
                                         },
