@@ -22,6 +22,9 @@ i18n.use(LanguageDetector)
         interpolation: {
             escapeValue: false,
         },
+        react: {
+            transKeepBasicHtmlNodesFor: ["br", "ol", "li"],
+        },
     });
 
 export default i18n;

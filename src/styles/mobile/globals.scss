@@ -52,3 +52,13 @@
         }
     }
 }
+
+.screen-carousel {
+    height: 100%;
+    transition: transform 0.4s;
+
+    > .screen {
+        height: 100%;
+        transition: opacity 0.4s;
+    }
+}
