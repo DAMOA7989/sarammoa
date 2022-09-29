@@ -1,6 +1,7 @@
 import React from "react";
 
 const WoilonnInput = ({
+    className,
     label,
     type,
     placeholder,
@@ -11,7 +12,7 @@ const WoilonnInput = ({
     alert,
 }) => {
     return (
-        <div className="woilonn-input">
+        <div className={`woilonn-input ${className}`}>
             <div className="label">{label}</div>
             <div className="input-container">
                 <input
@@ -23,7 +24,7 @@ const WoilonnInput = ({
                     disabled={disabled}
                 />
             </div>
-            <div className="alert">{alert}</div>
+            {Boolean(alert) && <div className="alert">{alert}</div>}
         </div>
     );
 };

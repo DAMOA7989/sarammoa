@@ -154,11 +154,12 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
     > .container {
-        width: calc(100% - 5em);
+        width: calc(100% - 2.5em);
+        margin-top: 7.5em;
 
         > .title {
             color: $primary_color;
@@ -205,11 +206,12 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 
     > .container {
         width: calc(100% - 2.5em);
+        margin-top: 7.5em;
 
         > .title {
             font-weight: 400;
@@ -254,5 +256,53 @@
 
     to {
         opacity: 0.3;
+    }
+}
+
+.modals-auth-init-user-validate-phone-number {
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    > .container {
+        margin-top: 7.5em;
+        width: calc(100% - 2.5em);
+
+        > .title {
+            font-weight: 400;
+            font-size: 1.25rem;
+            line-height: 30px;
+            margin-bottom: 2.125em;
+        }
+
+        > .content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75em;
+
+            > .phone-number,
+            > .verification-code {
+                display: flex;
+                align-items: flex-end;
+                gap: 0.625em;
+
+                > .input-field {
+                    flex: 1;
+                }
+
+                > button {
+                    height: 48px;
+                }
+            }
+        }
+    }
+
+    > .submit-button {
+        position: absolute;
+        bottom: 2.5em;
+        width: calc(100% - 2.5em);
     }
 }
