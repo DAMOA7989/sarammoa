@@ -5,9 +5,14 @@ import theme from "styles/include.scss";
 import WoilonnCheckbox from "components/input/WoilonnCheckbox";
 import { _agree } from "utils/firebase/auth";
 import { CircularProgress } from "@mui/material";
+import CommonButton from "components/button/CommonButton";
+import { useAuthContext } from "utils/auth";
+import { useModalContext } from "utils/modal";
 
 const Agreement = ({ uid, _idx, screenIdx, setScreenIdx }) => {
     const { t } = useTranslation();
+    const { dismissModal } = useModalContext();
+    const { signOut } = useAuthContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -137,137 +142,148 @@ const Agreement = ({ uid, _idx, screenIdx, setScreenIdx }) => {
             {state.isLoading ? (
                 <CircularProgress color="primary" size={45} />
             ) : (
-                <div className="container">
-                    <h1 className="title">
-                        <Trans
-                            t={t}
-                            i18nKey="title.modal.init_user.agreement"
-                            components={{
-                                appName: (
-                                    <span
-                                        style={{
-                                            color: theme?.primaryColor,
-                                            fontSize: "1.25rem",
-                                            fontWeight: "bold",
-                                        }}
-                                    />
-                                ),
-                                small: (
-                                    <span
-                                        style={{
-                                            fontSize: "1rem",
-                                        }}
-                                    />
-                                ),
-                            }}
-                        />
-                    </h1>
-                    <div className="content">
-                        <WoilonnCheckbox
-                            type="fill"
-                            label={t("label.checkbox.entire")}
-                            labelStyle={{
-                                fontSize: "1rem",
-                            }}
-                            checked={state.checkedEntire}
-                            onClick={(checked) => {
-                                switch (checked) {
-                                    case true:
-                                        dispatch({
-                                            type: "UNCHECK_ENTIRE",
-                                        });
-                                        break;
-                                    case false:
-                                        dispatch({
-                                            type: "CHECK_ENTIRE",
-                                        });
-                                        break;
-                                }
-                            }}
-                        />
-                        <div className="divider" />
-                        <WoilonnCheckbox
-                            className="common-checkbox"
-                            label={t("label.checkbox.privacy_policy")}
-                            required={true}
-                            checked={state.checkedPrivacyPolicy}
-                            onClick={(checked) => {
-                                switch (checked) {
-                                    case true:
-                                        dispatch({
-                                            type: "UNCHECK_PRIVACY_POLICY",
-                                        });
-                                        break;
-                                    case false:
-                                        dispatch({
-                                            type: "CHECK_PRIVACY_POLICY",
-                                        });
-                                        break;
-                                }
-                            }}
-                        />
-                        <WoilonnCheckbox
-                            className="common-checkbox"
-                            label={t("label.checkbox.terms_of_use")}
-                            required={true}
-                            checked={state.checkedTermsOfUse}
-                            onClick={(checked) => {
-                                switch (checked) {
-                                    case true:
-                                        dispatch({
-                                            type: "UNCHECK_TERMS_OF_USE",
-                                        });
-                                        break;
-                                    case false:
-                                        dispatch({
-                                            type: "CHECK_TERMS_OF_USE",
-                                        });
-                                        break;
-                                }
-                            }}
-                        />
-                        <WoilonnCheckbox
-                            className="common-checkbox"
-                            label={t("label.checkbox.marketing_info")}
-                            required={false}
-                            checked={state.checkedMarketingInfo}
-                            onClick={(checked) => {
-                                switch (checked) {
-                                    case true:
-                                        dispatch({
-                                            type: "UNCHECK_MARKETING_INFO",
-                                        });
-                                        break;
-                                    case false:
-                                        dispatch({
-                                            type: "CHECK_MARKETING_INFO",
-                                        });
-                                        break;
-                                }
-                            }}
-                        />
-                        <WoilonnCheckbox
-                            className="common-checkbox"
-                            label={t("label.checkbox.upper_age")}
-                            required={true}
-                            checked={state.checkedUpperAge}
-                            onClick={(checked) => {
-                                switch (checked) {
-                                    case true:
-                                        dispatch({
-                                            type: "UNCHECK_UPPER_AGE",
-                                        });
-                                        break;
-                                    case false:
-                                        dispatch({
-                                            type: "CHECK_UPPER_AGE",
-                                        });
-                                        break;
-                                }
-                            }}
-                        />
+                <>
+                    <CommonButton
+                        className="sign-out-button"
+                        type="text"
+                        color="primary"
+                        onClick={() => signOut().then(dismissModal)}
+                    >
+                        {t("text.setup.sign_out")}
+                    </CommonButton>
+
+                    <div className="container">
+                        <h1 className="title">
+                            <Trans
+                                t={t}
+                                i18nKey="title.modal.init_user.agreement"
+                                components={{
+                                    appName: (
+                                        <span
+                                            style={{
+                                                color: theme?.primaryColor,
+                                                fontSize: "1.25rem",
+                                                fontWeight: "bold",
+                                            }}
+                                        />
+                                    ),
+                                    small: (
+                                        <span
+                                            style={{
+                                                fontSize: "1rem",
+                                            }}
+                                        />
+                                    ),
+                                }}
+                            />
+                        </h1>
+                        <div className="content">
+                            <WoilonnCheckbox
+                                type="fill"
+                                label={t("label.checkbox.entire")}
+                                labelStyle={{
+                                    fontSize: "1rem",
+                                }}
+                                checked={state.checkedEntire}
+                                onClick={(checked) => {
+                                    switch (checked) {
+                                        case true:
+                                            dispatch({
+                                                type: "UNCHECK_ENTIRE",
+                                            });
+                                            break;
+                                        case false:
+                                            dispatch({
+                                                type: "CHECK_ENTIRE",
+                                            });
+                                            break;
+                                    }
+                                }}
+                            />
+                            <div className="divider" />
+                            <WoilonnCheckbox
+                                className="common-checkbox"
+                                label={t("label.checkbox.privacy_policy")}
+                                required={true}
+                                checked={state.checkedPrivacyPolicy}
+                                onClick={(checked) => {
+                                    switch (checked) {
+                                        case true:
+                                            dispatch({
+                                                type: "UNCHECK_PRIVACY_POLICY",
+                                            });
+                                            break;
+                                        case false:
+                                            dispatch({
+                                                type: "CHECK_PRIVACY_POLICY",
+                                            });
+                                            break;
+                                    }
+                                }}
+                            />
+                            <WoilonnCheckbox
+                                className="common-checkbox"
+                                label={t("label.checkbox.terms_of_use")}
+                                required={true}
+                                checked={state.checkedTermsOfUse}
+                                onClick={(checked) => {
+                                    switch (checked) {
+                                        case true:
+                                            dispatch({
+                                                type: "UNCHECK_TERMS_OF_USE",
+                                            });
+                                            break;
+                                        case false:
+                                            dispatch({
+                                                type: "CHECK_TERMS_OF_USE",
+                                            });
+                                            break;
+                                    }
+                                }}
+                            />
+                            <WoilonnCheckbox
+                                className="common-checkbox"
+                                label={t("label.checkbox.marketing_info")}
+                                required={false}
+                                checked={state.checkedMarketingInfo}
+                                onClick={(checked) => {
+                                    switch (checked) {
+                                        case true:
+                                            dispatch({
+                                                type: "UNCHECK_MARKETING_INFO",
+                                            });
+                                            break;
+                                        case false:
+                                            dispatch({
+                                                type: "CHECK_MARKETING_INFO",
+                                            });
+                                            break;
+                                    }
+                                }}
+                            />
+                            <WoilonnCheckbox
+                                className="common-checkbox"
+                                label={t("label.checkbox.upper_age")}
+                                required={true}
+                                checked={state.checkedUpperAge}
+                                onClick={(checked) => {
+                                    switch (checked) {
+                                        case true:
+                                            dispatch({
+                                                type: "UNCHECK_UPPER_AGE",
+                                            });
+                                            break;
+                                        case false:
+                                            dispatch({
+                                                type: "CHECK_UPPER_AGE",
+                                            });
+                                            break;
+                                    }
+                                }}
+                            />
+                        </div>
                     </div>
-                </div>
+                </>
             )}
 
             {state.checkedPrivacyPolicy &&

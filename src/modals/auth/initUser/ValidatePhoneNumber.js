@@ -11,10 +11,13 @@ import {
 } from "utils/firebase/auth";
 import { toast } from "react-toastify";
 import { useModalContext } from "utils/modal";
+import { CircularProgress } from "@mui/material";
+import { useAuthContext } from "utils/auth";
 
 const ValidatePhoneNumber = ({ uid, _idx, screenIdx, setScreenIdx }) => {
     const { t } = useTranslation();
     const { dismissModal } = useModalContext();
+    const { signOut } = useAuthContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -243,84 +246,100 @@ const ValidatePhoneNumber = ({ uid, _idx, screenIdx, setScreenIdx }) => {
 
     return (
         <div className="modals-auth-init-user-validate-phone-number">
-            <div className="container">
-                <h1 className="title">
-                    <Trans
-                        t={t}
-                        i18nKey="title.modal.init_user.agreement"
-                        components={{
-                            appName: (
-                                <span
-                                    style={{
-                                        color: theme?.primaryColor,
-                                        fontSize: "1.25rem",
-                                        fontWeight: "bold",
+            {state.submitLoading ? (
+                <CircularProgress color="primary" size={45} />
+            ) : (
+                <>
+                    <CommonButton
+                        className="sign-out-button"
+                        type="text"
+                        color="primary"
+                        onClick={() => signOut().then(dismissModal)}
+                    >
+                        {t("text.setup.sign_out")}
+                    </CommonButton>
+                    <div className="container">
+                        <h1 className="title">
+                            <Trans
+                                t={t}
+                                i18nKey="title.modal.init_user.agreement"
+                                components={{
+                                    appName: (
+                                        <span
+                                            style={{
+                                                color: theme?.primaryColor,
+                                                fontSize: "1.25rem",
+                                                fontWeight: "bold",
+                                            }}
+                                        />
+                                    ),
+                                    small: (
+                                        <span
+                                            style={{
+                                                fontSize: "1rem",
+                                            }}
+                                        />
+                                    ),
+                                }}
+                            />
+                        </h1>
+                        <div className="content">
+                            <div className="phone-number">
+                                <WoilonnInput
+                                    type="tel"
+                                    className="input-field"
+                                    placeholder={"010-0000-0000"}
+                                    label={t("label.phone_number")}
+                                    value={state.phoneNumber}
+                                    disabled={state.send}
+                                    onChange={(value) => {
+                                        dispatch({
+                                            type: "SET_PHONE_NUMBER",
+                                            payload: {
+                                                value,
+                                            },
+                                        });
                                     }}
                                 />
-                            ),
-                            small: (
-                                <span
-                                    style={{
-                                        fontSize: "1rem",
-                                    }}
+                                <CommonButton
+                                    color="primary"
+                                    disabled={!state.canSend || state.send}
+                                    loading={state.sendLoading}
+                                    onClick={onSendHandler}
+                                >
+                                    {t("btn.get_verification_code")}
+                                </CommonButton>
+                            </div>
+                            <div className="verification-code">
+                                <WoilonnInput
+                                    className="input-field"
+                                    label={t("label.verify_code")}
+                                    value={state.verificationCode}
+                                    disabled={!state.send || state.confirm}
+                                    onChange={(event) =>
+                                        dispatch({
+                                            type: "SET_VERIFICATION_CODE",
+                                            payload: {
+                                                value: event.target.value,
+                                            },
+                                        })
+                                    }
                                 />
-                            ),
-                        }}
-                    />
-                </h1>
-                <div className="content">
-                    <div className="phone-number">
-                        <WoilonnInput
-                            type="tel"
-                            className="input-field"
-                            placeholder={"010-0000-0000"}
-                            label={t("label.phone_number")}
-                            value={state.phoneNumber}
-                            disabled={state.send}
-                            onChange={(value) => {
-                                dispatch({
-                                    type: "SET_PHONE_NUMBER",
-                                    payload: {
-                                        value,
-                                    },
-                                });
-                            }}
-                        />
-                        <CommonButton
-                            color="primary"
-                            disabled={!state.canSend || state.send}
-                            loading={state.sendLoading}
-                            onClick={onSendHandler}
-                        >
-                            {t("btn.get_verification_code")}
-                        </CommonButton>
+                                <CommonButton
+                                    color="primary"
+                                    disabled={
+                                        !state.canConfirm || state.confirm
+                                    }
+                                    loading={state.confirmLoading}
+                                    onClick={onConfirmHandler}
+                                >
+                                    {t("btn.confirm")}
+                                </CommonButton>
+                            </div>
+                        </div>
                     </div>
-                    <div className="verification-code">
-                        <WoilonnInput
-                            className="input-field"
-                            label={t("label.verify_code")}
-                            value={state.verificationCode}
-                            disabled={!state.send || state.confirm}
-                            onChange={(event) =>
-                                dispatch({
-                                    type: "SET_VERIFICATION_CODE",
-                                    payload: {
-                                        value: event.target.value,
-                                    },
-                                })
-                            }
-                        />
-                        <CommonButton
-                            color="primary"
-                            disabled={!state.canConfirm || state.confirm}
-                            loading={state.confirmLoading}
-                            onClick={onConfirmHandler}
-                        >
-                            {t("btn.confirm")}
-                        </CommonButton>
-                    </div>
-                </div>
-            </div>
+                </>
+            )}
             <CommonButton
                 className="submit-button"
                 color="primary"
