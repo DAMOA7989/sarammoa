@@ -159,7 +159,9 @@ export const validateVerifyCode = (code) => {
 
 export const validatePhoneNumber = (phoneNumber) => {
     try {
-        const regexp = /^[0-9]{3}[-]+[0-9]{4}[-]+[0-9]{4}$/;
+        const regexp = new RegExp(
+            "^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$"
+        );
         return {
             success: regexp.test(phoneNumber),
             payload: null,

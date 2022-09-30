@@ -3,6 +3,7 @@ const db = require("../../index").db;
 const auth = require("../../index").auth;
 const axios = require("axios");
 const admin = require("firebase-admin");
+const { generateRandomNumberString } = require("../../utils/string");
 
 exports.getAccessTokenWithKakao = functions.https.onCall(
     (data, context) =>
@@ -282,5 +283,72 @@ exports.sendVerificationEmail = functions.https.onCall(
 
             const messageId = await sendMail(options);
             resolve(messageId);
+        })
+);
+
+exports.sendVerificationSms = functions.https.onCall(
+    (data, context) =>
+        new Promise(async (resolve, reject) => {
+            try {
+                const {
+                    makeSignature,
+                    makeFormData,
+                } = require("../../utils/ncp");
+                const to = data.to;
+                const code = generateRandomNumberString(6);
+                const countryCodeLength = to.length - 10;
+                const countryCode = to.substr(0, countryCodeLength);
+                const toPhoneNumber = to.slice(countryCodeLength);
+
+                const url = `/sms/v2/services/${process.env.NCP_SERVICE_ID}/messages`;
+                const timestamp = Date.now().toString();
+                const accessKey = process.env.NCP_ACCESS_KEY_ID;
+                const secretKey = process.env.NCP_SECRET_KEY;
+
+                const _data = {
+                    type: "SMS",
+                    contentType: "COMM",
+                    countryCode: countryCode.slice(1),
+                    from: "01090998225",
+                    content: `Sarammoa verification code: [${code}]`,
+                    messages: [
+                        {
+                            to: `${
+                                countryCode.slice(1) === "82" ? "0" : ""
+                            }${toPhoneNumber}`,
+                        },
+                    ],
+                };
+
+                const result = await axios({
+                    method: "post",
+                    url: `https://sens.apigw.ntruss.com/sms/v2/services/${process.env.NCP_SERVICE_ID}/messages`,
+                    headers: {
+                        "Content-Type": "application/json; charset=utf-8",
+                        "x-ncp-apigw-timestamp": timestamp,
+                        "x-ncp-iam-access-key": accessKey,
+                        "x-ncp-apigw-signature-v2": makeSignature(
+                            url,
+                            timestamp,
+                            accessKey,
+                            secretKey
+                        ),
+                    },
+                    data: _data,
+                });
+
+                await db.doc(`verifications/${result?.data?.requestId}`).set(
+                    {
+                        code,
+                        createdAt: result?.data?.requestTime,
+                    },
+                    { merge: true }
+                );
+
+                return resolve(result?.data);
+            } catch (e) {
+                console.dir(e);
+                return reject(e);
+            }
         })
 );

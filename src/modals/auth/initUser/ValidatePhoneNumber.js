@@ -4,6 +4,7 @@ import WoilonnInput from "components/input/WoilonnInput";
 import CommonButton from "components/button/CommonButton";
 import theme from "styles/include.scss";
 import { validatePhoneNumber, validateVerifyCode } from "utils/validator";
+import { generateRandomNumberString } from "utils/string";
 
 const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
     const { t } = useTranslation();
@@ -113,18 +114,23 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
     );
 
     React.useEffect(() => {
-        const resultOfValidatePhoneNumber = validatePhoneNumber(
-            state.phoneNumber
-        );
-        if (!resultOfValidatePhoneNumber.success) {
-            return dispatch({
+        try {
+            let phoneNumber = state.phoneNumber;
+
+            const resultOfValidatePhoneNumber =
+                validatePhoneNumber(phoneNumber);
+            if (!resultOfValidatePhoneNumber.success) {
+                throw new Error();
+            }
+
+            dispatch({
+                type: "CAN_SEND",
+            });
+        } catch (e) {
+            dispatch({
                 type: "CAN_NOT_SEND",
             });
         }
-
-        dispatch({
-            type: "CAN_SEND",
-        });
     }, [state.phoneNumber]);
 
     React.useEffect(() => {
@@ -149,6 +155,7 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
     }, [state.verificationCode]);
 
     const onSendHandler = () => {
+        const randomNumberString = generateRandomNumberString(6);
         dispatch({
             type: "SEND_PENDING",
         });
@@ -219,14 +226,14 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
                             placeholder={"010-0000-0000"}
                             label={t("label.phone_number")}
                             value={state.phoneNumber}
-                            onChange={(event) =>
+                            onChange={(value) => {
                                 dispatch({
                                     type: "SET_PHONE_NUMBER",
                                     payload: {
-                                        value: event.target.value,
+                                        value,
                                     },
-                                })
-                            }
+                                });
+                            }}
                         />
                         <CommonButton
                             color="primary"

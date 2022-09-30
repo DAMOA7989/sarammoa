@@ -15,6 +15,7 @@ import { StatusProvider } from "utils/status";
 import { StoreProvider } from "utils/store";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "config/theme";
+import "react-phone-number-input/style.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

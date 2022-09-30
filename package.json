@@ -55,6 +55,7 @@
         "react-dom": "^18.2.0",
         "react-google-login": "^5.2.2",
         "react-i18next": "^11.18.5",
+        "react-phone-number-input": "^3.2.11",
         "react-refresh": "^0.11.0",
         "react-router-dom": "^6.3.0",
         "react-spring-bottom-sheet": "^3.4.1",
