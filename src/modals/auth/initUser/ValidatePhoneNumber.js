@@ -4,10 +4,17 @@ import WoilonnInput from "components/input/WoilonnInput";
 import CommonButton from "components/button/CommonButton";
 import theme from "styles/include.scss";
 import { validatePhoneNumber, validateVerifyCode } from "utils/validator";
-import { generateRandomNumberString } from "utils/string";
+import {
+    _sendVerificationSms,
+    _confirmVerificationCode,
+    _setUserInfo,
+} from "utils/firebase/auth";
+import { toast } from "react-toastify";
+import { useModalContext } from "utils/modal";
 
-const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
+const ValidatePhoneNumber = ({ uid, _idx, screenIdx, setScreenIdx }) => {
     const { t } = useTranslation();
+    const { dismissModal } = useModalContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -31,18 +38,21 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
                         ...state,
                         sendLoading: true,
                         send: false,
+                        sendId: "",
                     };
                 case "SEND_FULFILLED":
                     return {
                         ...state,
                         sendLoading: false,
                         send: true,
+                        sendId: action?.payload?.requestId,
                     };
                 case "SEND_REJECTED":
                     return {
                         ...state,
                         sendLoading: false,
                         send: false,
+                        sendId: "",
                     };
                 case "SET_VERIFICATION_CODE":
                     return {
@@ -104,6 +114,7 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
             canSend: false,
             send: false,
             sendLoading: false,
+            sendId: "",
             canConfirm: false,
             confirm: false,
             confirmLoading: false,
@@ -155,16 +166,27 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
     }, [state.verificationCode]);
 
     const onSendHandler = () => {
-        const randomNumberString = generateRandomNumberString(6);
         dispatch({
             type: "SEND_PENDING",
         });
 
-        setTimeout(() => {
-            dispatch({
-                type: "SEND_FULFILLED",
+        _sendVerificationSms({ to: state.phoneNumber })
+            .then(({ requestId, requestTime, statusCode, statusName }) => {
+                toast.success(t("toast.sms.success.send_verification_code"));
+                dispatch({
+                    type: "SEND_FULFILLED",
+                    payload: {
+                        requestId,
+                    },
+                });
+            })
+            .catch((e) => {
+                console.dir(e);
+                toast.error(t("toast.sms.error.send_verification_code"));
+                dispatch({
+                    type: "SEND_REJECTED",
+                });
             });
-        }, 2000);
     };
 
     const onConfirmHandler = () => {
@@ -172,11 +194,23 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
             type: "CONFIRM_PENDING",
         });
 
-        setTimeout(() => {
-            dispatch({
-                type: "CONFIRM_FULFILLED",
+        _confirmVerificationCode({
+            vid: "sms:" + state.sendId,
+            code: state.verificationCode,
+        })
+            .then(() => {
+                toast.success(t("toast.sms.success.confirm_verification_code"));
+                dispatch({
+                    type: "CONFIRM_FULFILLED",
+                });
+            })
+            .catch((e) => {
+                console.dir(e);
+                toast.error(t("toast.sms.error.confirm_verification_code"));
+                dispatch({
+                    type: "CONFIRM_REJECTED",
+                });
             });
-        }, 2000);
     };
 
     const onSubmitHandler = () => {
@@ -184,11 +218,27 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
             type: "SUBMIT_PENDING",
         });
 
-        setTimeout(() => {
-            dispatch({
-                type: "SUBMIT_FULFILLED",
+        _setUserInfo({
+            uid,
+            payload: {
+                phoneNumber: state.phoneNumber,
+                init: true,
+            },
+        })
+            .then(() => {
+                // toast.success(t(""));
+                dispatch({
+                    type: "SUBMIT_FULFILLED",
+                });
+                dismissModal();
+            })
+            .catch((e) => {
+                console.dir(e);
+                // toast.error(t(""));
+                dispatch({
+                    type: "SUBMIT_REJECTED",
+                });
             });
-        }, 2000);
     };
 
     return (
@@ -226,6 +276,7 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
                             placeholder={"010-0000-0000"}
                             label={t("label.phone_number")}
                             value={state.phoneNumber}
+                            disabled={state.send}
                             onChange={(value) => {
                                 dispatch({
                                     type: "SET_PHONE_NUMBER",
@@ -237,7 +288,7 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
                         />
                         <CommonButton
                             color="primary"
-                            disabled={!state.canSend}
+                            disabled={!state.canSend || state.send}
                             loading={state.sendLoading}
                             onClick={onSendHandler}
                         >
@@ -249,7 +300,7 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
                             className="input-field"
                             label={t("label.verify_code")}
                             value={state.verificationCode}
-                            disabled={!state.send}
+                            disabled={!state.send || state.confirm}
                             onChange={(event) =>
                                 dispatch({
                                     type: "SET_VERIFICATION_CODE",
@@ -261,7 +312,7 @@ const ValidatePhoneNumber = ({ _idx, screenIdx, setScreenIdx }) => {
                         />
                         <CommonButton
                             color="primary"
-                            disabled={!state.canConfirm}
+                            disabled={!state.canConfirm || state.confirm}
                             loading={state.confirmLoading}
                             onClick={onConfirmHandler}
                         >

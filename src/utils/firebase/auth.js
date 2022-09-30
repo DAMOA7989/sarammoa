@@ -241,7 +241,6 @@ export const _confirmPasswordReset = ({ actionCode, newPassword }) =>
 
 export const _agree = ({ uid, agrees }) =>
     new Promise(async (resolve, reject) => {
-        console.log("d uid agrees", uid, agrees);
         try {
             const docRef = doc(db, "users", uid);
             await setDoc(
@@ -254,6 +253,51 @@ export const _agree = ({ uid, agrees }) =>
                 }
             );
             return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _sendVerificationSms = ({ to }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const sendVerificationSms = httpsCallable(
+                functions,
+                "caller-auth-sendVerificationSms"
+            );
+
+            const result = await sendVerificationSms({
+                to,
+            });
+
+            return resolve(result?.data);
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _confirmVerificationCode = ({ vid, code }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const docRef = doc(db, `verifications`, vid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const realCode = docSnap.data().code;
+                const createdAt = Date.parse(docSnap.data().createdAt);
+
+                if (Date.now() - createdAt > 5 * 60 * 1000) {
+                    throw new Error("expired");
+                }
+
+                if (realCode !== code) {
+                    throw new Error("disaccord");
+                }
+
+                return resolve();
+            } else {
+                throw new Error("empty doc");
+            }
         } catch (e) {
             return reject(e);
         }

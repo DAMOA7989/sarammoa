@@ -337,13 +337,15 @@ exports.sendVerificationSms = functions.https.onCall(
                     data: _data,
                 });
 
-                await db.doc(`verifications/${result?.data?.requestId}`).set(
-                    {
-                        code,
-                        createdAt: result?.data?.requestTime,
-                    },
-                    { merge: true }
-                );
+                await db
+                    .doc(`verifications/sms:${result?.data?.requestId}`)
+                    .set(
+                        {
+                            code,
+                            createdAt: result?.data?.requestTime,
+                        },
+                        { merge: true }
+                    );
 
                 return resolve(result?.data);
             } catch (e) {
