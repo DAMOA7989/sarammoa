@@ -83,28 +83,28 @@
 
             li:nth-child(1).active ~ .indicator {
                 // transform: translateX(20% * 0);
-                left: calc(20% * 0 + 10% - 1.375em);
+                left: calc(25% * 0 + 12.5% - 1.375em);
             }
 
             li:nth-child(2).active ~ .indicator {
                 // transform: translateX(100% * 1);
-                left: calc(20% * 1 + 10% - 1.375em);
+                left: calc(25% * 1 + 12.5% - 1.375em);
             }
 
             li:nth-child(3).active ~ .indicator {
                 // transform: translateX(100% * 2);
-                left: calc(20% * 2 + 10% - 1.375em);
+                left: calc(25% * 2 + 12.5% - 1.375em);
             }
 
             li:nth-child(4).active ~ .indicator {
                 // transform: translateX(100% * 3);
-                left: calc(20% * 3 + 10% - 1.375em);
+                left: calc(25% * 3 + 12.5% - 1.375em);
             }
 
-            li:nth-child(5).active ~ .indicator {
-                // transform: translateX(100% * 4);
-                left: calc(20% * 4 + 10% - 1.375em);
-            }
+            // li:nth-child(5).active ~ .indicator {
+            //     // transform: translateX(100% * 4);
+            //     left: calc(20% * 4 + 10% - 1.375em);
+            // }
 
             .indicator {
                 position: absolute;
@@ -829,6 +829,9 @@
 }
 
 .newsfeed-card {
+    position: relative;
+    overflow: hidden;
+
     > .writer {
         display: flex;
         align-items: center;
@@ -894,6 +897,37 @@
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             overflow: hidden;
+        }
+    }
+
+    > .ripple-effect {
+        position: absolute;
+        left: -1.75em;
+        top: -1.75em;
+        width: 3.5em;
+        height: 3.5em;
+        border-radius: 50%;
+        background-color: $auro_metal_saurus_color;
+        opacity: 0;
+
+        &.active {
+            animation-name: ripple-effect-common-animation;
+            animation-duration: 0.5s;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+            animation-iteration-count: 1;
+
+            @keyframes ripple-effect-common-animation {
+                from {
+                    transform: scale(0);
+                    opacity: 0.5;
+                }
+
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
         }
     }
 }

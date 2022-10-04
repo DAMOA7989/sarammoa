@@ -83,22 +83,22 @@ const __TABS__ = [
             });
         },
     },
-    {
-        key: "support",
-        path: "/support",
-        i18nKey: "tab.support",
-        icon: {
-            inactive: <SupportIcon />,
-            active: <SupportActiveIcon />,
-        },
-        color: styles?.primaryColor,
-        onClick: ({ navigate }) => {
-            navigate.push({
-                pathname: "/support",
-                mode: "main",
-            });
-        },
-    },
+    // {
+    //     key: "support",
+    //     path: "/support",
+    //     i18nKey: "tab.support",
+    //     icon: {
+    //         inactive: <SupportIcon />,
+    //         active: <SupportActiveIcon />,
+    //     },
+    //     color: styles?.primaryColor,
+    //     onClick: ({ navigate }) => {
+    //         navigate.push({
+    //             pathname: "/support",
+    //             mode: "main",
+    //         });
+    //     },
+    // },
     {
         key: "connect",
         path: "/connect",
@@ -210,7 +210,7 @@ const BottomNavigation = () => {
                         ref={bottomNavigationTabsRef}
                         className={`bottom-navigation-tabs`}
                         style={{
-                            width: `${tabBarWidth * 0.0625}em`,
+                            width: `${tabBarWidth}px`,
                         }}
                     >
                         {__TABS__.map((tab) => (
