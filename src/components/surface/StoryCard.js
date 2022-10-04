@@ -34,12 +34,24 @@ const StoryCard = ({ type, className, writer }) => {
                             variant="rectangular"
                             width={80}
                             height={80}
+                            animation="wave"
                         />
                     )}
                 </div>
             </div>
             <div className="nickname">
-                {type === "add" ? `+ ${t("title.add")}` : writer?.nickname}
+                {type === "add" ? (
+                    `+ ${t("title.add")}`
+                ) : loaded ? (
+                    writer?.nickname
+                ) : (
+                    <Skeleton
+                        variant="text"
+                        width={40}
+                        animation="wave"
+                        sx={{ fontSize: "0.75rem" }}
+                    />
+                )}
             </div>
         </article>
     );
