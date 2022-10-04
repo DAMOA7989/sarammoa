@@ -190,8 +190,8 @@ const Profile = () => {
                 profileInfoRef.current.style.transform = `translateX(0em)`;
                 profileInfoNavRef.current.style.paddingTop = `${24 * 0.0625}em`;
                 profileWrapRef.current.style.backgroundColor = `${styles.appBackgroundColor}`;
-                profileThumbnailRef.current.style.width = `${120 * 0.0625}em`;
-                profileThumbnailRef.current.style.height = `${120 * 0.0625}em`;
+                profileThumbnailRef.current.style.width = `${8.5}em`;
+                profileThumbnailRef.current.style.height = `${8.5}em`;
                 profileThumbnailRef.current.style.top = "0";
                 profileThumbnailRef.current.style.transform = `translateX(0em)`;
                 profileSmallNameRef.current.style.opacity = "0";
@@ -213,8 +213,8 @@ const Profile = () => {
                 }em)`;
                 profileInfoNavRef.current.style.paddingTop = "0";
                 profileWrapRef.current.style.backgroundColor = "white";
-                profileThumbnailRef.current.style.width = `${60 * 0.0625}em`;
-                profileThumbnailRef.current.style.height = `${60 * 0.0625}em`;
+                profileThumbnailRef.current.style.width = `${4.25}em`;
+                profileThumbnailRef.current.style.height = `${4.25}em`;
                 profileThumbnailRef.current.style.marginBottom = "0";
                 profileThumbnailRef.current.style.top = `${-15 * 0.0625}em`;
                 profileThumbnailRef.current.style.transform = `translateX(${
@@ -344,21 +344,23 @@ const Profile = () => {
                         >
                             <div
                                 ref={profileThumbnailRef}
-                                className="profile-thumbnail"
+                                className="profile-thumbnail-outline"
                             >
-                                {userInfo?.profileThumbnailUrl ? (
-                                    <img
-                                        src={userInfo?.profileThumbnailUrl}
-                                        alt="profile thumbnail"
-                                        loading="lazy"
-                                    />
-                                ) : (
-                                    <Skeleton
-                                        variant="rectangular"
-                                        width={120}
-                                        height={120}
-                                    />
-                                )}
+                                <div className="profile-thumbnail">
+                                    {userInfo?.profileThumbnailUrl ? (
+                                        <img
+                                            src={userInfo?.profileThumbnailUrl}
+                                            alt="profile thumbnail"
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <Skeleton
+                                            variant="rectangular"
+                                            width={120}
+                                            height={120}
+                                        />
+                                    )}
+                                </div>
                             </div>
                             <div ref={profileInfoRef} className="profile-info">
                                 <span className="name">

@@ -76,21 +76,30 @@
                 flex-direction: column;
                 align-items: center;
 
-                > .profile-thumbnail {
+                > .profile-thumbnail-outline {
                     position: relative;
-                    left: 0;
-                    width: 7.5em;
-                    height: 7.5em;
+                    width: 8.5em;
+                    height: 8.5em;
+                    display: inline-flex;
+                    justify-content: center;
+                    align-items: center;
                     border-radius: 50%;
-                    overflow: hidden;
-                    box-shadow: $profile_thumbnail_box_shadow;
+                    border: 2px solid $link_water_color;
                     transition: top 1s, left 1s;
 
-                    > img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        transition: object-fit 0.2s;
+                    > .profile-thumbnail {
+                        left: 0;
+                        width: calc(90%);
+                        height: calc(90%);
+                        border-radius: 50%;
+                        overflow: hidden;
+
+                        > img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            transition: object-fit 0.2s;
+                        }
                     }
                 }
 
@@ -197,6 +206,7 @@
     > .info {
         flex: 1;
         background-color: white;
+        padding: 0 1.25em;
 
         > nav {
             padding: 1.5em 0;
@@ -311,5 +321,82 @@
         width: 100%;
         gap: 0.75em;
         margin-bottom: 3.75em;
+    }
+}
+
+.pages-protected-profile-history {
+}
+
+.pages-protected-profile-information {
+    // position: relative;
+
+    > .boxes {
+        margin-bottom: 2.5em;
+
+        > ul {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, calc(50% - 0.5em));
+            grid-gap: 1em;
+            justify-content: space-between;
+
+            > li {
+                > .container {
+                    background-color: rgba($link_water_color, 0.4);
+                    padding: 0.5em 0 0.75em 0;
+                    border-radius: 8px;
+                    display: inline-flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                    gap: 0;
+
+                    > .count {
+                        font-size: 2rem;
+                        font-weight: 700;
+                    }
+
+                    > .label {
+                        font-size: 0.875rem;
+                        font-weight: 400;
+                    }
+                }
+            }
+        }
+    }
+
+    > .location {
+        > .title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: $gunmetal_color;
+            margin-bottom: 0.5em;
+        }
+
+        > .position {
+            display: flex;
+            align-items: center;
+
+            > svg {
+                margin-right: 0.25em;
+            }
+
+            > .country {
+                font-size: 0.875rem;
+                color: $gunmetal_color;
+                font-weight: 400;
+            }
+        }
+    }
+
+    > .created-at {
+        position: absolute;
+        bottom: calc(2em + 3.25em);
+        font-size: 0.8125rem;
+        color: rgba($auro_metal_saurus_color, 0.8);
+        // width: 100%;
+        text-align: center;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
     }
 }
