@@ -779,3 +779,47 @@
         }
     }
 }
+
+.story-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+
+    > .profile-thumbnail-outline {
+        width: 5em;
+        height: 5em;
+        border-radius: 2.5em;
+        border: 1px solid $link_water_color;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        > .profile-thumbnail {
+            width: calc(5em - 0.5em);
+            height: calc(5em - 0.5em);
+            border-radius: 2.5em;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+
+            > img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            &.add {
+                background-color: $gunmetal_color;
+            }
+        }
+    }
+
+    > .nickname {
+        display: inline;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: $auro_metal_saurus_color;
+    }
+}

@@ -1,4 +1,35 @@
 @import "../include.scss";
 
 .pages-public-newsfeed {
+    > .container {
+        min-height: 100%;
+
+        > .stories {
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 1em 1em 0.75em 1em;
+            border-bottom: 1px solid $link_water_color;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            > ul {
+                display: flex;
+                align-items: center;
+
+                > li {
+                    &.add {
+                        margin-right: 1.25em;
+                    }
+
+                    &.normal:not(:last-child) {
+                        margin-right: 0.75em;
+                    }
+                }
+            }
+        }
+    }
 }
