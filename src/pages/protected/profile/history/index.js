@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import ProfileHistoryCard from "components/surface/ProfileHistoryCard";
 import CommonButton from "components/button/CommonButton";
 import { ReactComponent as PlusIcon } from "assets/images/icons/profile/plus.svg";
+import { useNavigateContext } from "utils/navigate";
 
 const __WRITES__ = [
     {
@@ -33,6 +34,7 @@ const __WRITES__ = [
 
 const History = () => {
     const { t } = useTranslation();
+    const navigate = useNavigateContext();
 
     return (
         <div className="pages-protected-profile-history">
@@ -51,7 +53,17 @@ const History = () => {
                 </div>
             </section>
             <section className="bottom">
-                <CommonButton className="add" color="primary">
+                <CommonButton
+                    className="add"
+                    color="primary"
+                    onClick={() => {
+                        navigate.push({
+                            pathname: "/profile/history/add",
+                            mode: "sub",
+                            screenTitle: "title.profile.history.add",
+                        });
+                    }}
+                >
                     <PlusIcon />
                 </CommonButton>
             </section>

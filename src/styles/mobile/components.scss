@@ -159,31 +159,39 @@
         align-items: center;
         background-color: white;
         box-shadow: $header_box_shadow;
+        justify-content: space-between;
 
-        > .go-back-icon {
-            width: 1.75em;
-            height: 1.75em;
-            margin-right: 1.25em;
+        > .left {
             display: inline-flex;
-            justify-content: center;
-            align-items: center;
 
-            &::after {
-                content: "";
-                width: 100%;
-                height: 100%;
-                mask-image: url("/assets/images/icons/arrow-left.svg");
-                mask-repeat: no-repeat;
-                mask-position: center;
-                mask-size: contain;
-                background-color: $gunmetal_color;
+            > .go-back-icon {
+                width: 1.75em;
+                height: 1.75em;
+                margin-right: 1.25em;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+
+                &::after {
+                    content: "";
+                    width: 100%;
+                    height: 100%;
+                    mask-image: url("/assets/images/icons/arrow-left.svg");
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                    mask-size: contain;
+                    background-color: $gunmetal_color;
+                }
+            }
+
+            > .title {
+                font-size: 1.25rem;
+                font-weight: 400;
+                color: $gunmetal_color;
             }
         }
 
-        > .title {
-            font-size: 1.25rem;
-            font-weight: 400;
-            color: $gunmetal_color;
+        > .right {
         }
     }
 }
@@ -342,6 +350,10 @@
 
         &.active {
             cursor: pointer;
+
+            > .ripple-effect {
+                background-color: rgba($primary_color, 0.6);
+            }
 
             &.primary {
                 color: $primary_color;

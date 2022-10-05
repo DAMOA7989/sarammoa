@@ -78,6 +78,16 @@ export const NavigateProvider = ({ children }) => {
                     ...state,
                     routing: false,
                 };
+            case "SET_LAYOUT":
+                return {
+                    ...state,
+                    right: action.payload?.right,
+                };
+            case "CLEAR_LAYOUT":
+                return {
+                    ...state,
+                    right: null,
+                };
             default:
                 return state;
         }
@@ -93,6 +103,7 @@ export const NavigateProvider = ({ children }) => {
         screenTitle:
             JSON.parse(window.sessionStorage.getItem("sm_navigate_stack"))
                 ?.screenTitle || "",
+        right: null,
         replace: false,
         routing: false,
     });
@@ -249,11 +260,30 @@ export const NavigateProvider = ({ children }) => {
         });
     }, [state.routing]);
 
+    const setLayout = ({ right }) => {
+        const payload = {};
+
+        if (right) payload.right = right;
+
+        dispatch({
+            type: "SET_LAYOUT",
+            payload,
+        });
+    };
+
+    const clearLayout = () => {
+        dispatch({
+            type: "CLEAR_LAYOUT",
+        });
+    };
+
     const value = {
         state,
         push,
         replace,
         goBack,
+        setLayout,
+        clearLayout,
     };
 
     return (

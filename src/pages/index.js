@@ -14,6 +14,7 @@ export { default as NoticeNotification } from "./protected/notice/notification";
 
 export { default as Profile } from "./protected/profile";
 export { default as ProfileHistory } from "./protected/profile/history";
+export { default as ProfileHistoryAdd } from "./protected/profile/history/add";
 export { default as ProfileInformation } from "./protected/profile/information";
 export { default as ProfileScrap } from "./protected/profile/scrap";
 export { default as ProfileSetup } from "./protected/profile/setup";

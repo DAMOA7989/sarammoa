@@ -13,6 +13,7 @@ import {
     NoticeNotification,
     Profile,
     ProfileHistory,
+    ProfileHistoryAdd,
     ProfileInformation,
     ProfileScrap,
     ProfileSetup,
@@ -120,6 +121,12 @@ const App = () => {
                         <Route path="profile">
                             <Route path="setup" element={<ProfileSetup />} />
                             <Route path="edit" element={<ProfileEdit />} />
+                            <Route path="history">
+                                <Route
+                                    path="add"
+                                    element={<ProfileHistoryAdd />}
+                                />
+                            </Route>
                         </Route>
                         <Route path="notice">
                             <Route path="">
