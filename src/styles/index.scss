@@ -7,6 +7,9 @@ body {
         "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: contain;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+        env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 code {
@@ -19,19 +22,11 @@ body {
     height: 100%;
 }
 
-html {
-    background-color: $app_background_color;
-}
-
-body {
-    overscroll-behavior: contain;
-    padding: env(safe-area-inset-top) env(safe-area-inset-right)
-        env(safe-area-inset-bottom) env(safe-area-inset-left);
-}
-
 #root {
-    min-height: 100%;
-    // overflow-x: hidden;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: $app_background_color;
 
     * {
         box-sizing: border-box;

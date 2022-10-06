@@ -38,4 +38,4 @@ const SubHeader = () => {
     );
 };
 
-export default SubHeader;
+export default React.memo(SubHeader);

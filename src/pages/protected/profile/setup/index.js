@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthContext } from "utils/auth";
 import ListButton from "components/button/ListButton";
-import WoilonToggle from "components/input/WoilonToggle";
+import WoilonnToggle from "components/input/WoilonnToggle";
 
 const __ROWS__ = [
     {
@@ -18,7 +18,7 @@ const __ROWS__ = [
                 key: "push_notice",
                 i18nKey: "text.setup.push_notice",
                 right: ({ checkedPushNotice }) => (
-                    <WoilonToggle value={checkedPushNotice} />
+                    <WoilonnToggle value={checkedPushNotice} />
                 ),
                 onClick: ({ checkedPushNotice, setCheckedPushNotice }) => {
                     setCheckedPushNotice(!checkedPushNotice);
@@ -39,7 +39,7 @@ const __ROWS__ = [
                 key: "send_usage_information",
                 i18nKey: "text.setup.send_usage_information",
                 right: ({ checkedUsageInformation }) => (
-                    <WoilonToggle value={checkedUsageInformation} />
+                    <WoilonnToggle value={checkedUsageInformation} />
                 ),
                 onClick: ({
                     checkedUsageInformation,

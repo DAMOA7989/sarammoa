@@ -441,8 +441,8 @@
     }
 }
 
-.pages-protected-profile-history-add {
-    position: relative;
+.pages-protected-profile-history-add-edit {
+    flex: 1;
 
     > .editor {
         padding-bottom: 3.25em;
@@ -464,16 +464,28 @@
 
     > .edits {
         position: fixed;
-        bottom: 0;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        padding: 0 1.25em;
-        box-shadow: $header_box_shadow_reverse;
-        background-color: white;
+        left: 0px;
+        bottom: 0px;
+        width: 100vw;
 
-        > button {
-            flex: 1;
+        > .container {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 1.25em;
+            box-shadow: $header_box_shadow_reverse;
+            background-color: white;
+
+            > button {
+                flex: 1;
+            }
         }
     }
+}
+
+.pages-protected-profile-history-add-submit {
+    flex: 1;
+    position: relative;
 }

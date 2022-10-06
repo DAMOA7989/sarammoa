@@ -1,14 +1,18 @@
 import React from "react";
-import cx from "classnames";
 
-const ScreenCarousel = ({ screenIdx, setScreenIdx, screens }) => {
+const ScreenCarousel = ({ mode, screenIdx, setScreenIdx, screens }) => {
+    const styles = {
+        transform: `translateY(calc(${-100 * screenIdx}%))`,
+    };
+    if (mode === "sub") {
+        styles.transform = `translateX(calc(${
+            -(100 / screens.length) * screenIdx
+        }%))`;
+        styles.width = `${100 * screens.length}vw`;
+    }
+
     return (
-        <div
-            className="screen-carousel"
-            style={{
-                transform: `translateY(calc(${-100 * screenIdx}%))`,
-            }}
-        >
+        <div className={`screen-carousel ${mode || "main"}`} style={styles}>
             {(screens || []).map((screen, idx) => (
                 <div
                     className={`screen ${
@@ -34,4 +38,4 @@ const ScreenCarousel = ({ screenIdx, setScreenIdx, screens }) => {
     );
 };
 
-export default ScreenCarousel;
+export default React.memo(ScreenCarousel);

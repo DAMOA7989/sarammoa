@@ -264,7 +264,6 @@ export const NavigateProvider = ({ children }) => {
         const payload = {};
 
         if (right) payload.right = right;
-
         dispatch({
             type: "SET_LAYOUT",
             payload,

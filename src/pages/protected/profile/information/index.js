@@ -66,4 +66,4 @@ const Information = () => {
     );
 };
 
-export default Information;
+export default React.memo(Information);

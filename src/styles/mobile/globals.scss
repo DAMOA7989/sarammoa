@@ -54,11 +54,52 @@
 }
 
 .screen-carousel {
-    height: 100%;
+    flex: 1;
     transition: transform 0.4s;
+    display: flex;
 
     > .screen {
-        height: 100%;
         transition: opacity 0.4s;
+    }
+
+    &.main {
+        flex-direction: column;
+
+        > .screen {
+            &.active {
+                flex: 1;
+                overflow: auto;
+                min-height: 100%;
+            }
+
+            &.inactive {
+                flex: 0;
+                // overflow: hidden;
+                // height: 0;
+            }
+
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    &.sub {
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        > .screen {
+            flex: 1;
+
+            &.active {
+                width: 100vw;
+            }
+
+            &.inactive {
+                width: 100vw;
+            }
+
+            display: flex;
+            flex-direction: column;
+        }
     }
 }

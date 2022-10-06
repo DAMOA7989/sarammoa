@@ -4,4 +4,4 @@ const Scrap = () => {
     return <div>scrap</div>;
 };
 
-export default Scrap;
+export default React.memo(Scrap);

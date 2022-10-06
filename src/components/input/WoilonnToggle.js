@@ -1,6 +1,6 @@
 import React from "react";
 
-const WoilonnCheckbox = ({ value, onClick }) => {
+const WoilonnToggle = ({ value, onClick }) => {
     const [checked, setChecked] = React.useState(value);
 
     React.useEffect(() => {
@@ -14,4 +14,4 @@ const WoilonnCheckbox = ({ value, onClick }) => {
     );
 };
 
-export default WoilonnCheckbox;
+export default WoilonnToggle;
