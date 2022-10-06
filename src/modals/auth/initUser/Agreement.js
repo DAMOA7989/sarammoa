@@ -138,7 +138,7 @@ const Agreement = ({ uid, _idx, screenIdx, setScreenIdx }) => {
     };
 
     return (
-        <div className="modals-auth-init-user-agreement">
+        <main className="modals-auth-init-user-agreement">
             {state.isLoading ? (
                 <CircularProgress color="primary" size={45} />
             ) : (
@@ -297,7 +297,7 @@ const Agreement = ({ uid, _idx, screenIdx, setScreenIdx }) => {
                         }}
                     />
                 )}
-        </div>
+        </main>
     );
 };
 

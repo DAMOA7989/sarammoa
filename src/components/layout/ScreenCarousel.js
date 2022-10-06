@@ -1,9 +1,13 @@
 import React from "react";
 
 const ScreenCarousel = ({ mode, screenIdx, setScreenIdx, screens }) => {
-    const styles = {
-        transform: `translateY(calc(${-100 * screenIdx}%))`,
-    };
+    const styles = {};
+    if (!Boolean(mode) || mode === "main") {
+        styles.transform = `translateY(calc(${
+            -(100 / screens.length) * screenIdx
+        }%))`;
+        styles.height = `${100 * screens.length}%`;
+    }
     if (mode === "sub") {
         styles.transform = `translateX(calc(${
             -(100 / screens.length) * screenIdx

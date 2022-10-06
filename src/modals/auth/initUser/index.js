@@ -11,7 +11,7 @@ const Index = ({ _idx, screenIdx, setScreenIdx }) => {
     const { signOut } = useAuthContext();
 
     return (
-        <div className="modals-auth-init-user-index">
+        <main className="modals-auth-init-user-index">
             <CommonButton
                 className="sign-out-button"
                 type="text"
@@ -41,7 +41,7 @@ const Index = ({ _idx, screenIdx, setScreenIdx }) => {
                     display: _idx === screenIdx ? "block" : "none",
                 }}
             />
-        </div>
+        </main>
     );
 };
 

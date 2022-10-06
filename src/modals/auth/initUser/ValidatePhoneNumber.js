@@ -245,7 +245,7 @@ const ValidatePhoneNumber = ({ uid, _idx, screenIdx, setScreenIdx }) => {
     };
 
     return (
-        <div className="modals-auth-init-user-validate-phone-number">
+        <main className="modals-auth-init-user-validate-phone-number">
             {state.submitLoading ? (
                 <CircularProgress color="primary" size={45} />
             ) : (
@@ -349,7 +349,7 @@ const ValidatePhoneNumber = ({ uid, _idx, screenIdx, setScreenIdx }) => {
             >
                 {t("btn.start")}
             </CommonButton>
-        </div>
+        </main>
     );
 };
 

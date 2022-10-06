@@ -20,17 +20,15 @@ const InitUser = ({ uid, agrees }) => {
     }, []);
 
     return (
-        <main className="modals-auth-init-user">
-            <ScreenCarousel
-                screenIdx={screenIdx}
-                setScreenIdx={setScreenIdx}
-                screens={[
-                    <Index uid={uid} />,
-                    <Agreement uid={uid} />,
-                    <ValidatePhoneNumber uid={uid} />,
-                ]}
-            />
-        </main>
+        <ScreenCarousel
+            screenIdx={screenIdx}
+            setScreenIdx={setScreenIdx}
+            screens={[
+                <Index uid={uid} />,
+                <Agreement uid={uid} />,
+                <ValidatePhoneNumber uid={uid} />,
+            ]}
+        />
     );
 };
 

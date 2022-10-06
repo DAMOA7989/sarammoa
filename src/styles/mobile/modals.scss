@@ -145,12 +145,7 @@
     }
 }
 
-.modals-auth-init-user {
-    height: 100%;
-}
-
 .modals-auth-init-user-index {
-    height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -165,6 +160,7 @@
 
     > .container {
         width: calc(100% - 2.5em);
+        height: 100%;
         margin-top: 7.5em;
 
         > .title {
@@ -208,7 +204,6 @@
 }
 
 .modals-auth-init-user-agreement {
-    height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -223,6 +218,7 @@
 
     > .container {
         width: calc(100% - 2.5em);
+        height: 100%;
         margin-top: 7.5em;
 
         > .title {
@@ -288,6 +284,7 @@
     > .container {
         margin-top: 7.5em;
         width: calc(100% - 2.5em);
+        height: 100%;
 
         > .title {
             font-weight: 400;
@@ -309,6 +306,10 @@
 
                 > .input-field {
                     flex: 1;
+
+                    input {
+                        width: 100%;
+                    }
                 }
 
                 > button {
