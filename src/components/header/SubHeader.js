@@ -25,6 +25,7 @@ const SubHeader = () => {
                                     <CommonButton
                                         type="text"
                                         onClick={it.onClick}
+                                        disabled={it.disabled}
                                     >
                                         {it.title || it.icon}
                                     </CommonButton>

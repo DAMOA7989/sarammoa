@@ -341,7 +341,7 @@
 
     &.text {
         cursor: default;
-        color: $gunmetal_color;
+        color: $link_water_color;
         font-size: 1rem;
         font-weight: 500;
         padding: 0.75em 1em;
@@ -350,6 +350,7 @@
 
         &.active {
             cursor: pointer;
+            color: $gunmetal_color;
 
             > .ripple-effect {
                 background-color: rgba($primary_color, 0.6);

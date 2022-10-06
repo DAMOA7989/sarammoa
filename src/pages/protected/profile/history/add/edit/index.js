@@ -24,6 +24,7 @@ const ProfileHistoryAddEdit = ({
                 right: {
                     next: {
                         title: t("btn.next"),
+                        disabled: contents.length <= 0,
                         onClick: () => {
                             setScreenIdx(screenIdx + 1);
                         },
@@ -31,7 +32,7 @@ const ProfileHistoryAddEdit = ({
                 },
             });
         }
-    }, [screenIdx]);
+    }, [screenIdx, contents]);
 
     React.useEffect(() => {
         // containerRef.current.scrollTop = containerRef.current.scrollHeight;
@@ -76,7 +77,7 @@ const ProfileHistoryAddEdit = ({
                 })}
             </div>
 
-            <footer className="edits" style={{ position: "fixed" }}>
+            <footer className="edits">
                 <div className="container">
                     <input
                         ref={inputTagRef}
@@ -86,7 +87,7 @@ const ProfileHistoryAddEdit = ({
                             display: "none",
                         }}
                         type="file"
-                        capture="environment"
+                        // capture="environment"
                         onChange={(event) => handleCapture(event.target)}
                     />
                     <CommonButton
