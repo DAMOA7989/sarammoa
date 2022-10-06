@@ -18,8 +18,18 @@
 @import "./pc/auth.scss";
 
 #root {
+    position: relative;
     display: flex;
     flex-direction: column;
+    min-height: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-color: $app_background_color;
+
+    * {
+        box-sizing: border-box;
+    }
 
     > .sub-layout {
         position: relative;
@@ -29,6 +39,7 @@
         animation-name: appear-in;
         animation-duration: 0.15s;
         animation-timing-function: ease-out;
+        height: 100%;
 
         > header {
             position: sticky;
@@ -38,6 +49,16 @@
 
         > main {
             flex: 1;
+            overflow-y: auto;
+        }
+
+        > .screen-carousel {
+            height: calc(100% - 3.75em);
+
+            > .screen {
+                height: 100%;
+                overflow-y: auto;
+            }
         }
 
         @keyframes appear-in {
@@ -53,5 +74,6 @@
 
     > main {
         flex: 1;
+        overflow-y: auto;
     }
 }

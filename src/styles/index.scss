@@ -23,12 +23,4 @@ body {
 }
 
 #root {
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background-color: $app_background_color;
-
-    * {
-        box-sizing: border-box;
-    }
 }
