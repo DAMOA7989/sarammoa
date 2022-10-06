@@ -10,6 +10,7 @@ import { useModalContext } from "utils/modal";
 import { ReactComponent as EditIcon } from "assets/images/icons/profile/edit.svg";
 import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
 import { Skeleton } from "@mui/material";
+import ProfileThumbnail from "components/surface/LazyImage";
 
 const __TABS__ = [
     {
@@ -347,19 +348,10 @@ const Profile = () => {
                                 className="profile-thumbnail-outline"
                             >
                                 <div className="profile-thumbnail">
-                                    {userInfo?.profileThumbnailUrl ? (
-                                        <img
-                                            src={userInfo?.profileThumbnailUrl}
-                                            alt="profile thumbnail"
-                                            loading="lazy"
-                                        />
-                                    ) : (
-                                        <Skeleton
-                                            variant="rectangular"
-                                            width={120}
-                                            height={120}
-                                        />
-                                    )}
+                                    <ProfileThumbnail
+                                        src={userInfo?.profileThumbnailUrl}
+                                        alt="profile thumbnail"
+                                    />
                                 </div>
                             </div>
                             <div ref={profileInfoRef} className="profile-info">

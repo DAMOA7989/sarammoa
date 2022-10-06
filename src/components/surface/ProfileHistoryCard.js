@@ -60,6 +60,7 @@ const ProfileHistoryCard = ({ titleImageUrl, title }) => {
                         sx={{
                             fontSize: "0.8125em",
                         }}
+                        height={180}
                     />
                 )}
             </div>
