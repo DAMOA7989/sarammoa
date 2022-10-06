@@ -14,6 +14,7 @@ const ProfileHistoryAddEdit = ({
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigateContext();
+    const containerRef = React.useRef(null);
     const inputTagRef = React.useRef(null);
     const editorRef = React.useRef(null);
 
@@ -32,6 +33,11 @@ const ProfileHistoryAddEdit = ({
         }
     }, [screenIdx]);
 
+    React.useEffect(() => {
+        // containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        // editorRef.current.scrollTop = editorRef.current.scrollHeight;
+    }, [contents]);
+
     const handleCapture = (target) => {
         if (target.files) {
             if (target.files.length !== 0) {
@@ -44,7 +50,10 @@ const ProfileHistoryAddEdit = ({
     const onTextClickHandler = () => {};
 
     return (
-        <main className="pages-protected-profile-history-add-edit">
+        <main
+            ref={containerRef}
+            className="pages-protected-profile-history-add-edit"
+        >
             <div ref={editorRef} className="editor">
                 {(contents || []).map((content, idx) => {
                     if (content instanceof Blob) {
@@ -66,6 +75,7 @@ const ProfileHistoryAddEdit = ({
                     }
                 })}
             </div>
+
             <footer className="edits" style={{ position: "fixed" }}>
                 <div className="container">
                     <input
