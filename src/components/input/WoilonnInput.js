@@ -1,5 +1,6 @@
 import React from "react";
 import PhoneInput from "react-phone-number-input";
+import { ReactComponent as RequiredIcon } from "assets/images/icons/component/required.svg";
 
 const WoilonnInput = ({
     className,
@@ -11,10 +12,16 @@ const WoilonnInput = ({
     onKeyPress,
     disabled,
     alert,
+    required,
 }) => {
     return (
         <div className={`woilonn-input ${className}`}>
-            <div className="label">{label}</div>
+            {Boolean(label) && (
+                <div className={`label ${required && "required"}`}>
+                    {label}
+                    {required && <RequiredIcon />}
+                </div>
+            )}
             <div className="input-container">
                 {type === "tel" ? (
                     <PhoneInput

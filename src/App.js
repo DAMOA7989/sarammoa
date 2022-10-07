@@ -39,8 +39,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
     const { init, user } = useAuthContext();
-    const { mode } = useNavigateContext();
-    const { task } = useStatusContext();
     const location = useLocation();
 
     React.useEffect(() => {
