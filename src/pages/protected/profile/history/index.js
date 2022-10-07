@@ -60,7 +60,6 @@ const History = () => {
                         navigate.push({
                             pathname: "/profile/history/add",
                             mode: "sub",
-                            screenTitle: "title.profile.history.add",
                         });
                     }}
                 >

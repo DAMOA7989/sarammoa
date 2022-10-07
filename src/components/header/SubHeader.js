@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigateContext } from "utils/navigate";
 import CommonButton from "components/button/CommonButton";
+import { ReactComponent as ArrowLeftIcon } from "assets/images/icons/arrow-left.svg";
 
 const SubHeader = () => {
     const { t } = useTranslation();
@@ -13,8 +14,20 @@ const SubHeader = () => {
                 <section className="left">
                     <div
                         className="go-back-icon"
-                        onClick={() => navigate.goBack()}
-                    ></div>
+                        onClick={() => {
+                            navigate.clearLayout();
+                            if (
+                                typeof navigate.state.goBack?.onClick ===
+                                "function"
+                            ) {
+                                navigate.state.goBack.onClick();
+                            } else {
+                                navigate.goBack();
+                            }
+                        }}
+                    >
+                        <ArrowLeftIcon />
+                    </div>
                     <h3 className="title">{t(navigate.state.screenTitle)}</h3>
                 </section>
                 <section className="right">

@@ -27,6 +27,12 @@ const ProfileHistoryAddSubmit = ({
                         onClick: onSubmitHandler,
                     },
                 },
+                goBack: {
+                    onClick: () => {
+                        setScreenIdx(screenIdx - 1);
+                    },
+                },
+                screenTitle: "title.profile.history.add",
             });
         }
     }, [screenIdx]);

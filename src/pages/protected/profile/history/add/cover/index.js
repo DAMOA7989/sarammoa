@@ -32,6 +32,12 @@ const ProfileHistoryAddCover = ({
                         },
                     },
                 },
+                goBack: {
+                    onClick: () => {
+                        setScreenIdx(screenIdx - 1);
+                    },
+                },
+                screenTitle: "title.profile.history.add",
             });
 
             for (const content of contents) {

@@ -30,6 +30,7 @@ const ProfileHistoryAddEdit = ({
                         },
                     },
                 },
+                screenTitle: "title.profile.history.add",
             });
         }
     }, [screenIdx, contents]);

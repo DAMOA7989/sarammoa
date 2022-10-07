@@ -79,14 +79,19 @@ export const NavigateProvider = ({ children }) => {
                     routing: false,
                 };
             case "SET_LAYOUT":
-                return {
+                const _state = {
                     ...state,
-                    right: action.payload?.right,
                 };
+                for (const key in action.payload || {}) {
+                    _state[key] = action.payload[key];
+                }
+                return _state;
             case "CLEAR_LAYOUT":
                 return {
                     ...state,
                     right: null,
+                    goBack: null,
+                    screenTitle: null,
                 };
             default:
                 return state;
@@ -260,10 +265,13 @@ export const NavigateProvider = ({ children }) => {
         });
     }, [state.routing]);
 
-    const setLayout = ({ right }) => {
+    const setLayout = ({ right, goBack, screenTitle }) => {
         const payload = {};
 
         if (right) payload.right = right;
+        if (goBack) payload.goBack = goBack;
+        if (screenTitle) payload.screenTitle = screenTitle;
+
         dispatch({
             type: "SET_LAYOUT",
             payload,
