@@ -11,6 +11,7 @@ const ProfileHistoryAdd = () => {
     const [screenIdx, setScreenIdx] = React.useState(0);
     const [contents, setContents] = React.useState([]);
     const [cover, setCover] = React.useState(null);
+    const [coverUrl, setCoverUrl] = React.useState(null);
 
     return (
         <ScreenCarousel
@@ -27,12 +28,16 @@ const ProfileHistoryAdd = () => {
                     setContents={setContents}
                     cover={cover}
                     setCover={setCover}
+                    coverUrl={coverUrl}
+                    setCoverUrl={setCoverUrl}
                 />,
                 <ProfileHistoryAddSubmit
                     contents={contents}
                     setContents={setContents}
                     cover={cover}
                     setCover={setCover}
+                    coverUrl={coverUrl}
+                    setCoverUrl={setCoverUrl}
                 />,
             ]}
         />

@@ -4,6 +4,8 @@ import { useNavigateContext } from "utils/navigate";
 import WoilonnInput from "components/input/WoilonnInput";
 import LazyImage from "components/surface/LazyImage";
 import { useStatusContext } from "utils/status";
+import { useAuthContext } from "utils/auth";
+import { _post } from "utils/firebase/writing";
 
 const ProfileHistoryAddSubmit = ({
     _idx,
@@ -13,12 +15,16 @@ const ProfileHistoryAddSubmit = ({
     setContents,
     cover,
     setCover,
+    coverUrl,
+    setCoverUrl,
 }) => {
     const { t } = useTranslation();
+    const { userInfo } = useAuthContext();
     const navigate = useNavigateContext();
     const { task } = useStatusContext();
     const [title, setTitle] = React.useState("");
     const [searchTag, setSearchTag] = React.useState("");
+    const [searchTags, setSearchTags] = React.useState([]);
     const [canSubmit, setCanSubmit] = React.useState(false);
 
     React.useLayoutEffect(() => {
@@ -39,7 +45,7 @@ const ProfileHistoryAddSubmit = ({
                 screenTitle: "title.profile.history.add",
             });
         }
-    }, [screenIdx, canSubmit, title, searchTag]);
+    }, [screenIdx, canSubmit, title, searchTags]);
 
     React.useEffect(() => {
         if (!Boolean(title)) {
@@ -50,23 +56,28 @@ const ProfileHistoryAddSubmit = ({
     }, [title]);
 
     const onSubmitHandler = React.useCallback(() => {
-        const payload = {
+        task.run();
+        _post({
+            uid: userInfo?.id,
             contents,
             cover,
             title,
-            searchTag,
-        };
-
-        task.run();
-        setTimeout(() => {
-            task.finish();
-        }, 2000);
-    }, [title, searchTag]);
+            searchTags,
+        })
+            .then(() => {
+                task.finish();
+                navigate.goBack();
+            })
+            .catch((e) => {
+                console.dir(e);
+                task.finish();
+            });
+    }, [title, searchTags]);
 
     return (
         <main className="pages-protected-profile-history-add-submit">
             <div className="title-image-container">
-                <LazyImage src={cover} alt="title image" />
+                <LazyImage src={coverUrl} alt="title image" />
             </div>
             <div className="inputs">
                 <WoilonnInput

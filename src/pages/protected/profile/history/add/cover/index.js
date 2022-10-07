@@ -13,12 +13,14 @@ const ProfileHistoryAddCover = ({
     setContents,
     cover,
     setCover,
+    coverUrl,
+    setCoverUrl,
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigateContext();
     const slidesUlRef = React.useRef(0);
     const [prevCover, setPrevCover] = React.useState(null);
-    const [coverUrl, setCoverUrl] = React.useState(null);
+
     const imgSizeRate = React.useRef(1);
 
     React.useLayoutEffect(() => {
@@ -77,8 +79,7 @@ const ProfileHistoryAddCover = ({
                     }
 
                     ctx.drawImage(img, sx, sy, sw, sh, 0, 0, SIZE, SIZE);
-                    const dataUrl = canvas.toDataURL(prevCover.type);
-                    setCover(dataUrl);
+                    canvas.toBlob((blob) => setCover(blob));
                 };
                 img.src = reader.result;
             };

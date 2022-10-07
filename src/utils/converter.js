@@ -1,11 +1,13 @@
-export const getResizedImageUrl = (
+export const getResizedImageBlob = (
     imageFile,
-    MAX_WIDTH = 1024,
-    MAX_HEIGHT = 1024
+    MAX_WIDTH = 480,
+    MAX_HEIGHT = 480
 ) =>
     new Promise(async (resolve, reject) => {
         try {
-            if (!Boolean(imageFile) || !(imageFile instanceof File)) return;
+            if (!Boolean(imageFile) || !(imageFile instanceof Blob)) {
+                throw new Error();
+            }
 
             const reader = new FileReader();
             reader.onload = (event) => {
@@ -31,8 +33,7 @@ export const getResizedImageUrl = (
                     canvas.height = height;
                     const ctx = canvas.getContext("2d");
                     ctx.drawImage(img, 0, 0, width, height);
-                    const dataUrl = canvas.toDataURL(imageFile.type);
-                    return resolve(dataUrl);
+                    canvas.toBlob(resolve);
                 };
                 img.src = event.target.result;
             };
