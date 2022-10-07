@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigateContext } from "utils/navigate";
 import LazyImage from "components/surface/LazyImage";
 
+const SIZE = 300;
+
 const ProfileHistoryAddCover = ({
     _idx,
     screenIdx,
@@ -15,7 +17,7 @@ const ProfileHistoryAddCover = ({
     const { t } = useTranslation();
     const navigate = useNavigateContext();
     const slidesUlRef = React.useRef(0);
-    const [slideImageUrls, setSlideImageUrls] = React.useState([]);
+    const [prevCover, setPrevCover] = React.useState(null);
     const [coverUrl, setCoverUrl] = React.useState(null);
     const imgSizeRate = React.useRef(1);
 
@@ -34,7 +36,7 @@ const ProfileHistoryAddCover = ({
 
             for (const content of contents) {
                 if (content instanceof File) {
-                    setCover(content);
+                    setPrevCover(content);
                     return;
                 }
             }
@@ -42,19 +44,41 @@ const ProfileHistoryAddCover = ({
     }, [screenIdx]);
 
     React.useEffect(() => {
-        if (cover instanceof File) {
+        if (prevCover instanceof File) {
             const reader = new FileReader();
             reader.onload = () => {
                 const img = new Image();
                 img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = SIZE;
+                    canvas.height = SIZE;
+                    const ctx = canvas.getContext("2d");
+                    let sx, sy, sw, sh;
+
                     imgSizeRate.current = img.width / img.height;
                     setCoverUrl(reader.result);
+
+                    if (imgSizeRate.current > 1) {
+                        sx = (img.width - img.height) / 2;
+                        sy = 0;
+                        sw = img.height;
+                        sh = img.height;
+                    } else {
+                        sx = 0;
+                        sy = (img.height - img.width) / 2;
+                        sw = img.width;
+                        sh = img.width;
+                    }
+
+                    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, SIZE, SIZE);
+                    const dataUrl = canvas.toDataURL(prevCover.type);
+                    setCover(dataUrl);
                 };
                 img.src = reader.result;
             };
-            reader.readAsDataURL(cover);
+            reader.readAsDataURL(prevCover);
         }
-    }, [cover]);
+    }, [prevCover]);
 
     return (
         <main className="pages-protected-profile-history-add-cover">
@@ -65,7 +89,7 @@ const ProfileHistoryAddCover = ({
                     backgroundRepeat: "no-repeat",
                     backgroundSize:
                         imgSizeRate.current >= 1
-                            ? `${imgSizeRate * 100}% 100%`
+                            ? `${imgSizeRate.current * 100}vw ${100}vw`
                             : "100%",
                     backgroundPosition: "center",
                 }}
@@ -93,12 +117,12 @@ const ProfileHistoryAddCover = ({
                                 <li
                                     key={idx}
                                     className={`${
-                                        content === cover && "selected"
+                                        content === prevCover && "selected"
                                     }`}
                                 >
                                     <div
                                         className="image-container"
-                                        onClick={() => setCover(content)}
+                                        onClick={() => setPrevCover(content)}
                                     >
                                         <img
                                             id={`image_${idx}`}

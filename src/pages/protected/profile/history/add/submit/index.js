@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigateContext } from "utils/navigate";
 import WoilonnInput from "components/input/WoilonnInput";
+import LazyImage from "components/surface/LazyImage";
 
 const ProfileHistoryAddSubmit = ({
     _idx,
@@ -9,6 +10,8 @@ const ProfileHistoryAddSubmit = ({
     setScreenIdx,
     contents,
     setContents,
+    cover,
+    setCover,
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigateContext();
@@ -28,27 +31,27 @@ const ProfileHistoryAddSubmit = ({
         }
     }, [screenIdx]);
 
-    const onSubmitHandler = () => {
-        console.log("d submit", contents);
-    };
+    const onSubmitHandler = () => {};
 
     return (
         <main className="pages-protected-profile-history-add-submit">
             <div className="title-image-container">
-                <img src={null} alt="title image" />
+                <LazyImage src={cover} alt="title image" />
             </div>
-            <WoilonnInput
-                className="title"
-                label={t("label.profile.history.add.title")}
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-            />
-            <WoilonnInput
-                className="search-tag"
-                label={t("label.profile.history.add.search_tag")}
-                value={searchTag}
-                onChange={(event) => setSearchTag(event.target.value)}
-            />
+            <div className="inputs">
+                <WoilonnInput
+                    className="title"
+                    label={t("label.profile.history.add.title")}
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                />
+                <WoilonnInput
+                    className="search-tag"
+                    label={t("label.profile.history.add.search_tag")}
+                    value={searchTag}
+                    onChange={(event) => setSearchTag(event.target.value)}
+                />
+            </div>
         </main>
     );
 };
