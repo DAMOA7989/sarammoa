@@ -87,7 +87,6 @@ const ProfileHistoryAddEdit = ({
                             display: "none",
                         }}
                         type="file"
-                        // capture="environment"
                         onChange={(event) => handleCapture(event.target)}
                     />
                     <CommonButton

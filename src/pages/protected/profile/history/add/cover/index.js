@@ -9,11 +9,15 @@ const ProfileHistoryAddCover = ({
     setScreenIdx,
     contents,
     setContents,
+    cover,
+    setCover,
 }) => {
     const { t } = useTranslation();
     const navigate = useNavigateContext();
     const slidesUlRef = React.useRef(0);
     const [slideImageUrls, setSlideImageUrls] = React.useState([]);
+    const [coverUrl, setCoverUrl] = React.useState(null);
+    const imgSizeRate = React.useRef(1);
 
     React.useLayoutEffect(() => {
         if (screenIdx === _idx) {
@@ -27,12 +31,51 @@ const ProfileHistoryAddCover = ({
                     },
                 },
             });
+
+            for (const content of contents) {
+                if (content instanceof File) {
+                    setCover(content);
+                    return;
+                }
+            }
         }
     }, [screenIdx]);
 
+    React.useEffect(() => {
+        if (cover instanceof File) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const img = new Image();
+                img.onload = () => {
+                    imgSizeRate.current = img.width / img.height;
+                    setCoverUrl(reader.result);
+                };
+                img.src = reader.result;
+            };
+            reader.readAsDataURL(cover);
+        }
+    }, [cover]);
+
     return (
         <main className="pages-protected-profile-history-add-cover">
-            <div className="viewer"></div>
+            <div
+                className="viewer"
+                style={{
+                    backgroundImage: `url(${coverUrl})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize:
+                        imgSizeRate.current >= 1
+                            ? `${imgSizeRate * 100}% 100%`
+                            : "100%",
+                    backgroundPosition: "center",
+                }}
+            >
+                <div className="top" />
+                <div className="center">
+                    <LazyImage src={coverUrl} alt="cover image" />
+                </div>
+                <div className="bottom" />
+            </div>
             <footer className="slides">
                 <ul ref={slidesUlRef}>
                     {(contents || []).map((content, idx) => {
@@ -47,8 +90,16 @@ const ProfileHistoryAddCover = ({
                             reader.readAsDataURL(content);
 
                             return (
-                                <li key={idx}>
-                                    <div className="image-container">
+                                <li
+                                    key={idx}
+                                    className={`${
+                                        content === cover && "selected"
+                                    }`}
+                                >
+                                    <div
+                                        className="image-container"
+                                        onClick={() => setCover(content)}
+                                    >
                                         <img
                                             id={`image_${idx}`}
                                             src={null}

@@ -230,10 +230,12 @@ const Edit = () => {
                     ))}
                     <input
                         ref={inputFileRef}
+                        accept="image/*"
+                        style={{
+                            display: "none",
+                        }}
                         type="file"
-                        accept="image/jpg,impge/png,image/jpeg,image/gif"
                         onChange={onFileChangeHandler}
-                        hidden
                     />
                 </div>
             </BottomSheet>
