@@ -1,7 +1,7 @@
 import React from "react";
 import { Skeleton } from "@mui/material";
 
-const ProfileHistoryCard = ({ titleImageUrl, title }) => {
+const ProfileHistoryCard = ({ coverUrl, title }) => {
     const [loaded, setLoaded] = React.useState(false);
     const cardRef = React.useRef(null);
     const rippleEffectRef = React.useRef(null);
@@ -10,7 +10,7 @@ const ProfileHistoryCard = ({ titleImageUrl, title }) => {
 
     React.useEffect(() => {
         const newImg = new Image();
-        newImg.src = titleImageUrl;
+        newImg.src = coverUrl;
         newImg.onload = () => {
             setLoaded(true);
         };
@@ -53,7 +53,7 @@ const ProfileHistoryCard = ({ titleImageUrl, title }) => {
         <article ref={cardRef} className="profile-history-card">
             <div ref={titleImageRef} className="title-image">
                 {loaded ? (
-                    <img src={titleImageUrl} alt="title image" />
+                    <img src={coverUrl} alt="title image" />
                 ) : (
                     <Skeleton
                         variant="rectangular"

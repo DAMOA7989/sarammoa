@@ -1,5 +1,15 @@
 import { db, storage, functions } from "./index";
-import { doc, collection, setDoc, Timestamp } from "firebase/firestore";
+import {
+    doc,
+    collection,
+    setDoc,
+    Timestamp,
+    getDoc,
+    query,
+    getDocs,
+    where,
+    orderBy,
+} from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { httpsCallable } from "firebase/functions";
 import { getResizedImageBlob } from "utils/converter";
@@ -52,6 +62,31 @@ export const _post = ({
             );
 
             return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _getUserWritings = ({ uid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            if (!Boolean(uid)) throw new Error("uid is undefined");
+
+            const writingsRef = collection(db, "writings");
+            let q = query(writingsRef, where("writer", "==", uid));
+            q = query(q, orderBy("createdAt", "desc"));
+            const querySnapshot = await getDocs(q);
+
+            const docs = [];
+            querySnapshot.forEach((docSnapshot) => {
+                docs.push({
+                    id: docSnapshot.id,
+                    ...docSnapshot.data(),
+                });
+            });
+            return resolve({
+                docs,
+            });
         } catch (e) {
             return reject(e);
         }
