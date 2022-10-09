@@ -488,8 +488,21 @@
         > input {
             flex: 1;
             height: 100%;
+            background-color: transparent;
             color: rgba($auro_metal_saurus_color, 0.7);
             transition: color 0.15s;
+        }
+
+        > textarea {
+            flex: 1;
+            height: 100%;
+            border: none;
+            outline: none;
+            color: rgba($auro_metal_saurus_color, 0.7);
+            background-color: transparent;
+            overflow-y: hidden;
+            resize: none;
+            vertical-align: middle;
         }
     }
 
@@ -510,6 +523,10 @@
             border: 1px solid $gunmetal_color;
 
             > input {
+                color: $gunmetal_color;
+            }
+
+            > textarea {
                 color: $gunmetal_color;
             }
         }

@@ -13,7 +13,25 @@ const WoilonnInput = ({
     disabled,
     alert,
     required,
+    multiline,
 }) => {
+    const textareaRef = React.useRef(null);
+    const containerRef = React.useRef(null);
+
+    React.useEffect(() => {
+        if (multiline) {
+            if (textareaRef.current && containerRef.current) {
+                const textarea = textareaRef.current;
+                const container = containerRef.current;
+
+                textarea.style.height = "auto";
+                const height = textarea.scrollHeight;
+                textarea.style.height = `${height}px`;
+                container.style.height = `${height + 32}px`;
+            }
+        }
+    }, [multiline, value]);
+
     return (
         <div className={`woilonn-input ${className}`}>
             {Boolean(label) && (
@@ -22,7 +40,7 @@ const WoilonnInput = ({
                     {required && <RequiredIcon />}
                 </div>
             )}
-            <div className="input-container">
+            <div ref={containerRef} className="input-container">
                 {type === "tel" ? (
                     <PhoneInput
                         defaultCountry="KR"
@@ -30,6 +48,14 @@ const WoilonnInput = ({
                         value={value}
                         onChange={onChange}
                         disabled={disabled}
+                    />
+                ) : multiline ? (
+                    <textarea
+                        ref={textareaRef}
+                        type={type}
+                        value={value}
+                        onChange={onChange}
+                        rows="1"
                     />
                 ) : (
                     <input
