@@ -70,7 +70,7 @@ export const _post = ({
 export const _getUserWritings = ({ uid }) =>
     new Promise(async (resolve, reject) => {
         try {
-            if (!Boolean(uid)) throw new Error("uid is undefined");
+            if (!Boolean(uid)) throw new Error("uid is null");
 
             const writingsRef = collection(db, "writings");
             let q = query(writingsRef, where("writer", "==", uid));
@@ -87,6 +87,47 @@ export const _getUserWritings = ({ uid }) =>
             return resolve({
                 docs,
             });
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _getWritingDetail = ({ wid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            if (!Boolean(wid)) throw new Error("wid is null");
+
+            const docRef = doc(db, `writings`, wid);
+            const docSnapshot = await getDoc(docRef);
+
+            if (docSnapshot.exists()) {
+                const writingInfo = {
+                    id: docSnapshot.id,
+                    ...docSnapshot.data(),
+                };
+
+                const writerId = writingInfo?.writer;
+                if (!Boolean(writerId)) throw new Error("writer is empty");
+
+                const writerDocRef = doc(db, "users", writerId);
+                const writerDocSnapshot = await getDoc(writerDocRef);
+
+                if (writerDocSnapshot.exists()) {
+                    const writerInfo = {
+                        id: writerDocSnapshot.id,
+                        ...writerDocSnapshot.data(),
+                    };
+
+                    writingInfo.writer = writerInfo;
+
+                    return resolve(writingInfo);
+                } else {
+                    throw new Error("writer info is empty");
+                }
+            } else {
+                throw new Error("doc is empty");
+            }
+            throw new Error();
         } catch (e) {
             return reject(e);
         }

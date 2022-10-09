@@ -1044,3 +1044,34 @@
         height: 100%;
     }
 }
+
+.id-card {
+    display: inline-flex;
+    align-items: center;
+
+    > .profile-thumbnail {
+    }
+
+    > .nickname {
+    }
+
+    &.regular {
+        gap: 0.75em;
+
+        > .profile-thumbnail {
+            width: 2em;
+            height: 2em;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        > .nickname {
+            color: $gunmetal_color;
+
+            > .skeleton {
+                font-size: 1rem;
+                width: 100px;
+            }
+        }
+    }
+}

@@ -19,6 +19,7 @@ import {
     ProfileSetup,
     ProfileEdit,
     Support,
+    WritingDetail,
     Newsfeed,
     User,
     UserDetail,
@@ -133,6 +134,9 @@ const App = () => {
                                     element={<NoticeMessageDetail />}
                                 />
                             </Route>
+                        </Route>
+                        <Route path="writing">
+                            <Route path=":wid" element={<WritingDetail />} />
                         </Route>
                     </Route>
                 </Route>

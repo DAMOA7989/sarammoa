@@ -22,6 +22,8 @@ export { default as ProfileEdit } from "./protected/profile/edit";
 
 export { default as Support } from "./protected/support";
 
+export { default as WritingDetail } from "./protected/writing/detail";
+
 export { default as Newsfeed } from "./public/newsfeed";
 
 export { default as User } from "./public/user";

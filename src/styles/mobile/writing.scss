@@ -1,0 +1,27 @@
+@import "../include.scss";
+
+.pages-protected-writing-detail {
+    padding: 2.5em 0;
+
+    > .header {
+        padding: 0 1.25em;
+
+        > .title {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 0.375em;
+        }
+
+        > .writer-card {
+        }
+    }
+
+    > .contents {
+    }
+
+    > .info {
+    }
+
+    > .comment {
+    }
+}

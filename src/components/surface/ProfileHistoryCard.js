@@ -1,7 +1,7 @@
 import React from "react";
 import { Skeleton } from "@mui/material";
 
-const ProfileHistoryCard = ({ coverUrl, title }) => {
+const ProfileHistoryCard = ({ coverUrl, title, onClick }) => {
     const [loaded, setLoaded] = React.useState(false);
     const cardRef = React.useRef(null);
     const rippleEffectRef = React.useRef(null);
@@ -50,7 +50,11 @@ const ProfileHistoryCard = ({ coverUrl, title }) => {
     }, []);
 
     return (
-        <article ref={cardRef} className="profile-history-card">
+        <article
+            ref={cardRef}
+            className="profile-history-card"
+            onClick={onClick}
+        >
             <div ref={titleImageRef} className="title-image">
                 {loaded ? (
                     <img src={coverUrl} alt="title image" />

@@ -90,6 +90,12 @@ const History = () => {
                             {(state.writeDocs || []).map((write, idx) => (
                                 <li key={idx}>
                                     <ProfileHistoryCard
+                                        onClick={() => {
+                                            navigate.push({
+                                                pathname: `/writing/${write.id}`,
+                                                mode: "sub",
+                                            });
+                                        }}
                                         coverUrl={write.cover}
                                         title={write.title}
                                     />
