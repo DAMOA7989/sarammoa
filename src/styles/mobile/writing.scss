@@ -1,10 +1,12 @@
 @import "../include.scss";
 
 .pages-protected-writing-detail {
+    position: relative;
     padding: 2.5em 0;
 
     > .header {
         padding: 0 1.25em;
+        margin-bottom: 2.5em;
 
         > .title {
             font-size: 1.5em;
@@ -14,14 +16,118 @@
 
         > .writer-card {
         }
+
+        > .more {
+            position: absolute;
+            top: 2.75em;
+            right: 1.25em;
+        }
     }
 
     > .contents {
+        padding: 0.5em 0;
+
+        > ul {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25em;
+            > li {
+                > .container {
+                    &.image {
+                    }
+
+                    &.text {
+                        padding: 0 0.625em;
+                    }
+                }
+            }
+        }
     }
 
     > .info {
+        padding: 2.5em 1.25em 1.25em 1.25em;
+        border-top: 1px solid $link_water_color;
+        border-bottom: 1px solid $link_water_color;
+
+        > .title {
+            font-weight: 500;
+            margin-bottom: 0.75em;
+        }
+
+        > .desc {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25em;
+
+            > .left {
+                display: inline-flex;
+                gap: 1em;
+
+                > .likes,
+                > .views {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.4em;
+
+                    > span {
+                        position: relative;
+                        bottom: 1px;
+                        font-size: 0.8125rem;
+                        color: $gunmetal_color;
+                    }
+                }
+            }
+
+            > .right {
+                > .created-at {
+                    font-size: 0.875rem;
+                    color: $auro_metal_saurus_color;
+                }
+            }
+        }
+
+        > .more {
+            > .more-button {
+                padding: 0;
+
+                > .container {
+                    font-size: 0.875rem;
+                }
+            }
+        }
     }
 
     > .comment {
+        padding: 2.5em 1.25em;
+
+        > ul {
+            margin-bottom: 2em;
+
+            > li {
+                > .container {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5em;
+
+                    > .message {
+                        display: inline;
+                        font-size: 0.875rem;
+                        font-weight: 400;
+                        color: $gunmetal_color;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    > .created-at {
+                        display: inline;
+                        font-size: 0.75rem;
+                        font-weight: 400;
+                        color: $auro_metal_saurus_color;
+                    }
+                }
+            }
+        }
     }
 }

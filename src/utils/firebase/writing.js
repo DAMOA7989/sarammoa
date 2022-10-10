@@ -29,11 +29,15 @@ export const _post = ({
             const newContents = [];
             for (const [idx, content] of contents.entries()) {
                 let _content = content;
-                if (content instanceof File) {
-                    const blob = await getResizedImageBlob(content);
+                if (content.type === "photo") {
+                    const photo = content.value;
+                    const blob = await getResizedImageBlob(photo);
                     const contentRef = ref(storage, `writings/${docId}/${idx}`);
                     await uploadBytes(contentRef, blob);
-                    _content = await getDownloadURL(contentRef);
+                    _content = {
+                        type: "photo",
+                        value: await getDownloadURL(contentRef),
+                    };
                 }
                 newContents.push(_content);
             }
@@ -54,6 +58,9 @@ export const _post = ({
                     cover: _cover,
                     title,
                     searchTags,
+                    likes: 0,
+                    views: 0,
+                    comments: [],
                     createdAt: Timestamp.now(),
                 },
                 {

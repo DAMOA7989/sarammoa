@@ -43,7 +43,7 @@ const ProfileHistoryAddCover = ({
             });
 
             for (const content of contents) {
-                if (content instanceof File) {
+                if (content.type === "photo") {
                     setPrevCover(content);
                     return;
                 }
@@ -52,7 +52,8 @@ const ProfileHistoryAddCover = ({
     }, [screenIdx]);
 
     React.useEffect(() => {
-        if (prevCover instanceof File) {
+        if (prevCover?.type === "photo") {
+            const photo = prevCover.value;
             const reader = new FileReader();
             reader.onload = () => {
                 const img = new Image();
@@ -83,7 +84,7 @@ const ProfileHistoryAddCover = ({
                 };
                 img.src = reader.result;
             };
-            reader.readAsDataURL(prevCover);
+            reader.readAsDataURL(photo);
         }
     }, [prevCover]);
 
@@ -110,7 +111,8 @@ const ProfileHistoryAddCover = ({
             <footer className="slides">
                 <ul ref={slidesUlRef}>
                     {(contents || []).map((content, idx) => {
-                        if (content instanceof File) {
+                        if (content.type === "photo") {
+                            const photo = content.value;
                             const reader = new FileReader();
                             reader.onload = () => {
                                 const img = document.getElementById(
@@ -118,7 +120,7 @@ const ProfileHistoryAddCover = ({
                                 );
                                 img.src = reader.result;
                             };
-                            reader.readAsDataURL(content);
+                            reader.readAsDataURL(photo);
 
                             return (
                                 <li

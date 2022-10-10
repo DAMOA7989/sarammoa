@@ -74,7 +74,13 @@ const ProfileHistoryAddEdit = ({
         if (target.files) {
             if (target.files.length !== 0) {
                 const file = target.files[0];
-                setContents([...contents, file]);
+                setContents([
+                    ...contents,
+                    {
+                        type: "photo",
+                        value: file,
+                    },
+                ]);
             }
         }
     };
@@ -110,13 +116,14 @@ const ProfileHistoryAddEdit = ({
         >
             <div ref={editorRef} className="editor">
                 {(contents || []).map((content, idx) => {
-                    if (content instanceof Blob) {
+                    if (content.type === "photo") {
+                        const value = content.value;
                         const reader = new FileReader();
                         reader.onload = () => {
                             const elem = document.getElementById(`img_${idx}`);
                             elem.src = reader.result;
                         };
-                        reader.readAsDataURL(content);
+                        reader.readAsDataURL(value);
                         return (
                             <div
                                 key={idx}

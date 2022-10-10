@@ -14,6 +14,7 @@ const WoilonnInput = ({
     alert,
     required,
     multiline,
+    right,
 }) => {
     const textareaRef = React.useRef(null);
     const containerRef = React.useRef(null);
@@ -67,6 +68,7 @@ const WoilonnInput = ({
                         disabled={disabled}
                     />
                 )}
+                {right && <div className="input-right">{right}</div>}
             </div>
             {Boolean(alert) && <div className="alert">{alert}</div>}
         </div>

@@ -1,21 +1,37 @@
 import React from "react";
 import LazyImage from "./LazyImage";
 import { Skeleton } from "@mui/material";
+import { _getUserInfo } from "utils/firebase/auth";
 
-const IdCard = ({ className, size, userInfo }) => {
+const IdCard = ({ className, size, user, userInfo: _userInfo }) => {
     const [loaded, setLoaded] = React.useState(false);
+    const [userInfo, setUserInfo] = React.useState(null);
 
     React.useEffect(() => {
-        if (!Boolean(userInfo?.profileThumbnailUrl)) {
-            return setLoaded(false);
-        }
+        if (Boolean(_userInfo) && Object.keys(_userInfo || {}).length > 0) {
+            if (!Boolean(_userInfo?.profileThumbnailUrl)) {
+                return setLoaded(false);
+            }
 
-        if (!Boolean(userInfo?.nickname)) {
-            return setLoaded(false);
-        }
+            if (!Boolean(_userInfo?.nickname)) {
+                return setLoaded(false);
+            }
 
-        setLoaded(true);
-    }, [userInfo]);
+            setUserInfo(_userInfo);
+            return setLoaded(true);
+        } else if (Boolean(user)) {
+            _getUserInfo({ uid: user })
+                .then((result) => {
+                    setUserInfo(result);
+                    console.log("d result", result);
+                    setLoaded(true);
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    setLoaded(true);
+                });
+        }
+    }, [user, _userInfo]);
 
     return (
         <div className={`id-card ${className} ${size}`}>

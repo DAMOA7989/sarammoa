@@ -28,7 +28,8 @@ const History = () => {
                 case "PUSH_DOCS_FULFILLED":
                     const prevDocs = state.writeDocs || [];
                     const newDocs = action.payload?.docs || [];
-                    if (!newDocs.length) return { ...state };
+                    if (!newDocs.length)
+                        return { ...state, writeDocsLoading: false };
 
                     return {
                         ...state,
@@ -101,6 +102,8 @@ const History = () => {
                                     />
                                 </li>
                             ))}
+                            {state.writeDocs?.length &&
+                                state.writeDocs.length < 2 && <li></li>}
                         </ul>
                     )}
                 </div>
