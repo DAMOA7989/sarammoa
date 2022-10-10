@@ -23,7 +23,6 @@ const IdCard = ({ className, size, user, userInfo: _userInfo }) => {
             _getUserInfo({ uid: user })
                 .then((result) => {
                     setUserInfo(result);
-                    console.log("d result", result);
                     setLoaded(true);
                 })
                 .catch((e) => {

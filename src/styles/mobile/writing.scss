@@ -21,6 +21,12 @@
             position: absolute;
             top: 2.75em;
             right: 1.25em;
+
+            > .dropdown {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
         }
     }
 

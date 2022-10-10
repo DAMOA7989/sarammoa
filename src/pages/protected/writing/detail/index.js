@@ -14,6 +14,7 @@ import CommonButton from "components/button/CommonButton";
 import WoilonnInput from "components/input/WoilonnInput";
 import { ReactComponent as SendIcon } from "assets/images/icons/writing/send.svg";
 import { useAuthContext } from "utils/auth";
+import RippleEffect from "components/surface/RippleEffect";
 
 const WritingDetail = () => {
     const { t } = useTranslation();
@@ -63,6 +64,16 @@ const WritingDetail = () => {
                         ...state,
                         comment: action.payload?.value,
                     };
+                case "SHOW_MORE_DROPDOWN":
+                    return {
+                        ...state,
+                        showMoreDropdown: true,
+                    };
+                case "HIDE_MORE_DROPDOWN":
+                    return {
+                        ...state,
+                        showMoreDropdown: false,
+                    };
             }
         },
         {
@@ -70,6 +81,7 @@ const WritingDetail = () => {
             writingInfo: null,
             commentLoading: false,
             comment: "",
+            showMoreDropdown: false,
         }
     );
 
@@ -109,13 +121,32 @@ const WritingDetail = () => {
                         {state.writingInfo?.title}
                     </LazyTypography>
                 </h3>
-                <IdCard
-                    className="writer-card"
-                    size="regular"
-                    userInfo={state.writingInfo?.writer}
-                />
+                <RippleEffect>
+                    <IdCard
+                        className="writer-card"
+                        size="regular"
+                        userInfo={state.writingInfo?.writer}
+                    />
+                </RippleEffect>
                 <div className="more">
-                    <MoreIcon />
+                    <RippleEffect
+                        onClick={() => {
+                            dispatch({
+                                type: "SHOW_MORE_DROPDOWN",
+                            });
+                        }}
+                    >
+                        <MoreIcon />
+                    </RippleEffect>
+                    <div className="dropdown">
+                        {state.showMoreDropdown && (
+                            <ul>
+                                <li>test</li>
+                                <li>test</li>
+                                <li>test</li>
+                            </ul>
+                        )}
+                    </div>
                 </div>
             </header>
             <div className="contents">
