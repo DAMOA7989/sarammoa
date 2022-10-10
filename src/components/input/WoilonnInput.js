@@ -1,6 +1,7 @@
 import React from "react";
 import PhoneInput from "react-phone-number-input";
 import { ReactComponent as RequiredIcon } from "assets/images/icons/component/required.svg";
+import { CircularProgress } from "@mui/material";
 
 const WoilonnInput = ({
     className,
@@ -15,6 +16,7 @@ const WoilonnInput = ({
     required,
     multiline,
     right,
+    loading,
 }) => {
     const textareaRef = React.useRef(null);
     const containerRef = React.useRef(null);
@@ -42,33 +44,39 @@ const WoilonnInput = ({
                 </div>
             )}
             <div ref={containerRef} className="input-container">
-                {type === "tel" ? (
-                    <PhoneInput
-                        defaultCountry="KR"
-                        placeholder={placeholder || null}
-                        value={value}
-                        onChange={onChange}
-                        disabled={disabled}
-                    />
-                ) : multiline ? (
-                    <textarea
-                        ref={textareaRef}
-                        type={type}
-                        value={value}
-                        onChange={onChange}
-                        rows="1"
-                    />
+                {loading ? (
+                    <CircularProgress color="primary" size={25} />
                 ) : (
-                    <input
-                        type={type || "text"}
-                        placeholder={placeholder || null}
-                        value={value}
-                        onChange={onChange}
-                        onKeyPress={onKeyPress}
-                        disabled={disabled}
-                    />
+                    <>
+                        {type === "tel" ? (
+                            <PhoneInput
+                                defaultCountry="KR"
+                                placeholder={placeholder || null}
+                                value={value}
+                                onChange={onChange}
+                                disabled={disabled}
+                            />
+                        ) : multiline ? (
+                            <textarea
+                                ref={textareaRef}
+                                type={type}
+                                value={value}
+                                onChange={onChange}
+                                rows="1"
+                            />
+                        ) : (
+                            <input
+                                type={type || "text"}
+                                placeholder={placeholder || null}
+                                value={value}
+                                onChange={onChange}
+                                onKeyPress={onKeyPress}
+                                disabled={disabled}
+                            />
+                        )}
+                        {right && <div className="input-right">{right}</div>}
+                    </>
                 )}
-                {right && <div className="input-right">{right}</div>}
             </div>
             {Boolean(alert) && <div className="alert">{alert}</div>}
         </div>

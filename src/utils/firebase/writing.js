@@ -9,6 +9,7 @@ import {
     getDocs,
     where,
     orderBy,
+    addDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { httpsCallable } from "firebase/functions";
@@ -60,7 +61,6 @@ export const _post = ({
                     searchTags,
                     likes: 0,
                     views: 0,
-                    comments: [],
                     createdAt: Timestamp.now(),
                 },
                 {
@@ -126,15 +126,43 @@ export const _getWritingDetail = ({ wid }) =>
                     };
 
                     writingInfo.writer = writerInfo;
-
-                    return resolve(writingInfo);
                 } else {
                     throw new Error("writer info is empty");
                 }
+
+                const commentsRef = collection(db, `writings/${wid}/comments`);
+                const q = query(commentsRef, orderBy("createdAt", "desc"));
+
+                const querySnapshot = await getDocs(q);
+
+                const comments = [];
+                querySnapshot.forEach((docSnapshot) => {
+                    comments.push({
+                        id: docSnapshot.id,
+                        ...docSnapshot.data(),
+                    });
+                });
+                writingInfo.comments = comments;
+
+                return resolve(writingInfo);
             } else {
                 throw new Error("doc is empty");
             }
-            throw new Error();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _leaveComment = ({ wid, uid, message }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const commentsRef = collection(db, `writings/${wid}/comments`);
+            await addDoc(commentsRef, {
+                writer: uid,
+                message,
+                createdAt: Timestamp.now(),
+            });
+            return resolve();
         } catch (e) {
             return reject(e);
         }

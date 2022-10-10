@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { useNavigateContext } from "utils/navigate";
-import { _getWritingDetail } from "utils/firebase/writing";
+import { _getWritingDetail, _leaveComment } from "utils/firebase/writing";
 import { useStatusContext } from "utils/status";
 import LazyImage from "components/surface/LazyImage";
 import IdCard from "components/surface/IdCard";
@@ -13,10 +13,12 @@ import { ReactComponent as EyeIcon } from "assets/images/icons/writing/eye.svg";
 import CommonButton from "components/button/CommonButton";
 import WoilonnInput from "components/input/WoilonnInput";
 import { ReactComponent as SendIcon } from "assets/images/icons/writing/send.svg";
+import { useAuthContext } from "utils/auth";
 
 const WritingDetail = () => {
     const { t } = useTranslation();
     const { wid } = useParams();
+    const { userInfo } = useAuthContext();
     const navigate = useNavigateContext();
     const { task } = useStatusContext();
     const [state, dispatch] = React.useReducer(
@@ -40,21 +42,33 @@ const WritingDetail = () => {
                         writingInfoLoading: false,
                         writingInfo: null,
                     };
+                case "SUBMIT_COMMENT_PENDING":
+                    return {
+                        ...state,
+                        commentLoading: true,
+                    };
+                case "SUBMIT_COMMENT_FULFILLED":
+                    return {
+                        ...state,
+                        commentLoading: false,
+                        comment: "",
+                    };
+                case "SUBMIT_COMMENT_REJECTED":
+                    return {
+                        ...state,
+                        commentLoading: false,
+                    };
                 case "SET_COMMENT":
                     return {
                         ...state,
                         comment: action.payload?.value,
-                    };
-                case "CLEAR_COMMENT":
-                    return {
-                        ...state,
-                        comment: "",
                     };
             }
         },
         {
             writingInfoLoading: false,
             writingInfo: null,
+            commentLoading: false,
             comment: "",
         }
     );
@@ -186,7 +200,15 @@ const WritingDetail = () => {
                         </li>
                     ))}
                 </ul>
-
+                <div className="view-all-comments">
+                    <CommonButton
+                        className="view-all-comments-button"
+                        type="text"
+                        color="black"
+                    >
+                        {t("button.view_all_comments")}
+                    </CommonButton>
+                </div>
                 <div className="send">
                     <WoilonnInput
                         placeholder={t("placeholder.comment")}
@@ -202,13 +224,30 @@ const WritingDetail = () => {
                         right={
                             <SendIcon
                                 onClick={() => {
-                                    const comment = state.comment;
+                                    const message = state.comment;
                                     dispatch({
-                                        type: "CLEAR_COMMENT",
+                                        type: "SUBMIT_COMMENT_PENDING",
                                     });
+                                    _leaveComment({
+                                        wid: state.writingInfo?.id,
+                                        uid: userInfo?.id,
+                                        message,
+                                    })
+                                        .then(() => {
+                                            dispatch({
+                                                type: "SUBMIT_COMMENT_FULFILLED",
+                                            });
+                                        })
+                                        .catch((e) => {
+                                            console.dir(e);
+                                            dispatch({
+                                                type: "SUBMIT_COMMENT_REJECTED",
+                                            });
+                                        });
                                 }}
                             />
                         }
+                        loading={state.commentLoading}
                     />
                 </div>
             </div>
