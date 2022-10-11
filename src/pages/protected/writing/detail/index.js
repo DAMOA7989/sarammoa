@@ -15,6 +15,37 @@ import WoilonnInput from "components/input/WoilonnInput";
 import { ReactComponent as SendIcon } from "assets/images/icons/writing/send.svg";
 import { useAuthContext } from "utils/auth";
 import RippleEffect from "components/surface/RippleEffect";
+import { useOutsideClickListener } from "utils/hook";
+
+const __DROPDOWN_ITEMS__ = [
+    {
+        key: "edit",
+        i18nKey: "text.dropdown.edit",
+        onClick: ({ dispatch }) => {
+            dispatch({
+                type: "HIDE_MORE_DROPDOWN",
+            });
+        },
+    },
+    {
+        key: "unpublish",
+        i18nKey: "text.dropdown.unpublish",
+        onClick: ({ dispatch }) => {
+            dispatch({
+                type: "HIDE_MORE_DROPDOWN",
+            });
+        },
+    },
+    {
+        key: "delete",
+        i18nKey: "text.dropdown.delete",
+        onClick: ({ dispatch }) => {
+            dispatch({
+                type: "HIDE_MORE_DROPDOWN",
+            });
+        },
+    },
+];
 
 const WritingDetail = () => {
     const { t } = useTranslation();
@@ -84,12 +115,22 @@ const WritingDetail = () => {
             showMoreDropdown: false,
         }
     );
+    const moreRef = React.useRef(null);
+    useOutsideClickListener(moreRef, (event) => {
+        if (state.showMoreDropdown) {
+            dispatch({
+                type: "HIDE_MORE_DROPDOWN",
+            });
+        }
+    });
 
     React.useLayoutEffect(() => {
         navigate.setLayout({
             screenTitle: "",
         });
     }, [wid]);
+
+    React.useEffect(() => {}, []);
 
     React.useEffect(() => {
         if (!Boolean(wid)) return;
@@ -128,12 +169,18 @@ const WritingDetail = () => {
                         userInfo={state.writingInfo?.writer}
                     />
                 </RippleEffect>
-                <div className="more">
+                <div ref={moreRef} className="more">
                     <RippleEffect
                         onClick={() => {
-                            dispatch({
-                                type: "SHOW_MORE_DROPDOWN",
-                            });
+                            if (!state.showMoreDropdown) {
+                                dispatch({
+                                    type: "SHOW_MORE_DROPDOWN",
+                                });
+                            } else {
+                                dispatch({
+                                    type: "HIDE_MORE_DROPDOWN",
+                                });
+                            }
                         }}
                     >
                         <MoreIcon />
@@ -141,9 +188,20 @@ const WritingDetail = () => {
                     <div className="dropdown">
                         {state.showMoreDropdown && (
                             <ul>
-                                <li>test</li>
-                                <li>test</li>
-                                <li>test</li>
+                                {__DROPDOWN_ITEMS__.map((item) => (
+                                    <li key={item.key}>
+                                        <RippleEffect>
+                                            <div
+                                                className="container"
+                                                onClick={() =>
+                                                    item.onClick({ dispatch })
+                                                }
+                                            >
+                                                {t(item.i18nKey)}
+                                            </div>
+                                        </RippleEffect>
+                                    </li>
+                                ))}
                             </ul>
                         )}
                     </div>
@@ -216,20 +274,28 @@ const WritingDetail = () => {
             </div>
             <div className="comment">
                 <ul>
-                    {(state.writingInfo?.comments || []).map((comment, idx) => (
-                        <li key={idx}>
-                            <div className="container">
-                                <IdCard size="small" user={comment.writer} />
-                                <div className="message">
-                                    {comment.message +
-                                        "blahblahblahblahbalbhalbhlahblahb"}
+                    {(state.writingInfo?.comments || [])
+                        .slice(0, 3)
+                        .map((comment, idx) => (
+                            <li key={idx}>
+                                <div className="container">
+                                    <RippleEffect>
+                                        <IdCard
+                                            size="small"
+                                            user={comment.writer}
+                                        />
+                                    </RippleEffect>
+                                    <div className="message">
+                                        {comment.message}
+                                    </div>
+                                    <div className="created-at">
+                                        {comment.createdAt
+                                            .toDate()
+                                            .toDateString()}
+                                    </div>
                                 </div>
-                                <div className="created-at">
-                                    {comment.createdAt.toDate().toDateString()}
-                                </div>
-                            </div>
-                        </li>
-                    ))}
+                            </li>
+                        ))}
                 </ul>
                 <div className="view-all-comments">
                     <CommonButton
@@ -237,7 +303,9 @@ const WritingDetail = () => {
                         type="text"
                         color="black"
                     >
-                        {t("button.view_all_comments")}
+                        {`${t("button.view_all_comments")} (${
+                            (state.writingInfo?.comments || []).length
+                        })`}
                     </CommonButton>
                 </div>
                 <div className="send">

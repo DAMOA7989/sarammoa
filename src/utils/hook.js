@@ -48,3 +48,22 @@ export const usePrompt = (message, when = true) => {
 
     useBlocker(blocker, when);
 };
+
+export const useOutsideClickListener = (ref, callback) => {
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (ref.current && !ref.current.contains(event.target)) {
+                if (callback) {
+                    callback(event);
+                } else {
+                    alert("test");
+                }
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [ref, callback]);
+};

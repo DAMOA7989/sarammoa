@@ -24,8 +24,22 @@
 
             > .dropdown {
                 position: absolute;
-                top: 0;
+                top: 1em;
                 right: 0;
+
+                > ul {
+                    border-radius: 8px;
+                    overflow: hidden;
+                    box-shadow: $common_box_shadow;
+
+                    > li {
+                        .container {
+                            white-space: nowrap;
+                            background-color: white;
+                            padding: 0.625em 1em;
+                        }
+                    }
+                }
             }
         }
     }
