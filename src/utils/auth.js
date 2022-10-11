@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
                         setUserInfo(null);
                     }
 
-                    task.finish();
+                    task.terminate();
                 }
             );
 
@@ -180,7 +180,7 @@ export const AuthProvider = ({ children }) => {
                     status: "rejected",
                     payload: null,
                 });
-                task.finish();
+                task.terminate();
                 return reject(e);
             }
         });

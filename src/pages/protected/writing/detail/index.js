@@ -2,7 +2,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { useNavigateContext } from "utils/navigate";
-import { _getWritingDetail, _leaveComment } from "utils/firebase/writing";
+import {
+    _getWritingDetail,
+    _leaveComment,
+    _delete,
+    _switchPublishedField,
+} from "utils/firebase/writing";
 import { useStatusContext } from "utils/status";
 import LazyImage from "components/surface/LazyImage";
 import IdCard from "components/surface/IdCard";
@@ -28,21 +33,60 @@ const __DROPDOWN_ITEMS__ = [
         },
     },
     {
+        key: "publish",
+        i18nKey: "text.dropdown.publish",
+        onClick: ({ uid, wid, dispatch, navigate, task }) => {
+            task.run();
+            _switchPublishedField({ uid, wid })
+                .then(() => {
+                    task.terminate();
+                    dispatch({
+                        type: "HIDE_MORE_DROPDOWN",
+                    });
+                    navigate.goBack();
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    task.terminate();
+                });
+        },
+    },
+    {
         key: "unpublish",
         i18nKey: "text.dropdown.unpublish",
-        onClick: ({ dispatch }) => {
-            dispatch({
-                type: "HIDE_MORE_DROPDOWN",
-            });
+        onClick: ({ uid, wid, dispatch, navigate, task }) => {
+            task.run();
+            _switchPublishedField({ uid, wid })
+                .then(() => {
+                    task.terminate();
+                    dispatch({
+                        type: "HIDE_MORE_DROPDOWN",
+                    });
+                    navigate.goBack();
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    task.terminate();
+                });
         },
     },
     {
         key: "delete",
         i18nKey: "text.dropdown.delete",
-        onClick: ({ dispatch }) => {
-            dispatch({
-                type: "HIDE_MORE_DROPDOWN",
-            });
+        onClick: ({ uid, wid, dispatch, navigate, task }) => {
+            task.run();
+            _delete({ uid, wid })
+                .then(() => {
+                    task.terminate();
+                    dispatch({
+                        type: "HIDE_MORE_DROPDOWN",
+                    });
+                    navigate.goBack();
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    task.terminate();
+                });
         },
     },
 ];
@@ -145,12 +189,12 @@ const WritingDetail = () => {
                         doc,
                     },
                 });
-                // task.finish();
+                // task.terminate();
             })
             .catch((e) => {
                 console.dir(e);
                 dispatch({ type: "SET_WRITING_INFO_REJECTED" });
-                // task.finish();
+                // task.terminate();
             });
     }, [wid]);
 
@@ -188,20 +232,41 @@ const WritingDetail = () => {
                     <div className="dropdown">
                         {state.showMoreDropdown && (
                             <ul>
-                                {__DROPDOWN_ITEMS__.map((item) => (
-                                    <li key={item.key}>
-                                        <RippleEffect>
-                                            <div
-                                                className="container"
-                                                onClick={() =>
-                                                    item.onClick({ dispatch })
-                                                }
-                                            >
-                                                {t(item.i18nKey)}
-                                            </div>
-                                        </RippleEffect>
-                                    </li>
-                                ))}
+                                {__DROPDOWN_ITEMS__.map((item) => {
+                                    if (
+                                        item.key === "publish" &&
+                                        state.writingInfo?.published === true
+                                    )
+                                        return undefined;
+                                    if (
+                                        item.key === "unpublish" &&
+                                        state.writingInfo?.published === false
+                                    )
+                                        return undefined;
+
+                                    return (
+                                        <li key={item.key}>
+                                            <RippleEffect>
+                                                <div
+                                                    className="container"
+                                                    onClick={() =>
+                                                        item.onClick({
+                                                            uid: userInfo?.id,
+                                                            wid: state
+                                                                .writingInfo
+                                                                ?.id,
+                                                            dispatch,
+                                                            navigate,
+                                                            task,
+                                                        })
+                                                    }
+                                                >
+                                                    {t(item.i18nKey)}
+                                                </div>
+                                            </RippleEffect>
+                                        </li>
+                                    );
+                                })}
                             </ul>
                         )}
                     </div>
@@ -244,13 +309,13 @@ const WritingDetail = () => {
                         <div className="likes">
                             <ThumbsUpIcon />
                             <span className="count">
-                                {state.writingInfo?.likes}
+                                {(state.writingInfo?.likes || []).length}
                             </span>
                         </div>
                         <div className="views">
                             <EyeIcon />
                             <span className="count">
-                                {state.writingInfo?.views}
+                                {(state.writingInfo?.views || []).length}
                             </span>
                         </div>
                     </div>

@@ -313,7 +313,7 @@ const EmailSignup = () => {
                     dispatch({
                         type: "SUBMIT_FULFILLED",
                     });
-                    task.finish();
+                    task.terminate();
                     navigate.replace({
                         pathname: "/",
                         mode: "main",
@@ -324,7 +324,7 @@ const EmailSignup = () => {
                     dispatch({
                         type: "SUBMIT_REJECTED",
                     });
-                    task.finish();
+                    task.terminate();
                     switch (e?.code) {
                         case "auth/email-already-in-use":
                             toast.error(t("toast.auth/email-already-in-use"));

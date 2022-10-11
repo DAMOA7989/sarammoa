@@ -65,12 +65,12 @@ const ProfileHistoryAddSubmit = ({
             searchTags,
         })
             .then(() => {
-                task.finish();
+                task.terminate();
                 navigate.goBack();
             })
             .catch((e) => {
                 console.dir(e);
-                task.finish();
+                task.terminate();
             });
     }, [title, searchTags]);
 

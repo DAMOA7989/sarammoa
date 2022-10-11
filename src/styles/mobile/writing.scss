@@ -33,10 +33,15 @@
                     box-shadow: $common_box_shadow;
 
                     > li {
+                        > * {
+                            width: 100%;
+                        }
+
                         .container {
                             white-space: nowrap;
                             background-color: white;
                             padding: 0.625em 1em;
+                            width: 100%;
                         }
                     }
                 }

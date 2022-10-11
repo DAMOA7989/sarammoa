@@ -10,7 +10,7 @@ export const StatusProvider = ({ children }) => {
         run: React.useCallback(() => {
             setIsPending(true);
         }, [isPending]),
-        finish: React.useCallback(() => {
+        terminate: React.useCallback(() => {
             setIsPending(false);
         }, [isPending]),
     };
