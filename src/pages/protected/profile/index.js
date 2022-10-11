@@ -305,17 +305,15 @@ const Profile = () => {
     }, [profileInfoNavIndicatorRef.current]);
 
     React.useEffect(() => {
-        switch (location.pathname.split("/")?.[2]) {
-            case "information":
-                setCurTab("information");
-                break;
-            case "scrap":
-                setCurTab("scrap");
-                break;
-            default:
-                setCurTab("history");
-                break;
-        }
+        const tabs = __TABS__.map((x) => x.key);
+        let _tab = tabs?.[0];
+        tabs.forEach((tab) => {
+            if (location.pathname.split("/").includes(tab)) {
+                _tab = tab;
+                return;
+            }
+        });
+        return setCurTab(_tab);
     }, [location.pathname]);
 
     return (

@@ -17,6 +17,7 @@ const WoilonnInput = ({
     multiline,
     right,
     loading,
+    autoFocus,
 }) => {
     const textareaRef = React.useRef(null);
     const containerRef = React.useRef(null);
@@ -63,6 +64,7 @@ const WoilonnInput = ({
                                 value={value}
                                 onChange={onChange}
                                 rows="1"
+                                autoFocus={autoFocus ? autoFocus : false}
                             />
                         ) : (
                             <input
@@ -72,6 +74,7 @@ const WoilonnInput = ({
                                 onChange={onChange}
                                 onKeyPress={onKeyPress}
                                 disabled={disabled}
+                                autoFocus={autoFocus ? autoFocus : false}
                             />
                         )}
                         {right && <div className="input-right">{right}</div>}

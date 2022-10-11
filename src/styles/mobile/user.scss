@@ -1,0 +1,155 @@
+@import "../include.scss";
+
+.pages-public-user-detail {
+    position: relative;
+
+    > header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1.25em;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    > .user {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5em;
+        padding: 4.5em 0 1.25em 0;
+
+        > .profile-thumbnail {
+            width: 6.25em;
+            height: 6.25em;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: $common_box_shadow;
+        }
+
+        > .info {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25em;
+
+            > .nickname {
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: $gunmetal_color;
+            }
+
+            > .position {
+                font-size: 0.875rem;
+                font-weight: 400;
+                color: $auro_metal_saurus_color;
+            }
+
+            > .counts {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.75em;
+
+                > .likes,
+                > .following,
+                > .followers {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.25em;
+
+                    > .count {
+                        font-size: 0.875rem;
+                    }
+                }
+            }
+        }
+
+        > .buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 2.5em;
+            gap: 1.25em;
+
+            > .follow {
+                flex: 1;
+                border-radius: 24.5px;
+            }
+
+            > .message {
+                flex: 1;
+                border-radius: 24.5px;
+                color: $primary_color;
+            }
+        }
+    }
+
+    > .outlet {
+        flex: 1;
+        background-color: white;
+
+        > nav.tabs {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0.625em 0;
+
+            > ul {
+                display: inline-flex;
+                align-items: center;
+                gap: 2em;
+                position: relative;
+
+                > li {
+                    z-index: 2;
+
+                    > button {
+                        color: $gunmetal_color;
+                        transition: color 0.3s;
+                    }
+
+                    &.selected {
+                        > button {
+                            color: white;
+
+                            @media (hover: hover) {
+                                &:hover {
+                                    color: white;
+                                }
+                            }
+
+                            &:active {
+                                color: white;
+                            }
+                        }
+                    }
+                }
+
+                li:nth-child(1).selected ~ .indicator {
+                    // transform: translateX(calc(100% * 0 + 2em * 0));
+                }
+
+                li:nth-child(2).selected ~ .indicator {
+                    // transform: translateX(calc(100% * 1 + 2em * 1));
+                }
+
+                li:nth-child(3).selected ~ .indicator {
+                    // transform: translateX(calc(100% * 2 + 2em * 2));
+                }
+
+                > .indicator {
+                    position: absolute;
+                    left: 0;
+                    height: 2em;
+                    background-color: $gunmetal_color;
+                    border-radius: 8px;
+                    transition: width 0.3s, transform 0.3s;
+                }
+            }
+        }
+    }
+}

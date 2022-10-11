@@ -187,8 +187,6 @@ const WritingDetail = () => {
         });
     }, [wid]);
 
-    React.useEffect(() => {}, []);
-
     React.useEffect(() => {
         if (!Boolean(wid)) return;
 
@@ -455,7 +453,10 @@ const WritingDetail = () => {
                 onDismiss={() =>
                     dispatch({ type: "CLOSE_COMMENTS_BOTTOM_SHEET" })
                 }
-                defaultSnap={({ maxHeight }) => maxHeight * 0.8}
+                snapPoints={({ minHeight, maxHeight }) => [
+                    minHeight,
+                    maxHeight * 0.8,
+                ]}
                 header={
                     <>
                         <h5>{t("header.bottom_sheet.comments")}</h5>

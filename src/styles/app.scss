@@ -9,6 +9,7 @@
 @import "./mobile/modals.scss";
 @import "./mobile/auth.scss";
 @import "./mobile/writing.scss";
+@import "./mobile/user.scss";
 
 @import "./pc/globals.scss";
 @import "./pc/components.scss";
@@ -18,6 +19,7 @@
 @import "./pc/modals.scss";
 @import "./pc/auth.scss";
 @import "./pc/writing.scss";
+@import "./pc/user.scss";
 
 #root {
     position: relative;
@@ -52,6 +54,8 @@
         > main {
             flex: 1;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         > .screen-carousel {

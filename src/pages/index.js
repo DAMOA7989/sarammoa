@@ -28,5 +28,8 @@ export { default as Newsfeed } from "./public/newsfeed";
 
 export { default as User } from "./public/user";
 export { default as UserDetail } from "./public/user/detail";
+export { default as UserDetailWork } from "./public/user/detail/work";
+export { default as UserDetailHistory } from "./public/user/detail/history";
+export { default as UserDetailInformation } from "./public/user/detail/information";
 
 export { default as SplashScreen } from "./public/splash";

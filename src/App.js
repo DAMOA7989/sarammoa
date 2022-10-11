@@ -23,6 +23,9 @@ import {
     Newsfeed,
     User,
     UserDetail,
+    UserDetailWork,
+    UserDetailHistory,
+    UserDetailInformation,
     SplashScreen,
 } from "pages";
 import MainLayout from "components/layout/MainLayout";
@@ -111,7 +114,17 @@ const App = () => {
                 </Route>
                 <Route path="/sub" element={<SubLayout />}>
                     <Route path="user" element={<User />}>
-                        <Route path=":uid" element={<UserDetail />} />
+                        <Route path=":uid" element={<UserDetail />}>
+                            <Route path="" element={<UserDetailWork />} />
+                            <Route
+                                path="history"
+                                element={<UserDetailHistory />}
+                            />
+                            <Route
+                                path="information"
+                                element={<UserDetailInformation />}
+                            />
+                        </Route>
                     </Route>
                     <Route
                         element={
