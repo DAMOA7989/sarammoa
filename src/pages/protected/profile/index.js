@@ -327,7 +327,6 @@ const Profile = () => {
                                 navigate.push({
                                     pathname: "/profile/setup",
                                     mode: "sub",
-                                    screenTitle: "title.screen.setup",
                                 });
                             }}
                         ></div>

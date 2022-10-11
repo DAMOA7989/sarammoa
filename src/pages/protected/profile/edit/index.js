@@ -156,16 +156,18 @@ const Edit = () => {
     return (
         <>
             <main className="pages-protected-profile-edit">
-                <div
-                    className="profile-thumbnail"
-                    onClick={() =>
-                        setOpenProfileThumbnail(!openProfileThumbnail)
-                    }
-                >
-                    <LazyImage
-                        src={profileThumbnailUrl || ""}
-                        alt="profile thumbnail"
-                    />
+                <div className="profile">
+                    <div
+                        className="profile-thumbnail"
+                        onClick={() =>
+                            setOpenProfileThumbnail(!openProfileThumbnail)
+                        }
+                    >
+                        <LazyImage
+                            src={profileThumbnailUrl || ""}
+                            alt="profile thumbnail"
+                        />
+                    </div>
                 </div>
                 <div className="form">
                     <WoilonnInput

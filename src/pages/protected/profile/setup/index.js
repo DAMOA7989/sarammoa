@@ -3,6 +3,9 @@ import { useTranslation } from "react-i18next";
 import { useAuthContext } from "utils/auth";
 import ListButton from "components/button/ListButton";
 import WoilonnToggle from "components/input/WoilonnToggle";
+import { useNavigateContext } from "utils/navigate";
+import { useStatusContext } from "utils/status";
+import { useModalContext } from "utils/modal";
 
 const __ROWS__ = [
     {
@@ -22,6 +25,23 @@ const __ROWS__ = [
                 ),
                 onClick: ({ checkedPushNotice, setCheckedPushNotice }) => {
                     setCheckedPushNotice(!checkedPushNotice);
+                },
+            },
+            {
+                key: "change_lang",
+                i18nKey: "text.setup.change_lang",
+                right: ({ t }) => (
+                    <span>
+                        {t(`lang.${window.localStorage.getItem("i18nextLng")}`)}
+                    </span>
+                ),
+                onClick: ({ lang, displayModal }) => {
+                    console.log("d lang", lang);
+                    displayModal({
+                        pathname: "profile/ChangeLang",
+                        params: {},
+                        options: {},
+                    });
                 },
             },
             // {
@@ -101,9 +121,18 @@ const __ROWS__ = [
 const Setup = () => {
     const { t } = useTranslation();
     const { signOut } = useAuthContext();
+    const navigate = useNavigateContext();
+    const { lang } = useStatusContext();
+    const { displayModal } = useModalContext();
     const [checkedUsageInformation, setCheckedUsageInformation] =
         React.useState(true);
     const [checkedPushNotice, setCheckedPushNotice] = React.useState(true);
+
+    React.useLayoutEffect(() => {
+        navigate.setLayout({
+            screenTitle: "title.screen.setup",
+        });
+    }, []);
 
     return (
         <main className="pages-protected-profile-setup">
@@ -122,12 +151,15 @@ const Setup = () => {
                                         setCheckedUsageInformation,
                                         checkedPushNotice,
                                         setCheckedPushNotice,
+                                        lang,
+                                        displayModal,
                                     })
                                 }
                             >
                                 <span>{t(col.i18nKey)}</span>
                                 {col.right &&
                                     col.right({
+                                        t,
                                         checkedUsageInformation,
                                         checkedPushNotice,
                                     })}

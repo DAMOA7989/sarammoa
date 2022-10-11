@@ -292,30 +292,22 @@
     flex-direction: column;
     align-items: center;
     padding: 2.5em 1.25em;
-    width: 100%;
-    height: 100%;
     background-color: white;
 
-    > .profile-thumbnail {
-        cursor: pointer;
-        width: 7.5em;
-        height: 7.5em;
-        border-radius: 50%;
-        box-shadow: $common_box_shadow;
-        margin-bottom: 2.5em;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-
-        > img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+    > .profile {
+        > .profile-thumbnail {
+            cursor: pointer;
+            width: 7.5em;
+            height: 7.5em;
+            border-radius: 50%;
+            box-shadow: $common_box_shadow;
+            margin-bottom: 2.5em;
+            overflow: hidden;
         }
     }
 
     > .form {
+        flex: 1;
         display: flex;
         flex-direction: column;
         width: 100%;
