@@ -110,6 +110,9 @@ const App = () => {
                     </Route>
                 </Route>
                 <Route path="/sub" element={<SubLayout />}>
+                    <Route path="user" element={<User />}>
+                        <Route path=":uid" element={<UserDetail />} />
+                    </Route>
                     <Route
                         element={
                             <RequireAuth>

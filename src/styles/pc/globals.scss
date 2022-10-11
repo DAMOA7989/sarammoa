@@ -137,6 +137,14 @@ div[data-rsbs-header] {
             align-items: flex-end;
         }
     }
+
+    &.comments {
+        > ul {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25em;
+        }
+    }
 }
 
 .splash-screen {
