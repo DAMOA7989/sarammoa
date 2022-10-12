@@ -114,7 +114,6 @@ const UserDetail = () => {
         dispatch({ type: "SET_USER_INFO_PENDING" });
         _getUserInfo({ uid })
             .then((doc) => {
-                console.log("d userInfo", doc);
                 dispatch({
                     type: "SET_USER_INFO_FULFILLED",
                     payload: {
@@ -240,7 +239,11 @@ const UserDetail = () => {
                         />
                     </ul>
                 </nav>
-                <Outlet />
+                <Outlet
+                    context={{
+                        userInfo: state.userInfo,
+                    }}
+                />
             </div>
         </main>
     );
