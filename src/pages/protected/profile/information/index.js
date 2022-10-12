@@ -60,7 +60,7 @@ const Information = () => {
                 </div>
             </section>
             <section className="bottom">
-                <div className="created-at">{`Members sice apr 17, 2022`}</div>
+                <div className="created-at">{`Members since apr 17, 2022`}</div>
             </section>
         </div>
     );

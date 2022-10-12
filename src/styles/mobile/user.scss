@@ -90,7 +90,7 @@
     > .outlet {
         flex: 1;
         background-color: white;
-        padding: 0 1.25em 0.625em 1.25em;
+        padding: 0 1.25em 1.25em 1.25em;
 
         > nav.tabs {
             width: 100%;
@@ -171,6 +171,88 @@
 
             > li {
             }
+        }
+    }
+}
+
+.user-detail-information {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5em;
+
+    > .top {
+        > .boxes {
+            margin-bottom: 2.5em;
+
+            > ul {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, calc(50% - 0.5em));
+                grid-gap: 1em;
+                justify-content: space-between;
+
+                > li {
+                    > .container {
+                        background-color: rgba($link_water_color, 0.4);
+                        padding: 0.5em 0 0.75em 0;
+                        border-radius: 8px;
+                        display: inline-flex;
+                        flex-direction: column;
+                        align-items: center;
+                        width: 100%;
+                        gap: 0;
+
+                        > .count {
+                            font-size: 2rem;
+                            font-weight: 700;
+                        }
+
+                        > .label {
+                            font-size: 0.875rem;
+                            font-weight: 400;
+                        }
+                    }
+                }
+            }
+        }
+
+        > .location {
+            > .title {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: $gunmetal_color;
+                margin-bottom: 0.5em;
+            }
+
+            > .position {
+                display: flex;
+                align-items: center;
+
+                > svg {
+                    margin-right: 0.25em;
+                }
+
+                > .country {
+                    font-size: 0.875rem;
+                    color: $gunmetal_color;
+                    font-weight: 400;
+                }
+            }
+        }
+    }
+
+    > .bottom {
+        > .created-at {
+            // position: absolute;
+            // bottom: calc(2em + 3.25em);
+            font-size: 0.8125rem;
+            color: rgba($auro_metal_saurus_color, 0.8);
+            // width: 100%;
+            text-align: center;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
         }
     }
 }
