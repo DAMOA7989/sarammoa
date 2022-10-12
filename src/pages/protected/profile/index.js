@@ -14,11 +14,21 @@ import ProfileThumbnail from "components/surface/LazyImage";
 
 const __TABS__ = [
     {
+        key: "work",
+        i18nKey: "tab.profile.work",
+        onClick: ({ push }) => {
+            push({
+                pathname: "/profile",
+                mode: "main",
+            });
+        },
+    },
+    {
         key: "history",
         i18nKey: "tab.profile.history",
         onClick: ({ push }) => {
             push({
-                pathname: `/profile`,
+                pathname: `/profile/history`,
                 mode: "main",
             });
         },
@@ -29,16 +39,6 @@ const __TABS__ = [
         onClick: ({ push }) => {
             push({
                 pathname: "/profile/information",
-                mode: "main",
-            });
-        },
-    },
-    {
-        key: "scrap",
-        i18nKey: "tab.profile.scrap",
-        onClick: ({ push }) => {
-            push({
-                pathname: "/profile/scrap",
                 mode: "main",
             });
         },
@@ -86,9 +86,9 @@ const Profile = () => {
     const prevTouchPosition = React.useRef([0, 0]);
     const [touchPosition, setTouchPosition] = React.useState([0, 0]);
     const tabRefs = {
+        work: React.useRef(null),
         history: React.useRef(null),
         information: React.useRef(null),
-        scrap: React.useRef(null),
     };
     const originalProfileSizeRef = React.useRef([0, 0]);
     const originalProfileInfoSizeRef = React.useRef([0, 0]);
@@ -300,7 +300,7 @@ const Profile = () => {
         if (!profileInfoNavIndicatorRef.current) return;
         if (profileInfoNavIndicatorRef.current.offsetWidth > 0) {
             profileInfoNavIndicatorRef.current.style.transition =
-                "transform 0.3s";
+                "width 0.3s, transform 0.3s";
         }
     }, [profileInfoNavIndicatorRef.current]);
 

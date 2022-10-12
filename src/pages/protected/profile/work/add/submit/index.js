@@ -7,7 +7,7 @@ import { useStatusContext } from "utils/status";
 import { useAuthContext } from "utils/auth";
 import { _post } from "utils/firebase/writing";
 
-const ProfileHistoryAddSubmit = ({
+const ProfileWorkAddSubmit = ({
     _idx,
     screenIdx,
     setScreenIdx,
@@ -75,7 +75,7 @@ const ProfileHistoryAddSubmit = ({
     }, [title, searchTags]);
 
     return (
-        <main className="pages-protected-profile-history-add-submit">
+        <main className="pages-protected-profile-work-add-submit">
             <div className="title-image-container">
                 <LazyImage src={coverUrl} alt="title image" />
             </div>
@@ -98,4 +98,4 @@ const ProfileHistoryAddSubmit = ({
     );
 };
 
-export default ProfileHistoryAddSubmit;
+export default ProfileWorkAddSubmit;

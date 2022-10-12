@@ -6,7 +6,7 @@ import { ReactComponent as TextIcon } from "assets/images/icons/profile/add/text
 import { useNavigateContext } from "utils/navigate";
 import WoilonnInput from "components/input/WoilonnInput";
 
-const ProfileHistoryAddEdit = ({
+const ProfileWorkAddEdit = ({
     _idx,
     screenIdx,
     setScreenIdx,
@@ -112,7 +112,7 @@ const ProfileHistoryAddEdit = ({
     return (
         <main
             ref={containerRef}
-            className="pages-protected-profile-history-add-edit"
+            className="pages-protected-profile-work-add-edit"
         >
             <div ref={editorRef} className="editor">
                 {(contents || []).map((content, idx) => {
@@ -204,4 +204,4 @@ const ProfileHistoryAddEdit = ({
     );
 };
 
-export default ProfileHistoryAddEdit;
+export default ProfileWorkAddEdit;

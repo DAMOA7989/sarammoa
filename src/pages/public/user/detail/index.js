@@ -55,6 +55,7 @@ const UserDetail = () => {
         history: React.useRef(null),
         information: React.useRef(null),
     };
+    const indicatorRef = React.useRef(null);
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -126,6 +127,14 @@ const UserDetail = () => {
                 dispatch({ type: "SET_USER_INFO_REJECTED" });
             });
     }, [uid]);
+
+    React.useEffect(() => {
+        if (!indicatorRef.current) return;
+        if (indicatorRef.current.offsetWidth > 0) {
+            indicatorRef.current.style.transition =
+                "width 0.3s, transform 0.3s";
+        }
+    }, [indicatorRef.current]);
 
     return (
         <main className="pages-public-user-detail">
@@ -199,6 +208,7 @@ const UserDetail = () => {
                             </li>
                         ))}
                         <div
+                            ref={indicatorRef}
                             className="indicator"
                             style={{
                                 width: `${

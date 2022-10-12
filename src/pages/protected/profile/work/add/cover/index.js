@@ -5,7 +5,7 @@ import LazyImage from "components/surface/LazyImage";
 
 const SIZE = 300;
 
-const ProfileHistoryAddCover = ({
+const ProfileWorkAddCover = ({
     _idx,
     screenIdx,
     setScreenIdx,
@@ -89,7 +89,7 @@ const ProfileHistoryAddCover = ({
     }, [prevCover]);
 
     return (
-        <main className="pages-protected-profile-history-add-cover">
+        <main className="pages-protected-profile-work-add-cover">
             <div
                 className="viewer"
                 style={{
@@ -149,4 +149,4 @@ const ProfileHistoryAddCover = ({
     );
 };
 
-export default ProfileHistoryAddCover;
+export default ProfileWorkAddCover;

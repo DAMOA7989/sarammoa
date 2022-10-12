@@ -12,10 +12,10 @@ import {
     NoticeMessageDetail,
     NoticeNotification,
     Profile,
-    ProfileHistory,
-    ProfileHistoryAdd,
+    ProfileWork,
+    ProfileWorkAdd,
     ProfileInformation,
-    ProfileScrap,
+    ProfileHistory,
     ProfileSetup,
     ProfileEdit,
     Support,
@@ -84,7 +84,17 @@ const App = () => {
                 <Route path="/" element={<MainLayout />}>
                     <Route index element={<Newsfeed />} />
                     <Route path="user" element={<User />}>
-                        <Route path=":uid" element={<UserDetail />} />
+                        <Route path=":uid" element={<UserDetail />}>
+                            <Route path="" element={<UserDetailWork />} />
+                            <Route
+                                path="history"
+                                element={<UserDetailHistory />}
+                            />
+                            <Route
+                                path="information"
+                                element={<UserDetailInformation />}
+                            />
+                        </Route>
                     </Route>
                     <Route
                         element={
@@ -103,12 +113,15 @@ const App = () => {
                             />
                         </Route>
                         <Route path="profile" element={<Profile />}>
-                            <Route path="" element={<ProfileHistory />} />
+                            <Route path="" element={<ProfileWork />} />
                             <Route
                                 path="information"
                                 element={<ProfileInformation />}
                             />
-                            <Route path="scrap" element={<ProfileScrap />} />
+                            <Route
+                                path="history"
+                                element={<ProfileHistory />}
+                            />
                         </Route>
                     </Route>
                 </Route>
@@ -136,10 +149,10 @@ const App = () => {
                         <Route path="profile">
                             <Route path="setup" element={<ProfileSetup />} />
                             <Route path="edit" element={<ProfileEdit />} />
-                            <Route path="history">
+                            <Route path="work">
                                 <Route
                                     path="add"
-                                    element={<ProfileHistoryAdd />}
+                                    element={<ProfileWorkAdd />}
                                 />
                             </Route>
                         </Route>
