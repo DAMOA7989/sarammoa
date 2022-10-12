@@ -5,11 +5,15 @@ import { ReactComponent as CameraIcon } from "assets/images/icons/profile/add/ca
 import { ReactComponent as TextIcon } from "assets/images/icons/profile/add/text.svg";
 import { useNavigateContext } from "utils/navigate";
 import WoilonnInput from "components/input/WoilonnInput";
+import LazyImage from "components/surface/LazyImage";
 
 const ProfileWorkAddEdit = ({
     _idx,
     screenIdx,
     setScreenIdx,
+    mode,
+    wid,
+    writingInfo,
     contents,
     setContents,
 }) => {
@@ -65,7 +69,10 @@ const ProfileWorkAddEdit = ({
                                   },
                               },
                           },
-                screenTitle: "title.profile.history.add",
+                screenTitle:
+                    mode === "modify"
+                        ? "title.profile.work.modify"
+                        : "title.profile.work.add",
             });
         }
     }, [screenIdx, contents, state.text]);
@@ -117,13 +124,24 @@ const ProfileWorkAddEdit = ({
             <div ref={editorRef} className="editor">
                 {(contents || []).map((content, idx) => {
                     if (content.type === "photo") {
-                        const value = content.value;
-                        const reader = new FileReader();
-                        reader.onload = () => {
-                            const elem = document.getElementById(`img_${idx}`);
-                            elem.src = reader.result;
-                        };
-                        reader.readAsDataURL(value);
+                        if (content.value instanceof Blob) {
+                            const value = content.value;
+                            const reader = new FileReader();
+                            reader.onload = () => {
+                                const elem = document.getElementById(
+                                    `img_${idx}`
+                                );
+                                elem.src = reader.result;
+                            };
+                            reader.readAsDataURL(value);
+                        } else if (typeof content.value === "string") {
+                            setTimeout(() => {
+                                const elem = document.getElementById(
+                                    `img_${idx}`
+                                );
+                                elem.src = content.value;
+                            }, 100);
+                        }
                         return (
                             <div
                                 key={idx}

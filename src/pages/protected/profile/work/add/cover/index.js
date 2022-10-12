@@ -9,6 +9,9 @@ const ProfileWorkAddCover = ({
     _idx,
     screenIdx,
     setScreenIdx,
+    mode,
+    wid,
+    writingInfo,
     contents,
     setContents,
     cover,
@@ -39,7 +42,10 @@ const ProfileWorkAddCover = ({
                         setScreenIdx(screenIdx - 1);
                     },
                 },
-                screenTitle: "title.profile.history.add",
+                screenTitle:
+                    mode === "modify"
+                        ? "title.profile.work.modify"
+                        : "title.profile.work.add",
             });
 
             for (const content of contents) {
@@ -53,38 +59,43 @@ const ProfileWorkAddCover = ({
 
     React.useEffect(() => {
         if (prevCover?.type === "photo") {
-            const photo = prevCover.value;
-            const reader = new FileReader();
-            reader.onload = () => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement("canvas");
-                    canvas.width = SIZE;
-                    canvas.height = SIZE;
-                    const ctx = canvas.getContext("2d");
-                    let sx, sy, sw, sh;
+            if (prevCover?.value instanceof Blob) {
+                const photo = prevCover.value;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement("canvas");
+                        canvas.width = SIZE;
+                        canvas.height = SIZE;
+                        const ctx = canvas.getContext("2d");
+                        let sx, sy, sw, sh;
 
-                    imgSizeRate.current = img.width / img.height;
-                    setCoverUrl(reader.result);
+                        imgSizeRate.current = img.width / img.height;
+                        setCoverUrl(reader.result);
 
-                    if (imgSizeRate.current > 1) {
-                        sx = (img.width - img.height) / 2;
-                        sy = 0;
-                        sw = img.height;
-                        sh = img.height;
-                    } else {
-                        sx = 0;
-                        sy = (img.height - img.width) / 2;
-                        sw = img.width;
-                        sh = img.width;
-                    }
+                        if (imgSizeRate.current > 1) {
+                            sx = (img.width - img.height) / 2;
+                            sy = 0;
+                            sw = img.height;
+                            sh = img.height;
+                        } else {
+                            sx = 0;
+                            sy = (img.height - img.width) / 2;
+                            sw = img.width;
+                            sh = img.width;
+                        }
 
-                    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, SIZE, SIZE);
-                    canvas.toBlob((blob) => setCover(blob));
+                        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, SIZE, SIZE);
+                        canvas.toBlob((blob) => setCover(blob));
+                    };
+                    img.src = reader.result;
                 };
-                img.src = reader.result;
-            };
-            reader.readAsDataURL(photo);
+                reader.readAsDataURL(photo);
+            } else if (typeof prevCover?.value === "string") {
+                setCover(prevCover.value);
+                setCoverUrl(prevCover.value);
+            }
         }
     }, [prevCover]);
 
@@ -112,15 +123,24 @@ const ProfileWorkAddCover = ({
                 <ul ref={slidesUlRef}>
                     {(contents || []).map((content, idx) => {
                         if (content.type === "photo") {
-                            const photo = content.value;
-                            const reader = new FileReader();
-                            reader.onload = () => {
-                                const img = document.getElementById(
-                                    `image_${idx}`
-                                );
-                                img.src = reader.result;
-                            };
-                            reader.readAsDataURL(photo);
+                            if (content.value instanceof Blob) {
+                                const photo = content.value;
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                    const img = document.getElementById(
+                                        `image_${idx}`
+                                    );
+                                    img.src = reader.result;
+                                };
+                                reader.readAsDataURL(photo);
+                            } else if (typeof content.value === "string") {
+                                setTimeout(() => {
+                                    const img = document.getElementById(
+                                        `image_${idx}`
+                                    );
+                                    img.src = content.value;
+                                }, 100);
+                            }
 
                             return (
                                 <li

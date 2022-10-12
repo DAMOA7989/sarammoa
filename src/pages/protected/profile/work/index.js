@@ -102,8 +102,7 @@ const Work = () => {
                                     />
                                 </li>
                             ))}
-                            {state.writeDocs?.length &&
-                                state.writeDocs.length < 2 && <li></li>}
+                            {state.writeDocs?.length < 2 && <li></li>}
                         </ul>
                     )}
                 </div>

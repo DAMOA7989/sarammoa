@@ -5,12 +5,15 @@ import WoilonnInput from "components/input/WoilonnInput";
 import LazyImage from "components/surface/LazyImage";
 import { useStatusContext } from "utils/status";
 import { useAuthContext } from "utils/auth";
-import { _post } from "utils/firebase/writing";
+import { _post, _update } from "utils/firebase/writing";
 
 const ProfileWorkAddSubmit = ({
     _idx,
     screenIdx,
     setScreenIdx,
+    mode,
+    wid,
+    writingInfo,
     contents,
     setContents,
     cover,
@@ -42,10 +45,20 @@ const ProfileWorkAddSubmit = ({
                         setScreenIdx(screenIdx - 1);
                     },
                 },
-                screenTitle: "title.profile.history.add",
+                screenTitle:
+                    mode === "modify"
+                        ? "title.profile.work.modify"
+                        : "title.profile.work.add",
             });
         }
-    }, [screenIdx, canSubmit, title, searchTags]);
+    }, [screenIdx, canSubmit, title, searchTags, contents, cover]);
+
+    React.useEffect(() => {
+        if (!writingInfo) return;
+
+        if (writingInfo?.title) setTitle(writingInfo?.title);
+        if (writingInfo?.searchTags) setSearchTags(writingInfo?.searchTags);
+    }, [writingInfo]);
 
     React.useEffect(() => {
         if (!Boolean(title)) {
@@ -56,23 +69,46 @@ const ProfileWorkAddSubmit = ({
     }, [title]);
 
     const onSubmitHandler = React.useCallback(() => {
-        task.run();
-        _post({
-            uid: userInfo?.id,
-            contents,
-            cover,
-            title,
-            searchTags,
-        })
-            .then(() => {
-                task.terminate();
-                navigate.goBack();
-            })
-            .catch((e) => {
-                console.dir(e);
-                task.terminate();
-            });
-    }, [title, searchTags]);
+        switch (mode) {
+            case "modify":
+                task.run();
+                _update({
+                    uid: userInfo?.id,
+                    wid,
+                    contents,
+                    cover,
+                    title,
+                    searchTags,
+                })
+                    .then(() => {
+                        task.terminate();
+                        navigate.goBack();
+                    })
+                    .catch((e) => {
+                        console.dir(e);
+                        task.terminate();
+                    });
+                break;
+            default:
+                task.run();
+                _post({
+                    uid: userInfo?.id,
+                    contents,
+                    cover,
+                    title,
+                    searchTags,
+                })
+                    .then(() => {
+                        task.terminate();
+                        navigate.goBack();
+                    })
+                    .catch((e) => {
+                        console.dir(e);
+                        task.terminate();
+                    });
+                break;
+        }
+    }, [title, searchTags, cover, contents]);
 
     return (
         <main className="pages-protected-profile-work-add-submit">

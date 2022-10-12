@@ -55,13 +55,20 @@ export const _post = ({
 
             const newContents = [];
             for (const [idx, content] of contents.entries()) {
-                let _content = content;
+                const _id = uuidv4();
+                let _content = {
+                    id: _id,
+                    ...content,
+                };
                 if (content.type === "photo") {
-                    const photo = content.value;
-                    const blob = await getResizedImageBlob(photo);
-                    const contentRef = ref(storage, `writings/${docId}/${idx}`);
+                    const blob = await getResizedImageBlob(content.value);
+                    const contentRef = ref(
+                        storage,
+                        `writings/${docId}/${_content.id}`
+                    );
                     await uploadBytes(contentRef, blob);
                     _content = {
+                        ..._content,
                         type: "photo",
                         value: await getDownloadURL(contentRef),
                     };
@@ -70,7 +77,7 @@ export const _post = ({
             }
 
             let _cover = null;
-            if (cover && cover instanceof Blob) {
+            if (cover instanceof Blob) {
                 const blob = await getResizedImageBlob(cover, 300, 300);
                 const coverRef = ref(storage, `writings/${docId}/cover`);
                 await uploadBytes(coverRef, blob);
@@ -92,6 +99,65 @@ export const _post = ({
                     merge: true,
                 }
             );
+
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _update = ({
+    uid,
+    wid,
+    contents = [],
+    cover = null,
+    title = "",
+    searchTags = [],
+}) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await _isOwner({ uid, wid });
+
+            const newContents = [];
+            for (const [idx, content] of contents.entries()) {
+                const _id = uuidv4();
+                let _content = {
+                    id: _id,
+                    ...content,
+                };
+                if (content.type === "photo") {
+                    if (content.value instanceof Blob) {
+                        const blob = await getResizedImageBlob(content.value);
+                        const contentRef = ref(
+                            storage,
+                            `writings/${wid}/${_content.id}`
+                        );
+                        await uploadBytes(contentRef, blob);
+                        _content = {
+                            ..._content,
+                            type: "photo",
+                            value: await getDownloadURL(contentRef),
+                        };
+                    }
+                }
+                newContents.push(_content);
+            }
+            const updateData = {
+                title,
+                searchTags,
+                contents: newContents,
+            };
+
+            if (cover instanceof Blob) {
+                const blob = await getResizedImageBlob(cover, 300, 300);
+                const coverRef = ref(storage, `writings/${wid}/cover`);
+                await uploadBytes(coverRef, blob);
+                updateData.cover = await getDownloadURL(coverRef);
+            }
+
+            await setDoc(doc(db, `writings/${wid}`), updateData, {
+                merge: true,
+            });
 
             return resolve();
         } catch (e) {

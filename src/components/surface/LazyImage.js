@@ -1,7 +1,7 @@
 import React from "react";
 import { Skeleton } from "@mui/material";
 
-const LazyImage = ({ src, alt, width, height, position }) => {
+const LazyImage = ({ id, className, src, alt, width, height, position }) => {
     const [loaded, setLoaded] = React.useState(false);
     const lazyImageRef = React.useRef(null);
 
@@ -15,9 +15,12 @@ const LazyImage = ({ src, alt, width, height, position }) => {
     }, [src]);
 
     return (
-        <div ref={lazyImageRef} className={`lazy-image position-${position}`}>
+        <div
+            ref={lazyImageRef}
+            className={`lazy-image position-${position} ${className}`}
+        >
             {loaded ? (
-                <img src={src} alt={alt} />
+                <img id={id} src={src} alt={alt} />
             ) : (
                 <Skeleton variant="rectangular" animation="wave" />
             )}

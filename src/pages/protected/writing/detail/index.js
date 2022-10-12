@@ -28,9 +28,14 @@ const __DROPDOWN_ITEMS__ = [
     {
         key: "edit",
         i18nKey: "text.dropdown.edit",
-        onClick: ({ dispatch }) => {
+        onClick: ({ uid, wid, dispatch, navigate }) => {
             dispatch({
                 type: "HIDE_MORE_DROPDOWN",
+            });
+
+            navigate.push({
+                pathname: `/profile/work/add?mode=modify&wid=${wid}`,
+                mode: "sub",
             });
         },
     },
