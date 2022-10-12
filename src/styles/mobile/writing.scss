@@ -59,6 +59,15 @@
             > li {
                 > .container {
                     &.image {
+                        &.empty {
+                            position: relative;
+
+                            &::before {
+                                content: "";
+                                display: block;
+                                padding-bottom: calc(100% / 1.618);
+                            }
+                        }
                     }
 
                     &.text {

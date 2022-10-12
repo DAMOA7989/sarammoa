@@ -295,30 +295,42 @@ const WritingDetail = () => {
                 </header>
                 <div className="contents">
                     <ul>
-                        {(state.writingInfo?.contents || []).map(
-                            (content, idx) => {
-                                if (content.type === "photo") {
-                                    return (
-                                        <li key={idx}>
-                                            <div className="container image">
-                                                <LazyImage
-                                                    src={content.value}
-                                                    alt="content image"
-                                                />
-                                            </div>
-                                        </li>
-                                    );
-                                } else if (content.type === "text") {
-                                    return (
-                                        <li key={idx}>
-                                            <div className="container text">
-                                                <p>{content.value}</p>
-                                            </div>
-                                        </li>
-                                    );
-                                }
-                            }
-                        )}
+                        {(state.writingInfo?.contents || []).length
+                            ? (state.writingInfo?.contents || []).map(
+                                  (content, idx) => {
+                                      if (content.type === "photo") {
+                                          return (
+                                              <li key={idx}>
+                                                  <div className="container image">
+                                                      <LazyImage
+                                                          src={content.value}
+                                                          alt="content image"
+                                                      />
+                                                  </div>
+                                              </li>
+                                          );
+                                      } else if (content.type === "text") {
+                                          return (
+                                              <li key={idx}>
+                                                  <div className="container text">
+                                                      <p>{content.value}</p>
+                                                  </div>
+                                              </li>
+                                          );
+                                      }
+                                  }
+                              )
+                            : [1, 2, 3].map((x, idx) => (
+                                  <li key={idx}>
+                                      <div className="container image empty">
+                                          <LazyImage
+                                              position={"absolute"}
+                                              src={null}
+                                              alt="empty image"
+                                          />
+                                      </div>
+                                  </li>
+                              ))}
                     </ul>
                 </div>
                 <div className="info">
