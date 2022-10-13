@@ -114,40 +114,93 @@ const NewsFeed = () => {
                         page: -1,
                         writings: [],
                     };
+                case "PUSH_WRITINGS_PENDING":
+                    return {
+                        ...state,
+                        writingsLoading: true,
+                    };
+                case "PUSH_WRITINGS_FULFILLED":
+                    const prevWritings = state.writings;
+                    const newWritings = action.payload?.docs || [];
+
+                    return {
+                        ...state,
+                        writingsLoading: false,
+                        writings: [...prevWritings, ...newWritings],
+                    };
+                case "PUSH_WRITINGS_REJECTED":
+                    return {
+                        ...state,
+                        writingsLoading: false,
+                    };
             }
         },
         {
             page: -1,
+            writingsLoading: false,
             writings: [],
         }
     );
     const prevPage = React.useRef(-1);
 
     React.useEffect(() => {
-        if (userInfo?.id) {
-            if (state.page < 0) {
-                dispatch({
-                    type: "INIT_WRITINGS",
+        if (state.page < 0) {
+            dispatch({
+                type: "INIT_WRITINGS",
+            });
+        } else {
+            dispatch({
+                type: "PUSH_WRITINGS_PENDING",
+            });
+            _getWritings({
+                uid: userInfo?.id,
+                lastVisible:
+                    state.writings?.[(state.writings?.length || []) - 1],
+            })
+                .then(({ docs }) => {
+                    dispatch({
+                        type: "PUSH_WRITINGS_FULFILLED",
+                        payload: {
+                            docs,
+                        },
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    dispatch({
+                        type: "PUSH_WRITINGS_REJECTED",
+                    });
                 });
-            } else {
-                fetchWritings();
-            }
-            prevPage.current = state.page;
         }
+
+        prevPage.current = state.page;
     }, [userInfo, state.page]);
 
     const fetchWritings = () => {
         const lastVisible =
             state.writings && state.writings[state.writings.length - 1];
 
+        dispatch({
+            type: "PUSH_WRITINGS_PENDING",
+        });
         _getWritings({ uid: userInfo?.id, lastVisible, limit: 3 })
             .then(({ docs }) => {
-                console.log("d docs", docs);
+                dispatch({
+                    type: "PUSH_WRITINGS_FULFILLED",
+                    payload: {
+                        docs,
+                    },
+                });
             })
             .catch((e) => {
                 console.dir(e);
+                dispatch({
+                    type: "PUSH_WRITINGS_REJECTED",
+                });
             });
     };
+
+    console.log("d writings", state.writings);
 
     return (
         <main className="pages-public-newsfeed">
@@ -169,12 +222,11 @@ const NewsFeed = () => {
                 </div>
                 <div className="cards">
                     <ul>
-                        {(__CARDS__ || []).map((card, idx) => (
+                        {(state.writings || []).map((card, idx) => (
                             <li key={idx}>
                                 <NewsfeedCard
-                                    titleImageSrc={card.titleImageSrc}
+                                    cover={card.cover}
                                     title={card.title}
-                                    content={card.content}
                                     writer={card.writer}
                                 />
                             </li>

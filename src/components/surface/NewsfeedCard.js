@@ -1,8 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Skeleton } from "@mui/material";
+import IdCard from "./IdCard";
 
-const NewsfeedCard = ({ writer, titleImageSrc, title, content }) => {
+const NewsfeedCard = ({ writer, cover, title }) => {
     const { t } = useTranslation();
     const [loaded, setLoaded] = React.useState(false);
     const cardRef = React.useRef(null);
@@ -11,7 +12,7 @@ const NewsfeedCard = ({ writer, titleImageSrc, title, content }) => {
 
     React.useEffect(() => {
         const newImg = new Image();
-        newImg.src = titleImageSrc;
+        newImg.src = cover;
         newImg.onload = () => {
             setLoaded(true);
         };
@@ -53,7 +54,8 @@ const NewsfeedCard = ({ writer, titleImageSrc, title, content }) => {
     return (
         <article ref={cardRef} className="newsfeed-card">
             <header className="writer">
-                <div className="profile-thumbnail-outline">
+                <IdCard className="writer-card" size="large" user={writer} />
+                {/* <div className="profile-thumbnail-outline">
                     <div className="profile-thumbnail">
                         {loaded ? (
                             <img
@@ -76,11 +78,11 @@ const NewsfeedCard = ({ writer, titleImageSrc, title, content }) => {
                     ) : (
                         <Skeleton variant="text" animation="wave" width={100} />
                     )}
-                </span>
+                </span> */}
             </header>
             <div className="title-image">
                 {loaded ? (
-                    <img src={titleImageSrc} />
+                    <img src={cover} />
                 ) : (
                     <Skeleton
                         variant="rectangular"
@@ -104,7 +106,7 @@ const NewsfeedCard = ({ writer, titleImageSrc, title, content }) => {
                         />
                     )}
                 </h5>
-                <p className="content">
+                {/* <p className="content">
                     {loaded ? (
                         content
                     ) : (
@@ -130,7 +132,7 @@ const NewsfeedCard = ({ writer, titleImageSrc, title, content }) => {
                             />
                         </>
                     )}
-                </p>
+                </p> */}
             </div>
             <div ref={rippleEffectRef} className="ripple-effect" />
         </article>
