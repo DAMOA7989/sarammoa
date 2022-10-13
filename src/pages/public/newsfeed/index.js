@@ -2,6 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import StoryCard from "components/surface/StoryCard";
 import NewsfeedCard from "components/surface/NewsfeedCard";
+import { _getWritings } from "utils/firebase/writing";
+import { useAuthContext } from "utils/auth";
 
 const __STORIES__ = [
     {
@@ -52,8 +54,6 @@ const __CARDS__ = [
         titleImageSrc:
             "https://blog.kakaocdn.net/dn/bdaEMH/btq8pNTyCoH/QCKnS2csxjzOrizEPyuiL1/img.jpg",
         title: "sarammoa",
-        content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         writer: {
             profileThumbnailUrl:
                 "https://firebasestorage.googleapis.com/v0/b/sarammoa-cc444.appspot.com/o/75PaGQeeXzM5Jzc2bThrDnRMyWL2%2FprofileThumbnail?alt=media&token=81ca7d39-3efd-41ac-bc9b-abf4222397fa",
@@ -65,8 +65,6 @@ const __CARDS__ = [
         titleImageSrc:
             "https://blog.kakaocdn.net/dn/bdaEMH/btq8pNTyCoH/QCKnS2csxjzOrizEPyuiL1/img.jpg",
         title: "sarammoa",
-        content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         writer: {
             profileThumbnailUrl:
                 "https://firebasestorage.googleapis.com/v0/b/sarammoa-cc444.appspot.com/o/75PaGQeeXzM5Jzc2bThrDnRMyWL2%2FprofileThumbnail?alt=media&token=81ca7d39-3efd-41ac-bc9b-abf4222397fa",
@@ -79,8 +77,6 @@ const __CARDS__ = [
         titleImageSrc:
             "https://blog.kakaocdn.net/dn/bdaEMH/btq8pNTyCoH/QCKnS2csxjzOrizEPyuiL1/img.jpg",
         title: "sarammoa",
-        content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         writer: {
             profileThumbnailUrl:
                 "https://firebasestorage.googleapis.com/v0/b/sarammoa-cc444.appspot.com/o/75PaGQeeXzM5Jzc2bThrDnRMyWL2%2FprofileThumbnail?alt=media&token=81ca7d39-3efd-41ac-bc9b-abf4222397fa",
@@ -92,6 +88,66 @@ const __CARDS__ = [
 
 const NewsFeed = () => {
     const { t } = useTranslation();
+    const { userInfo } = useAuthContext();
+    const [state, dispatch] = React.useReducer(
+        (state, action) => {
+            switch (action.type) {
+                case "INCREASE_PAGE":
+                    return {
+                        ...state,
+                        page: state.page + 1,
+                    };
+                case "DECREASE_PAGE":
+                    return {
+                        ...state,
+                        page: state.page - 1,
+                    };
+                case "INIT_WRITINGS":
+                    return {
+                        ...state,
+                        page: 0,
+                        writings: [],
+                    };
+                case "CLEAR_WRITINGS":
+                    return {
+                        ...state,
+                        page: -1,
+                        writings: [],
+                    };
+            }
+        },
+        {
+            page: -1,
+            writings: [],
+        }
+    );
+    const prevPage = React.useRef(-1);
+
+    React.useEffect(() => {
+        if (userInfo?.id) {
+            if (state.page < 0) {
+                dispatch({
+                    type: "INIT_WRITINGS",
+                });
+            } else {
+                fetchWritings();
+            }
+            prevPage.current = state.page;
+        }
+    }, [userInfo, state.page]);
+
+    const fetchWritings = () => {
+        const lastVisible =
+            state.writings && state.writings[state.writings.length - 1];
+
+        _getWritings({ uid: userInfo?.id, lastVisible, limit: 3 })
+            .then(({ docs }) => {
+                console.log("d docs", docs);
+            })
+            .catch((e) => {
+                console.dir(e);
+            });
+    };
 
     return (
         <main className="pages-public-newsfeed">

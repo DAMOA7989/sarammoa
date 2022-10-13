@@ -367,7 +367,7 @@ const WritingDetail = () => {
                             </span>
                         </div>
                     </div>
-                    <div className="more">
+                    {/* <div className="more">
                         <CommonButton
                             className="more-button"
                             type="text"
@@ -375,7 +375,7 @@ const WritingDetail = () => {
                         >
                             {t("btn.see_more_info")}
                         </CommonButton>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="comment">
                     <ul>

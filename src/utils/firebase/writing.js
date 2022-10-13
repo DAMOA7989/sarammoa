@@ -11,6 +11,8 @@ import {
     orderBy,
     addDoc,
     deleteDoc,
+    limit,
+    startAfter,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { httpsCallable } from "firebase/functions";
@@ -146,6 +148,7 @@ export const _update = ({
                 title,
                 searchTags,
                 contents: newContents,
+                updatedAt: Timestamp.now(),
             };
 
             if (cover instanceof Blob) {
@@ -326,6 +329,79 @@ export const _switchPublishedField = ({ uid, wid }) =>
             }
 
             return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _getWritings = ({ uid, lastVisible, limit: _limit }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const writingsRef = collection(db, "writings");
+            const docs = [];
+            if (!Boolean(uid)) {
+                let writingsQuery = null;
+                if (lastVisible) {
+                    writingsQuery = query(
+                        writingsRef,
+                        orderBy("createdAt", "desc"),
+                        startAfter(lastVisible),
+                        limit(_limit)
+                    );
+                } else {
+                    writingsQuery = query(
+                        writingsRef,
+                        orderBy("createdAt", "desc"),
+                        limit(_limit)
+                    );
+                }
+                const querySnapshot = await getDocs(writingsQuery);
+
+                querySnapshot.forEach((docSnapshot) => {
+                    docs.push({
+                        id: docSnapshot.id,
+                        ...docSnapshot.data(),
+                    });
+                });
+            } else {
+                const followingIds = [];
+                const followingRef = collection(db, `users/${uid}/following`);
+                const querySnapshot = await getDocs(followingRef);
+                querySnapshot.forEach((docSnapshot) =>
+                    followingIds.push(docSnapshot.id)
+                );
+
+                const dbPromises = [];
+                for (const followingId of followingIds) {
+                    let writingsQuery = null;
+                    if (lastVisible) {
+                        writingsQuery = query(
+                            writingsRef,
+                            where("writer", "==", followingId),
+                            orderBy("createdAt", "desc"),
+                            startAfter(lastVisible),
+                            limit(_limit)
+                        );
+                    } else {
+                        writingsQuery = query(
+                            writingsRef,
+                            where("writer", "==", followingId),
+                            orderBy("createdAt", "desc"),
+                            limit(_limit)
+                        );
+                    }
+                    dbPromises.push(getDocs(writingsQuery));
+                }
+
+                Promise.all(dbPromises).then((result) => {
+                    // TODO
+                    console.log("d result", result);
+                });
+            }
+
+            return resolve({
+                docs,
+            });
         } catch (e) {
             return reject(e);
         }
