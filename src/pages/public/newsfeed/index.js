@@ -106,7 +106,7 @@ const NewsFeed = () => {
         }
     );
     const prevPage = React.useRef(-1);
-    const prevUid = React.useRef(null);
+    const prevUid = React.useRef(undefined);
 
     React.useEffect(() => {
         if (userInfo?.id !== prevUid.current) {
@@ -114,6 +114,10 @@ const NewsFeed = () => {
                 type: "CLEAR_WRITINGS",
             });
         }
+        prevUid.current = userInfo?.id;
+    }, [userInfo?.id]);
+
+    React.useEffect(() => {
         if (state.page < 0) {
             dispatch({
                 type: "INIT_WRITINGS",
@@ -123,8 +127,7 @@ const NewsFeed = () => {
         }
 
         prevPage.current = state.page;
-        prevUid.current = userInfo?.id;
-    }, [userInfo, state.page]);
+    }, [state.page]);
 
     const fetchWritings = () => {
         const lastVisible =

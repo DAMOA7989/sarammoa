@@ -338,7 +338,7 @@ export const _getWritings = ({ uid, lastVisible, limit: _limit = 5 }) =>
     new Promise(async (resolve, reject) => {
         try {
             const writingsRef = collection(db, "writings");
-            const docs = [];
+            let docs = [];
             if (!Boolean(uid)) {
                 let writingsQuery = null;
                 if (lastVisible) {
@@ -364,7 +364,7 @@ export const _getWritings = ({ uid, lastVisible, limit: _limit = 5 }) =>
                     });
                 });
             } else {
-                const followingIds = [];
+                const followingIds = [uid];
                 const followingRef = collection(db, `users/${uid}/following`);
                 const querySnapshot = await getDocs(followingRef);
                 querySnapshot.forEach((docSnapshot) =>
@@ -393,10 +393,25 @@ export const _getWritings = ({ uid, lastVisible, limit: _limit = 5 }) =>
                     dbPromises.push(getDocs(writingsQuery));
                 }
 
-                Promise.all(dbPromises).then((result) => {
-                    // TODO
-                    console.log("d result", result);
+                const beforeFilteringDocs = [];
+                await Promise.all(dbPromises).then((writingsQuerySnapshots) => {
+                    writingsQuerySnapshots.forEach((writingsQuerySnapshot) => {
+                        writingsQuerySnapshot.forEach((docSnapshot) => {
+                            beforeFilteringDocs.push({
+                                id: docSnapshot.id,
+                                ...docSnapshot.data(),
+                            });
+                        });
+                    });
                 });
+
+                beforeFilteringDocs.sort((a, b) => {
+                    const aDate = a.createdAt.toDate();
+                    const bDate = b.createdAt.toDate();
+                    return aDate > bDate ? -1 : aDate < bDate ? 1 : 0;
+                });
+
+                docs = beforeFilteringDocs.slice(0, _limit);
             }
 
             return resolve({
