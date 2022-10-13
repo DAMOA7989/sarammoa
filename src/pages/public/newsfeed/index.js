@@ -106,8 +106,14 @@ const NewsFeed = () => {
         }
     );
     const prevPage = React.useRef(-1);
+    const prevUid = React.useRef(null);
 
     React.useEffect(() => {
+        if (userInfo?.id !== prevUid.current) {
+            dispatch({
+                type: "CLEAR_WRITINGS",
+            });
+        }
         if (state.page < 0) {
             dispatch({
                 type: "INIT_WRITINGS",
@@ -117,6 +123,7 @@ const NewsFeed = () => {
         }
 
         prevPage.current = state.page;
+        prevUid.current = userInfo?.id;
     }, [userInfo, state.page]);
 
     const fetchWritings = () => {
