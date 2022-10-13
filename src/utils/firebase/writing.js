@@ -337,7 +337,6 @@ export const _switchPublishedField = ({ uid, wid }) =>
 export const _getWritings = ({ uid, lastVisible, limit: _limit = 5 }) =>
     new Promise(async (resolve, reject) => {
         try {
-            console.log("d uid", uid, lastVisible);
             const writingsRef = collection(db, "writings");
             const docs = [];
             if (!Boolean(uid)) {

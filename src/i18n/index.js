@@ -4,7 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import KO from "./locale/ko.json";
 import EN from "./locale/en.json";
 
-const resources = {
+export const resources = {
     ko: {
         translation: KO,
     },

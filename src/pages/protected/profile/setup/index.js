@@ -6,6 +6,9 @@ import WoilonnToggle from "components/input/WoilonnToggle";
 import { useNavigateContext } from "utils/navigate";
 import { useStatusContext } from "utils/status";
 import { useModalContext } from "utils/modal";
+import { BottomSheet } from "react-spring-bottom-sheet";
+import CommonButton from "components/button/CommonButton";
+import { resources } from "i18n";
 
 const __ROWS__ = [
     {
@@ -35,13 +38,8 @@ const __ROWS__ = [
                         {t(`lang.${window.localStorage.getItem("i18nextLng")}`)}
                     </span>
                 ),
-                onClick: ({ lang, displayModal }) => {
-                    console.log("d lang", lang);
-                    displayModal({
-                        pathname: "profile/ChangeLang",
-                        params: {},
-                        options: {},
-                    });
+                onClick: ({ setOpenLangBottomSheet }) => {
+                    setOpenLangBottomSheet(true);
                 },
             },
             // {
@@ -119,7 +117,7 @@ const __ROWS__ = [
 ];
 
 const Setup = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { signOut } = useAuthContext();
     const navigate = useNavigateContext();
     const { lang } = useStatusContext();
@@ -127,6 +125,7 @@ const Setup = () => {
     const [checkedUsageInformation, setCheckedUsageInformation] =
         React.useState(true);
     const [checkedPushNotice, setCheckedPushNotice] = React.useState(true);
+    const [openLangBottomSheet, setOpenLangBottomSheet] = React.useState(false);
 
     React.useLayoutEffect(() => {
         navigate.setLayout({
@@ -135,40 +134,64 @@ const Setup = () => {
     }, []);
 
     return (
-        <main className="pages-protected-profile-setup">
-            {__ROWS__.map((row) => (
-                <section key={row.key} className={`rows ${row.key}`}>
-                    <h3 className="title">{t(row.title)}</h3>
-                    <section className="cols">
-                        {(row?.cols || []).map((col) => (
-                            <ListButton
-                                key={col.key}
-                                className={`${col.key} list-button`}
-                                onClick={() =>
-                                    col.onClick({
-                                        signOut,
-                                        checkedUsageInformation,
-                                        setCheckedUsageInformation,
-                                        checkedPushNotice,
-                                        setCheckedPushNotice,
-                                        lang,
-                                        displayModal,
-                                    })
-                                }
-                            >
-                                <span>{t(col.i18nKey)}</span>
-                                {col.right &&
-                                    col.right({
-                                        t,
-                                        checkedUsageInformation,
-                                        checkedPushNotice,
-                                    })}
-                            </ListButton>
-                        ))}
+        <>
+            <main className="pages-protected-profile-setup">
+                {__ROWS__.map((row) => (
+                    <section key={row.key} className={`rows ${row.key}`}>
+                        <h3 className="title">{t(row.title)}</h3>
+                        <section className="cols">
+                            {(row?.cols || []).map((col) => (
+                                <ListButton
+                                    key={col.key}
+                                    className={`${col.key} list-button`}
+                                    onClick={() =>
+                                        col.onClick({
+                                            signOut,
+                                            checkedUsageInformation,
+                                            setCheckedUsageInformation,
+                                            checkedPushNotice,
+                                            setCheckedPushNotice,
+                                            setOpenLangBottomSheet,
+                                        })
+                                    }
+                                >
+                                    <span>{t(col.i18nKey)}</span>
+                                    {col.right &&
+                                        col.right({
+                                            t,
+                                            checkedUsageInformation,
+                                            checkedPushNotice,
+                                        })}
+                                </ListButton>
+                            ))}
+                        </section>
                     </section>
-                </section>
-            ))}
-        </main>
+                ))}
+            </main>
+            <BottomSheet
+                open={openLangBottomSheet}
+                onDismiss={() => setOpenLangBottomSheet(false)}
+            >
+                <div className="bottom-sheet lang">
+                    <ul>
+                        {Object.keys(resources || {}).map((lang) => (
+                            <li key={lang}>
+                                <CommonButton
+                                    className="lang-button"
+                                    color="primary"
+                                    onClick={() => {
+                                        i18n.changeLanguage(lang);
+                                        setOpenLangBottomSheet(false);
+                                    }}
+                                >
+                                    {t(`lang.${lang}`)}
+                                </CommonButton>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </BottomSheet>
+        </>
     );
 };
 

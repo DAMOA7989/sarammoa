@@ -4,6 +4,7 @@ import StoryCard from "components/surface/StoryCard";
 import NewsfeedCard from "components/surface/NewsfeedCard";
 import { _getWritings } from "utils/firebase/writing";
 import { useAuthContext } from "utils/auth";
+import { useNavigateContext } from "utils/navigate";
 
 const __STORIES__ = [
     {
@@ -48,47 +49,10 @@ const __STORIES__ = [
     },
 ];
 
-const __CARDS__ = [
-    {
-        key: "",
-        titleImageSrc:
-            "https://blog.kakaocdn.net/dn/bdaEMH/btq8pNTyCoH/QCKnS2csxjzOrizEPyuiL1/img.jpg",
-        title: "sarammoa",
-        writer: {
-            profileThumbnailUrl:
-                "https://firebasestorage.googleapis.com/v0/b/sarammoa-cc444.appspot.com/o/75PaGQeeXzM5Jzc2bThrDnRMyWL2%2FprofileThumbnail?alt=media&token=81ca7d39-3efd-41ac-bc9b-abf4222397fa",
-            nickname: "dusa",
-        },
-    },
-    {
-        key: "",
-        titleImageSrc:
-            "https://blog.kakaocdn.net/dn/bdaEMH/btq8pNTyCoH/QCKnS2csxjzOrizEPyuiL1/img.jpg",
-        title: "sarammoa",
-        writer: {
-            profileThumbnailUrl:
-                "https://firebasestorage.googleapis.com/v0/b/sarammoa-cc444.appspot.com/o/75PaGQeeXzM5Jzc2bThrDnRMyWL2%2FprofileThumbnail?alt=media&token=81ca7d39-3efd-41ac-bc9b-abf4222397fa",
-
-            nickname: "dusa",
-        },
-    },
-    {
-        key: "",
-        titleImageSrc:
-            "https://blog.kakaocdn.net/dn/bdaEMH/btq8pNTyCoH/QCKnS2csxjzOrizEPyuiL1/img.jpg",
-        title: "sarammoa",
-        writer: {
-            profileThumbnailUrl:
-                "https://firebasestorage.googleapis.com/v0/b/sarammoa-cc444.appspot.com/o/75PaGQeeXzM5Jzc2bThrDnRMyWL2%2FprofileThumbnail?alt=media&token=81ca7d39-3efd-41ac-bc9b-abf4222397fa",
-
-            nickname: "dusa",
-        },
-    },
-];
-
 const NewsFeed = () => {
     const { t } = useTranslation();
     const { userInfo } = useAuthContext();
+    const navigate = useNavigateContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -149,28 +113,7 @@ const NewsFeed = () => {
                 type: "INIT_WRITINGS",
             });
         } else {
-            dispatch({
-                type: "PUSH_WRITINGS_PENDING",
-            });
-            _getWritings({
-                uid: userInfo?.id,
-                lastVisible:
-                    state.writings?.[(state.writings?.length || []) - 1],
-            })
-                .then(({ docs }) => {
-                    dispatch({
-                        type: "PUSH_WRITINGS_FULFILLED",
-                        payload: {
-                            docs,
-                        },
-                    });
-                })
-                .catch((e) => {
-                    console.dir(e);
-                    dispatch({
-                        type: "PUSH_WRITINGS_REJECTED",
-                    });
-                });
+            fetchWritings();
         }
 
         prevPage.current = state.page;
@@ -183,7 +126,7 @@ const NewsFeed = () => {
         dispatch({
             type: "PUSH_WRITINGS_PENDING",
         });
-        _getWritings({ uid: userInfo?.id, lastVisible, limit: 3 })
+        _getWritings({ uid: userInfo?.id, lastVisible })
             .then(({ docs }) => {
                 dispatch({
                     type: "PUSH_WRITINGS_FULFILLED",
@@ -199,8 +142,6 @@ const NewsFeed = () => {
                 });
             });
     };
-
-    console.log("d writings", state.writings);
 
     return (
         <main className="pages-public-newsfeed">
@@ -228,6 +169,16 @@ const NewsFeed = () => {
                                     cover={card.cover}
                                     title={card.title}
                                     writer={card.writer}
+                                    onClick={() => {
+                                        if (userInfo?.id) {
+                                            navigate.push({
+                                                pathname: `/writing/${card.id}`,
+                                                mode: "sub",
+                                            });
+                                        } else {
+                                            alert("Please login");
+                                        }
+                                    }}
                                 />
                             </li>
                         ))}

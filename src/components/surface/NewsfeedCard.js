@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Skeleton } from "@mui/material";
 import IdCard from "./IdCard";
 
-const NewsfeedCard = ({ writer, cover, title }) => {
+const NewsfeedCard = ({ writer, cover, title, onClick }) => {
     const { t } = useTranslation();
     const [loaded, setLoaded] = React.useState(false);
     const cardRef = React.useRef(null);
@@ -52,33 +52,9 @@ const NewsfeedCard = ({ writer, cover, title }) => {
     });
 
     return (
-        <article ref={cardRef} className="newsfeed-card">
+        <article ref={cardRef} className="newsfeed-card" onClick={onClick}>
             <header className="writer">
                 <IdCard className="writer-card" size="large" user={writer} />
-                {/* <div className="profile-thumbnail-outline">
-                    <div className="profile-thumbnail">
-                        {loaded ? (
-                            <img
-                                src={writer?.profileThumbnailUrl}
-                                alt="writer profile thumbnail"
-                            />
-                        ) : (
-                            <Skeleton
-                                variant="rectangular"
-                                animation="wave"
-                                width={"2.25em"}
-                                height={"2.25em"}
-                            />
-                        )}
-                    </div>
-                </div>
-                <span className="nickname">
-                    {loaded ? (
-                        writer?.nickname
-                    ) : (
-                        <Skeleton variant="text" animation="wave" width={100} />
-                    )}
-                </span> */}
             </header>
             <div className="title-image">
                 {loaded ? (
