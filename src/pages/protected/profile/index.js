@@ -16,8 +16,8 @@ const __TABS__ = [
     {
         key: "work",
         i18nKey: "tab.profile.work",
-        onClick: ({ push }) => {
-            push({
+        onClick: ({ navigate }) => {
+            navigate.replace({
                 pathname: "/profile",
                 mode: "main",
             });
@@ -26,8 +26,8 @@ const __TABS__ = [
     {
         key: "history",
         i18nKey: "tab.profile.history",
-        onClick: ({ push }) => {
-            push({
+        onClick: ({ navigate }) => {
+            navigate.replace({
                 pathname: `/profile/history`,
                 mode: "main",
             });
@@ -36,8 +36,8 @@ const __TABS__ = [
     {
         key: "information",
         i18nKey: "tab.profile.information",
-        onClick: ({ push }) => {
-            push({
+        onClick: ({ navigate }) => {
+            navigate.replace({
                 pathname: "/profile/information",
                 mode: "main",
             });
@@ -413,7 +413,7 @@ const Profile = () => {
                                         type="text"
                                         color="black"
                                         onClick={() =>
-                                            tab.onClick({ push: navigate.push })
+                                            tab.onClick({ navigate })
                                         }
                                     >
                                         {t(tab.i18nKey)}

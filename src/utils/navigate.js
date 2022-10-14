@@ -9,31 +9,30 @@ export const NavigateProvider = ({ children }) => {
     const location = useLocation();
 
     useBackListener(({ location }) => {
-        const navigateStack = JSON.parse(
-            window.sessionStorage.getItem("sm_navigate_stack")
-        );
-        const newNavigateStack = [
-            ...navigateStack.splice(0, navigateStack.length - 1),
-        ];
-
-        window.sessionStorage.setItem(
-            "sm_navigate_stack",
-            JSON.stringify(newNavigateStack)
-        );
-        dispatch({
-            type: "GO_BACK",
-            payload: {
-                pathname:
-                    newNavigateStack?.[newNavigateStack.length - 1]?.pathname ||
-                    "/",
-                mode:
-                    newNavigateStack?.[newNavigateStack.length - 1]?.mode ||
-                    "main",
-                screenTitle:
-                    newNavigateStack?.[newNavigateStack.length - 1]
-                        ?.screenTitle || "",
-            },
-        });
+        // const navigateStack = JSON.parse(
+        //     window.sessionStorage.getItem("sm_navigate_stack")
+        // );
+        // const newNavigateStack = [
+        //     ...navigateStack.splice(0, navigateStack.length - 1),
+        // ];
+        // window.sessionStorage.setItem(
+        //     "sm_navigate_stack",
+        //     JSON.stringify(newNavigateStack)
+        // );
+        // dispatch({
+        //     type: "GO_BACK",
+        //     payload: {
+        //         pathname:
+        //             newNavigateStack?.[newNavigateStack.length - 1]?.pathname ||
+        //             "/",
+        //         mode:
+        //             newNavigateStack?.[newNavigateStack.length - 1]?.mode ||
+        //             "main",
+        //         screenTitle:
+        //             newNavigateStack?.[newNavigateStack.length - 1]
+        //                 ?.screenTitle || "",
+        //     },
+        // });
     });
 
     const reducer = (state, action) => {
@@ -43,7 +42,7 @@ export const NavigateProvider = ({ children }) => {
                     ...state,
                     pathname: action.payload?.pathname,
                     mode: action.payload?.mode,
-                    screenTitle: action.payload?.screenTitle,
+                    screenTitle: null,
                     routing: true,
                 };
             case "REPLACE":
@@ -51,7 +50,7 @@ export const NavigateProvider = ({ children }) => {
                     ...state,
                     pathname: action.payload?.pathname,
                     mode: action.payload?.mode,
-                    screenTitle: action.payload?.screenTitle,
+                    screenTitle: null,
                     replace: true,
                     routing: true,
                 };
@@ -64,8 +63,7 @@ export const NavigateProvider = ({ children }) => {
                 return {
                     ...state,
                     pathname: action.payload?.pathname,
-                    mode: action.payload?.mode,
-                    screenTitle: action.payload?.screenTitle,
+                    screenTitle: null,
                     routing: true,
                 };
             case "ROUTING_START":
@@ -99,128 +97,46 @@ export const NavigateProvider = ({ children }) => {
     };
 
     const [state, dispatch] = React.useReducer(reducer, {
-        pathname:
-            JSON.parse(window.sessionStorage.getItem("sm_navigate_stack"))
-                ?.pathname || "/",
-        mode:
-            JSON.parse(window.sessionStorage.getItem("sm_navigate_stack"))
-                ?.mode || "main",
-        screenTitle:
-            JSON.parse(window.sessionStorage.getItem("sm_navigate_stack"))
-                ?.screenTitle || "",
+        pathname: null,
+        mode: null,
+        screenTitle: null,
         right: null,
         replace: false,
         routing: false,
     });
 
-    React.useEffect(() => {
-        const navigateStack =
-            window.sessionStorage.getItem("sm_navigate_stack");
-        if (
-            !navigateStack ||
-            (Array.isArray(navigateStack) && navigateStack.length === 0)
-        ) {
-            window.location.reload();
-            window.sessionStorage.setItem(
-                "sm_navigate_stack",
-                JSON.stringify([
-                    {
-                        pathname: location.pathname,
-                    },
-                ])
-            );
-        }
-    }, []);
-
-    const push = ({
-        pathname: _pathname,
-        mode: _mode,
-        screenTitle: _screenTitle,
-    }) => {
-        const navigateStack = JSON.parse(
-            window.sessionStorage.getItem("sm_navigate_stack")
-        );
-        window.sessionStorage.setItem(
-            "sm_navigate_stack",
-            JSON.stringify([
-                ...navigateStack,
-                {
-                    pathname: _pathname,
-                    mode: _mode,
-                    screenTitle: _screenTitle,
-                },
-            ])
-        );
-
+    const push = ({ pathname: _pathname, mode: _mode }) => {
         dispatch({
             type: "PUSH",
             payload: {
                 pathname: _pathname,
-                mode: _mode,
-                screenTitle: _screenTitle,
+                mode: _mode || "main",
             },
         });
     };
 
-    const replace = ({
-        pathname: _pathname,
-        mode: _mode,
-        screenTitle: _screenTitle,
-    }) => {
-        const navigateStack = JSON.parse(
-            window.sessionStorage.getItem("sm_navigate_stack")
-        );
-        window.sessionStorage.setItem(
-            "sm_navigate_stack",
-            JSON.stringify([
-                ...navigateStack.slice(0, navigateStack.length - 1),
-                {
-                    pathname: _pathname,
-                    mode: _mode,
-                    screenTitle: _screenTitle,
-                },
-            ])
-        );
+    const replace = ({ pathname: _pathname, mode: _mode }) => {
         dispatch({
             type: "REPLACE",
             payload: {
-                pathname: _pathname || "",
+                pathname: _pathname,
                 mode: _mode || "main",
-                screenTitle: _screenTitle || "",
             },
         });
     };
 
     const goBack = () => {
-        const navigateStack = JSON.parse(
-            window.sessionStorage.getItem("sm_navigate_stack")
-        );
-        const newNavigateStack = [
-            ...navigateStack.slice(0, navigateStack.length - 1),
-        ];
-        window.sessionStorage.setItem(
-            "sm_navigate_stack",
-            JSON.stringify(newNavigateStack)
-        );
         dispatch({
             type: "GO_BACK",
             payload: {
-                pathname:
-                    newNavigateStack?.[newNavigateStack.length - 1]?.pathname ||
-                    "/",
-                mode:
-                    newNavigateStack?.[newNavigateStack.length - 1]?.mode ||
-                    "main",
-                screenTitle:
-                    newNavigateStack?.[newNavigateStack.length - 1]
-                        ?.screenTitle || "",
+                pathname: -1,
             },
         });
     };
 
     React.useEffect(() => {
         if (!state.routing) return;
-        const { pathname, mode, screenTitle, replace } = state;
+        const { pathname, mode, replace } = state;
         if (typeof pathname === "number") {
             navigate(pathname);
         } else if (mode === "sub") {

@@ -8,7 +8,7 @@ const __TABS__ = [
         key: "message",
         i18nKey: "title.notice.tab.message",
         onClick: ({ navigate }) => {
-            navigate.push({
+            navigate.replace({
                 pathname: "/notice",
                 mode: "main",
             });
@@ -18,7 +18,7 @@ const __TABS__ = [
         key: "notification",
         i18nKey: "title.notice.tab.notification",
         onClick: ({ navigate }) => {
-            navigate.push({
+            navigate.replace({
                 pathname: "/notice/notification",
                 mode: "main",
             });
