@@ -11,6 +11,9 @@ import { ReactComponent as FollowInIcon } from "assets/images/icons/follow_from.
 import { ReactComponent as FollowOutIcon } from "assets/images/icons/follow_to.svg";
 import CommonButton from "components/button/CommonButton";
 import { useNavigateContext } from "utils/navigate";
+import { _follow, _unfollow } from "utils/firebase/user";
+import { useAuthContext } from "utils/auth";
+import { _isFollow } from "utils/firebase/user";
 
 const __TABS__ = [
     {
@@ -49,6 +52,7 @@ const UserDetail = () => {
     const { t } = useTranslation();
     const { uid } = useParams();
     const navigate = useNavigateContext();
+    const { userInfo } = useAuthContext();
     const location = useLocation();
     const tabRefs = {
         work: React.useRef(null),
@@ -82,14 +86,68 @@ const UserDetail = () => {
                         ...state,
                         curTab: action.payload?.tab,
                     };
+                case "IS_FOLLOW":
+                    return {
+                        ...state,
+                        follow: true,
+                    };
+                case "FOLLOW_PENDING":
+                    return {
+                        ...state,
+                        followLoading: true,
+                    };
+                case "FOLLOW_FULFILLED":
+                    return {
+                        ...state,
+                        followLoading: false,
+                        follow: true,
+                    };
+                case "FOLLOW_REJECTED":
+                    return {
+                        ...state,
+                        followLoading: false,
+                    };
+                case "UNFOLLOW_PENDING":
+                    return {
+                        ...state,
+                        followLoading: true,
+                    };
+                case "UNFOLLOW_FULFILLED":
+                    return {
+                        ...state,
+                        followLoading: false,
+                        follow: false,
+                    };
+                case "UNFOLLOW_REJECTED":
+                    return {
+                        ...state,
+                        followLoading: false,
+                    };
             }
         },
         {
             userInfoLoading: false,
             userInfo: null,
             curTab: null,
+            followLoading: false,
+            follow: false,
         }
     );
+
+    React.useEffect(() => {
+        if (!Boolean(userInfo?.id) || !Boolean(uid)) return;
+        _isFollow({ from: userInfo?.id, to: uid })
+            .then((flag) => {
+                if (flag) {
+                    dispatch({
+                        type: "IS_FOLLOW",
+                    });
+                }
+            })
+            .catch((e) => {
+                console.dir(e);
+            });
+    }, [userInfo?.id, uid]);
 
     React.useEffect(() => {
         const tabs = __TABS__.map((x) => x.key);
@@ -130,10 +188,48 @@ const UserDetail = () => {
     React.useEffect(() => {
         if (!indicatorRef.current) return;
         if (indicatorRef.current.offsetWidth > 0) {
-            indicatorRef.current.style.transition =
-                "width 0.3s, transform 0.3s";
+            // indicatorRef.current.style.transition =
+            //     "width 0.3s, transform 0.3s";
         }
     }, [indicatorRef.current]);
+
+    const onFollowHandler = () => {
+        dispatch({
+            type: "FOLLOW_PENDING",
+        });
+
+        _follow({ from: userInfo?.id, to: uid })
+            .then(() => {
+                dispatch({
+                    type: "FOLLOW_FULFILLED",
+                });
+            })
+            .catch((e) => {
+                console.dir(e);
+                dispatch({
+                    type: "UNFOLLOW_REJECTED",
+                });
+            });
+    };
+
+    const onUnfollowHandler = () => {
+        dispatch({
+            type: "UNFOLLOW_PENDING",
+        });
+
+        _unfollow({ from: userInfo?.id, to: uid })
+            .then(() => {
+                dispatch({
+                    type: "UNFOLLOW_FULFILLED",
+                });
+            })
+            .catch((e) => {
+                console.dir(e);
+                dispatch({
+                    type: "UNFOLLOW_REJECTED",
+                });
+            });
+    };
 
     return (
         <main className="pages-public-user-detail">
@@ -176,8 +272,16 @@ const UserDetail = () => {
                     </div>
                 </div>
                 <div className="buttons">
-                    <CommonButton color="primary" className="follow">
-                        {t("btn.follow")}
+                    <CommonButton
+                        color={"primary"}
+                        className={`follow ${state.follow && "following"}`}
+                        type={state.follow ? "contrast" : "common"}
+                        onClick={
+                            state.follow ? onUnfollowHandler : onFollowHandler
+                        }
+                        loading={state.followLoading}
+                    >
+                        {state.follow ? t("btn.unfollow") : t("btn.follow")}
                     </CommonButton>
                     <CommonButton className="message">
                         {t("btn.message")}

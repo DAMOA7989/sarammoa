@@ -258,6 +258,8 @@
     }
 
     &.common {
+        box-shadow: $common_box_shadow;
+
         &.active {
             cursor: pointer;
 
@@ -309,11 +311,33 @@
     }
 
     &.contrast {
+        box-shadow: $common_box_shadow;
+
         &.active {
             background-color: $contrast_button_background_color;
 
             > .ripple-effect {
                 background-color: $primary_color;
+            }
+
+            @media (hover: hover) {
+                background-color: rgba($contrast_button_background_color, 0.6);
+            }
+
+            &:active {
+                background-color: rgba($contrast_button_background_color, 0.8);
+            }
+
+            &.primary {
+                color: $primary_color;
+
+                @media (hover: hover) {
+                    color: rgba($primary_color, 0.6);
+                }
+
+                &:active {
+                    color: rgba($primary_color, 0.8);
+                }
             }
 
             &.dark_gray {
@@ -322,19 +346,11 @@
                 @media (hover: hover) {
                     &:hover {
                         color: rgba($gunmetal_color, 0.6);
-                        background-color: rgba(
-                            $contrast_button_background_color,
-                            0.6
-                        );
                     }
                 }
 
                 &:active {
                     color: rgba($gunmetal_color, 0.8);
-                    background-color: rgba(
-                        $contrast_button_background_color,
-                        0.8
-                    );
                 }
             }
         }

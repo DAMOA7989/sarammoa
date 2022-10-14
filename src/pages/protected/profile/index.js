@@ -411,7 +411,7 @@ const Profile = () => {
                                 >
                                     <CommonButton
                                         type="text"
-                                        color="primary"
+                                        color="black"
                                         onClick={() =>
                                             tab.onClick({ push: navigate.push })
                                         }
@@ -450,7 +450,7 @@ const Profile = () => {
                             />
                         </ul>
                     </nav>
-                    <Outlet />
+                    <Outlet context={{ userInfo }} />
                 </div>
             </main>
             <BottomSheet
