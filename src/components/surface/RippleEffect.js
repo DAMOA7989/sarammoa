@@ -1,6 +1,6 @@
 import React from "react";
 
-const RippleEffect = ({ children, onClick }) => {
+const RippleEffect = ({ className, children, onClick }) => {
     const timerRef = React.useRef(null);
     const rippleEffectRef = React.useRef(null);
     const containerRef = React.useRef(null);
@@ -42,7 +42,7 @@ const RippleEffect = ({ children, onClick }) => {
         <div
             ref={containerRef}
             onClick={onClick}
-            className="ripple-effect-container"
+            className={`effect ripple-effect-container ${className}`}
         >
             {children}
             <div ref={rippleEffectRef} className="ripple-effect" />

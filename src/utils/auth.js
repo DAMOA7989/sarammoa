@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
             const _user = user?.payload?.user;
             setUser(user);
 
-            _logAccess({ uid: _user?.uid });
+            // _logAccess({ uid: _user?.uid });
 
             const unsubscribe = onSnapshot(
                 doc(db, "users", _user?.uid),

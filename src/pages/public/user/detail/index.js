@@ -14,6 +14,10 @@ import { useNavigateContext } from "utils/navigate";
 import { _follow, _unfollow } from "utils/firebase/user";
 import { useAuthContext } from "utils/auth";
 import { _isFollow } from "utils/firebase/user";
+import { BottomSheet } from "react-spring-bottom-sheet";
+import { useModalContext } from "utils/modal";
+import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
+import { ReactComponent as ReportIcon } from "assets/images/icons/profile/report.svg";
 
 const __TABS__ = [
     {
@@ -48,11 +52,36 @@ const __TABS__ = [
     },
 ];
 
+const __EXPAND__ = [
+    {
+        key: "share",
+        i18nKey: "text.profile.expand.share",
+        icon: <ShareIcon />,
+        onClick: ({ modal }) => {
+            modal.displayModal({
+                pathname: "profile/Share",
+                params: {},
+                options: {
+                    title: "title.profile.share",
+                    layout: "responsive",
+                },
+            });
+        },
+    },
+    {
+        key: "report",
+        i18nKey: "text.dropdown.report",
+        icon: <ReportIcon />,
+        onClick: () => {},
+    },
+];
+
 const UserDetail = () => {
     const { t } = useTranslation();
     const { uid } = useParams();
     const navigate = useNavigateContext();
     const { userInfo } = useAuthContext();
+    const modal = useModalContext();
     const location = useLocation();
     const tabRefs = {
         work: React.useRef(null),
@@ -123,6 +152,16 @@ const UserDetail = () => {
                         ...state,
                         followLoading: false,
                     };
+                case "OPEN_EXPAND":
+                    return {
+                        ...state,
+                        openExpand: true,
+                    };
+                case "CLOSE_EXPAND":
+                    return {
+                        ...state,
+                        openExpand: false,
+                    };
             }
         },
         {
@@ -131,6 +170,7 @@ const UserDetail = () => {
             curTab: null,
             followLoading: false,
             follow: false,
+            openExpand: false,
         }
     );
 
@@ -231,129 +271,166 @@ const UserDetail = () => {
             });
     };
 
+    console.log("d userInfo", state.userInfo);
+
     return (
-        <main className="pages-public-user-detail">
-            <header className="header">
-                <RippleEffect>
-                    <DotsVerticalIcon />
-                </RippleEffect>
-            </header>
-            <div className="user">
-                <div className="profile-thumbnail">
-                    <LazyImage
-                        src={state.userInfo?.profileThumbnailUrl}
-                        alt="profile thumbnail"
-                    />
-                </div>
-                <div className="info">
-                    <span className="nickname">
-                        <LazyTypography width={160} fontSize="1.125rem">
-                            {state.userInfo?.nickname}
-                        </LazyTypography>
-                    </span>
-                    <span className="position">
-                        <LazyTypography width={200} fontSize="0.875rem">
-                            {state.userInfo?.position}
-                        </LazyTypography>
-                    </span>
-                    <div className="counts">
-                        <div className="likes">
-                            <ThumbUpIcon />
-                            <span className="count">{0}</span>
-                        </div>
-                        <div className="following">
-                            <FollowOutIcon />
-                            <span className="count">
-                                {(state.userInfo?.following || []).length}
-                            </span>
-                        </div>
-                        <div className="followers">
-                            <FollowInIcon />
-                            <span className="count">
-                                {(state.userInfo?.followers || []).length}
-                            </span>
+        <>
+            <main className="pages-public-user-detail">
+                <header className="header">
+                    <RippleEffect
+                        onClick={() => dispatch({ type: "OPEN_EXPAND" })}
+                    >
+                        <DotsVerticalIcon />
+                    </RippleEffect>
+                </header>
+                <div className="user">
+                    <div className="profile-thumbnail">
+                        <LazyImage
+                            src={state.userInfo?.profileThumbnailUrl}
+                            alt="profile thumbnail"
+                        />
+                    </div>
+                    <div className="info">
+                        <span className="nickname">
+                            <LazyTypography width={160} fontSize="1.125rem">
+                                {state.userInfo?.nickname}
+                            </LazyTypography>
+                        </span>
+                        <span className="position">
+                            <LazyTypography width={200} fontSize="0.875rem">
+                                {state.userInfo?.position}
+                            </LazyTypography>
+                        </span>
+                        <div className="counts">
+                            <div className="likes">
+                                <ThumbUpIcon />
+                                <span className="count">{0}</span>
+                            </div>
+                            <div className="following">
+                                <FollowOutIcon />
+                                <span className="count">
+                                    {(state.userInfo?.following || []).length}
+                                </span>
+                            </div>
+                            <div className="followers">
+                                <FollowInIcon />
+                                <span className="count">
+                                    {(state.userInfo?.followers || []).length}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="buttons">
-                    <CommonButton
-                        color={"primary"}
-                        className={`follow ${state.follow && "following"}`}
-                        type={state.follow ? "contrast" : "common"}
-                        onClick={
-                            state.follow ? onUnfollowHandler : onFollowHandler
-                        }
-                        loading={state.followLoading}
-                    >
-                        {state.follow ? t("btn.unfollow") : t("btn.follow")}
-                    </CommonButton>
-                    <CommonButton className="message">
-                        {t("btn.message")}
-                    </CommonButton>
-                </div>
-            </div>
-            <div className="outlet">
-                <nav className="tabs">
-                    <ul>
-                        {__TABS__.map((tab) => (
-                            <li
-                                key={tab.key}
-                                className={`${
-                                    state.curTab === tab.key && "selected"
+                    {userInfo?.id !== uid && (
+                        <div className="buttons">
+                            <CommonButton
+                                color={"primary"}
+                                className={`follow ${
+                                    state.follow && "following"
                                 }`}
-                                ref={tabRefs[tab.key]}
+                                type={state.follow ? "contrast" : "common"}
+                                onClick={
+                                    state.follow
+                                        ? onUnfollowHandler
+                                        : onFollowHandler
+                                }
+                                loading={state.followLoading}
                             >
-                                <CommonButton
-                                    type="text"
-                                    color="black"
-                                    onClick={() =>
-                                        tab.onClick({ uid, navigate })
-                                    }
+                                {state.follow
+                                    ? t("btn.unfollow")
+                                    : t("btn.follow")}
+                            </CommonButton>
+                            <CommonButton className="message">
+                                {t("btn.message")}
+                            </CommonButton>
+                        </div>
+                    )}
+                </div>
+                <div className="outlet">
+                    <nav className="tabs">
+                        <ul>
+                            {__TABS__.map((tab) => (
+                                <li
+                                    key={tab.key}
+                                    className={`${
+                                        state.curTab === tab.key && "selected"
+                                    }`}
+                                    ref={tabRefs[tab.key]}
                                 >
-                                    {t(tab.i18nKey)}
-                                </CommonButton>
-                            </li>
-                        ))}
-                        <div
-                            ref={indicatorRef}
-                            className="indicator"
-                            style={{
-                                width: `${
-                                    tabRefs?.[state.curTab]?.current
-                                        ?.offsetWidth
-                                }px`,
-                                transform: `translateX(calc(${Object.values(
-                                    tabRefs
-                                )
-                                    .slice(
-                                        0,
+                                    <CommonButton
+                                        type="text"
+                                        color="black"
+                                        onClick={() =>
+                                            tab.onClick({ uid, navigate })
+                                        }
+                                    >
+                                        {t(tab.i18nKey)}
+                                    </CommonButton>
+                                </li>
+                            ))}
+                            <div
+                                ref={indicatorRef}
+                                className="indicator"
+                                style={{
+                                    width: `${
+                                        tabRefs?.[state.curTab]?.current
+                                            ?.offsetWidth
+                                    }px`,
+                                    transform: `translateX(calc(${Object.values(
+                                        tabRefs
+                                    )
+                                        .slice(
+                                            0,
+                                            Object.values(__TABS__).findIndex(
+                                                (x) => x.key === state.curTab
+                                            )
+                                        )
+                                        .reduce(
+                                            (previousValue, currentValue) =>
+                                                previousValue +
+                                                    currentValue.current
+                                                        ?.offsetWidth || 0,
+                                            0
+                                        )}px + ${
+                                        2 *
                                         Object.values(__TABS__).findIndex(
                                             (x) => x.key === state.curTab
                                         )
-                                    )
-                                    .reduce(
-                                        (previousValue, currentValue) =>
-                                            previousValue +
-                                                currentValue.current
-                                                    ?.offsetWidth || 0,
-                                        0
-                                    )}px + ${
-                                    2 *
-                                    Object.values(__TABS__).findIndex(
-                                        (x) => x.key === state.curTab
-                                    )
-                                }em))`,
+                                    }em))`,
+                                }}
+                            />
+                        </ul>
+                    </nav>
+                    <Outlet
+                        context={{
+                            userInfo: state.userInfo,
+                        }}
+                    />
+                </div>
+            </main>
+            <BottomSheet
+                open={state.openExpand}
+                onDismiss={() => dispatch({ type: "CLOSE_EXPAND" })}
+            >
+                <div className="bottom-sheet expand">
+                    {__EXPAND__.map((button) => (
+                        <CommonButton
+                            key={button.key}
+                            type="contrast"
+                            className={button.key}
+                            icon={button.icon}
+                            onClick={() => {
+                                dispatch({
+                                    type: "CLOSE_EXPAND",
+                                });
+                                button.onClick({ modal });
                             }}
-                        />
-                    </ul>
-                </nav>
-                <Outlet
-                    context={{
-                        userInfo: state.userInfo,
-                    }}
-                />
-            </div>
-        </main>
+                        >
+                            <span>{t(button.i18nKey)}</span>
+                        </CommonButton>
+                    ))}
+                </div>
+            </BottomSheet>
+        </>
     );
 };
 

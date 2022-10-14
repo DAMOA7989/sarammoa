@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { ReactComponent as GpsIcon } from "assets/images/icons/profile/gps.svg";
 import { useOutletContext } from "react-router-dom";
+import RippleEffect from "components/surface/RippleEffect";
 
 const __BOXES__ = [
     {
@@ -41,14 +42,16 @@ const Information = () => {
                     <ul>
                         {(__BOXES__ || []).map((box, idx) => (
                             <li key={idx}>
-                                <div className="container">
-                                    <span className="count">
-                                        {box.count({ userInfo })}
-                                    </span>
-                                    <span className="label">
-                                        {t(box.i18nKey)}
-                                    </span>
-                                </div>
+                                <RippleEffect>
+                                    <div className="container">
+                                        <span className="count">
+                                            {box.count({ userInfo })}
+                                        </span>
+                                        <span className="label">
+                                            {t(box.i18nKey)}
+                                        </span>
+                                    </div>
+                                </RippleEffect>
                             </li>
                         ))}
                     </ul>

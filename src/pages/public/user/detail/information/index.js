@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import { ReactComponent as GpsIcon } from "assets/images/icons/profile/gps.svg";
+import RippleEffect from "components/surface/RippleEffect";
 
 const __BOXES__ = [
     {
@@ -35,42 +36,48 @@ const UserDetailInformation = () => {
     const { userInfo } = useOutletContext();
 
     return (
-        <div className="user-detail-information">
-            <div className="top">
-                <div className="boxes">
-                    <ul>
-                        {__BOXES__.map((box, idx) => (
-                            <li key={idx}>
-                                <div className="container">
-                                    <span className="count">
-                                        {box.count({ userInfo })}
-                                    </span>
-                                    <span className="label">
-                                        {t(box.i18nKey)}
-                                    </span>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+        <>
+            <div className="user-detail-information">
+                <div className="top">
+                    <div className="boxes">
+                        <ul>
+                            {__BOXES__.map((box, idx) => (
+                                <li key={idx}>
+                                    <RippleEffect onClick={() => box.onClick()}>
+                                        <div className="container">
+                                            <span className="count">
+                                                {box.count({ userInfo })}
+                                            </span>
+                                            <span className="label">
+                                                {t(box.i18nKey)}
+                                            </span>
+                                        </div>
+                                    </RippleEffect>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="location">
+                        <h3 className="title">
+                            {t("title.profile.information.location")}
+                        </h3>
+                        <div className="position">
+                            <GpsIcon />
+                            <span className="country">
+                                {"Republic of Korea"}
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div className="location">
-                    <h3 className="title">
-                        {t("title.profile.information.location")}
-                    </h3>
-                    <div className="position">
-                        <GpsIcon />
-                        <span className="country">{"Republic of Korea"}</span>
+                <div className="bottom">
+                    <div className="created-at">
+                        {`Members since ${userInfo?.createdAt
+                            ?.toDate()
+                            ?.toDateString()}`}
                     </div>
                 </div>
             </div>
-            <div className="bottom">
-                <div className="created-at">
-                    {`Members since ${userInfo?.createdAt
-                        ?.toDate()
-                        ?.toDateString()}`}
-                </div>
-            </div>
-        </div>
+        </>
     );
 };
 

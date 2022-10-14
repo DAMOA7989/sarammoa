@@ -11,6 +11,7 @@ import { ReactComponent as EditIcon } from "assets/images/icons/profile/edit.svg
 import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
 import { Skeleton } from "@mui/material";
 import ProfileThumbnail from "components/surface/LazyImage";
+import RippleEffect from "components/surface/RippleEffect";
 
 const __TABS__ = [
     {
@@ -45,7 +46,7 @@ const __TABS__ = [
     },
 ];
 
-const __EXPAND_BUTTONS__ = [
+const __EXPAND__ = [
     {
         key: "edit_profile",
         i18nKey: "text.profile.expand.edit_profile",
@@ -321,19 +322,21 @@ const Profile = () => {
             <main className="pages-protected-profile">
                 <div ref={profileWrapRef} className="profile-wrap">
                     <header>
-                        <div
-                            className="gear-icon"
+                        <RippleEffect
                             onClick={() => {
                                 navigate.push({
                                     pathname: "/profile/setup",
                                     mode: "sub",
                                 });
                             }}
-                        ></div>
-                        <div
-                            className="dots-vertical-icon"
+                        >
+                            <div className="gear-icon"></div>
+                        </RippleEffect>
+                        <RippleEffect
                             onClick={() => setOpenExpand(!openExpand)}
-                        ></div>
+                        >
+                            <div className="dots-vertical-icon"></div>
+                        </RippleEffect>
                     </header>
                     <div ref={profileRef} className="profile">
                         <div
@@ -458,7 +461,7 @@ const Profile = () => {
                 onDismiss={() => setOpenExpand(false)}
             >
                 <div className="bottom-sheet expand">
-                    {__EXPAND_BUTTONS__.map((button) => (
+                    {__EXPAND__.map((button) => (
                         <CommonButton
                             key={button.key}
                             type="contrast"

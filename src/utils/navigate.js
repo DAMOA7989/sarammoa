@@ -6,34 +6,6 @@ const NavigateContext = React.createContext(null);
 
 export const NavigateProvider = ({ children }) => {
     const navigate = useNavigate();
-    const location = useLocation();
-
-    useBackListener(({ location }) => {
-        // const navigateStack = JSON.parse(
-        //     window.sessionStorage.getItem("sm_navigate_stack")
-        // );
-        // const newNavigateStack = [
-        //     ...navigateStack.splice(0, navigateStack.length - 1),
-        // ];
-        // window.sessionStorage.setItem(
-        //     "sm_navigate_stack",
-        //     JSON.stringify(newNavigateStack)
-        // );
-        // dispatch({
-        //     type: "GO_BACK",
-        //     payload: {
-        //         pathname:
-        //             newNavigateStack?.[newNavigateStack.length - 1]?.pathname ||
-        //             "/",
-        //         mode:
-        //             newNavigateStack?.[newNavigateStack.length - 1]?.mode ||
-        //             "main",
-        //         screenTitle:
-        //             newNavigateStack?.[newNavigateStack.length - 1]
-        //                 ?.screenTitle || "",
-        //     },
-        // });
-    });
 
     const reducer = (state, action) => {
         switch (action.type) {

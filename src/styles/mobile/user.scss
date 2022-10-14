@@ -193,24 +193,30 @@
                 justify-content: space-between;
 
                 > li {
-                    > .container {
-                        background-color: rgba($link_water_color, 0.4);
-                        padding: 0.5em 0 0.75em 0;
-                        border-radius: 8px;
-                        display: inline-flex;
-                        flex-direction: column;
-                        align-items: center;
+                    > .effect {
                         width: 100%;
-                        gap: 0;
 
-                        > .count {
-                            font-size: 2rem;
-                            font-weight: 700;
-                        }
+                        > .container {
+                            background-color: rgba($link_water_color, 0.4);
+                            padding: 0.5em 0 0.75em 0;
+                            border-radius: 8px;
+                            display: inline-flex;
+                            flex-direction: column;
+                            align-items: center;
+                            width: 100%;
+                            gap: 0;
+                            transform: scale(0.98);
+                            box-shadow: $common_box_shadow;
 
-                        > .label {
-                            font-size: 0.875rem;
-                            font-weight: 400;
+                            > .count {
+                                font-size: 2rem;
+                                font-weight: 700;
+                            }
+
+                            > .label {
+                                font-size: 0.875rem;
+                                font-weight: 400;
+                            }
                         }
                     }
                 }
