@@ -263,11 +263,15 @@ const UserDetail = () => {
                         </div>
                         <div className="following">
                             <FollowOutIcon />
-                            <span className="count">{0}</span>
+                            <span className="count">
+                                {(state.userInfo?.following || []).length}
+                            </span>
                         </div>
                         <div className="followers">
                             <FollowInIcon />
-                            <span className="count">{0}</span>
+                            <span className="count">
+                                {(state.userInfo?.followers || []).length}
+                            </span>
                         </div>
                     </div>
                 </div>

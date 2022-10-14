@@ -8,7 +8,7 @@ import {
     _delete,
     _switchPublishedField,
 } from "utils/firebase/writing";
-import { useStatusContext } from "utils/status";
+import { useStatusContext, isOwner } from "utils/status";
 import LazyImage from "components/surface/LazyImage";
 import IdCard from "components/surface/IdCard";
 import LazyTypography from "components/surface/LazyTypography";
@@ -27,6 +27,7 @@ import CommentCard from "components/surface/CommentCard";
 const __DROPDOWN_ITEMS__ = [
     {
         key: "edit",
+        permission: ["write"],
         i18nKey: "text.dropdown.edit",
         onClick: ({ uid, wid, dispatch, navigate }) => {
             dispatch({
@@ -41,6 +42,7 @@ const __DROPDOWN_ITEMS__ = [
     },
     {
         key: "publish",
+        permission: ["write"],
         i18nKey: "text.dropdown.publish",
         onClick: ({ uid, wid, dispatch, navigate, task }) => {
             task.run();
@@ -60,6 +62,7 @@ const __DROPDOWN_ITEMS__ = [
     },
     {
         key: "unpublish",
+        permission: ["write"],
         i18nKey: "text.dropdown.unpublish",
         onClick: ({ uid, wid, dispatch, navigate, task }) => {
             task.run();
@@ -79,6 +82,7 @@ const __DROPDOWN_ITEMS__ = [
     },
     {
         key: "delete",
+        permission: ["write"],
         i18nKey: "text.dropdown.delete",
         onClick: ({ uid, wid, dispatch, navigate, task }) => {
             task.run();
@@ -95,6 +99,25 @@ const __DROPDOWN_ITEMS__ = [
                     task.terminate();
                 });
         },
+    },
+    {
+        key: "share",
+        permission: ["write", "read"],
+        i18nKey: "text.dropdown.share",
+        onClick: ({}) => {},
+    },
+
+    {
+        key: "scrap",
+        permission: ["read"],
+        i18nKey: "text.dropdown.scrap",
+        onClick: ({}) => {},
+    },
+    {
+        key: "report",
+        permission: ["read"],
+        i18nKey: "text.dropdown.report",
+        onClick: ({}) => {},
     },
 ];
 
@@ -269,29 +292,76 @@ const WritingDetail = () => {
                                                 false
                                         )
                                             return undefined;
-
-                                        return (
-                                            <li key={item.key}>
-                                                <RippleEffect>
-                                                    <div
-                                                        className="container"
-                                                        onClick={() =>
-                                                            item.onClick({
-                                                                uid: userInfo?.id,
-                                                                wid: state
-                                                                    .writingInfo
-                                                                    ?.id,
-                                                                dispatch,
-                                                                navigate,
-                                                                task,
-                                                            })
-                                                        }
-                                                    >
-                                                        {t(item.i18nKey)}
-                                                    </div>
-                                                </RippleEffect>
-                                            </li>
-                                        );
+                                        if (
+                                            isOwner({
+                                                userId: userInfo?.id,
+                                                writerId:
+                                                    state.writingInfo?.writer
+                                                        ?.id,
+                                            })
+                                        ) {
+                                            if (
+                                                item.permission.includes(
+                                                    "write"
+                                                )
+                                            )
+                                                return (
+                                                    <li key={item.key}>
+                                                        <RippleEffect>
+                                                            <div
+                                                                className="container"
+                                                                onClick={() =>
+                                                                    item.onClick(
+                                                                        {
+                                                                            uid: userInfo?.id,
+                                                                            wid: state
+                                                                                .writingInfo
+                                                                                ?.id,
+                                                                            dispatch,
+                                                                            navigate,
+                                                                            task,
+                                                                        }
+                                                                    )
+                                                                }
+                                                            >
+                                                                {t(
+                                                                    item.i18nKey
+                                                                )}
+                                                            </div>
+                                                        </RippleEffect>
+                                                    </li>
+                                                );
+                                        } else {
+                                            if (
+                                                item.permission.includes("read")
+                                            )
+                                                return (
+                                                    <li key={item.key}>
+                                                        <RippleEffect>
+                                                            <div
+                                                                className="container"
+                                                                onClick={() =>
+                                                                    item.onClick(
+                                                                        {
+                                                                            uid: userInfo?.id,
+                                                                            wid: state
+                                                                                .writingInfo
+                                                                                ?.id,
+                                                                            dispatch,
+                                                                            navigate,
+                                                                            task,
+                                                                        }
+                                                                    )
+                                                                }
+                                                            >
+                                                                {t(
+                                                                    item.i18nKey
+                                                                )}
+                                                            </div>
+                                                        </RippleEffect>
+                                                    </li>
+                                                );
+                                        }
                                     })}
                                 </ul>
                             )}

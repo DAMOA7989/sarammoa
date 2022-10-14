@@ -36,3 +36,12 @@ export const StatusProvider = ({ children }) => {
 };
 
 export const useStatusContext = () => React.useContext(StatusContext);
+
+export const isOwner = ({ userId, writerId }) => {
+    try {
+        if (!Boolean(userId) || !Boolean(writerId)) throw new Error();
+        return userId === writerId;
+    } catch (e) {
+        return false;
+    }
+};

@@ -126,7 +126,7 @@ const App = () => {
                     </Route>
                 </Route>
                 <Route path="/sub" element={<SubLayout />}>
-                    <Route path="user" element={<User />}>
+                    <Route path="user">
                         <Route path=":uid" element={<UserDetail />}>
                             <Route path="" element={<UserDetailWork />} />
                             <Route

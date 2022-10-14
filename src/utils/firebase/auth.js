@@ -19,6 +19,7 @@ import {
     addDoc,
     getDoc,
     Timestamp,
+    getDocs,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { httpsCallable } from "firebase/functions";
@@ -109,14 +110,39 @@ export const _getUserInfo = ({ uid }) =>
             const docRef = doc(db, "users", uid);
             const docSnap = await getDoc(docRef);
 
+            let userInfo = null;
             if (docSnap.exists()) {
-                return resolve({
+                userInfo = {
                     id: docSnap.id,
                     ...docSnap.data(),
-                });
+                };
             } else {
                 throw new Error();
             }
+
+            const followingRef = collection(db, `users/${uid}/following`);
+            const followingQuerySnapshot = await getDocs(followingRef);
+            const following = [];
+            followingQuerySnapshot.forEach((docSnapshot) => {
+                following.push({
+                    id: docSnapshot.id,
+                    ...docSnapshot.data(),
+                });
+            });
+            userInfo.following = following;
+
+            const followersRef = collection(db, `users/${uid}/followers`);
+            const followersQuerySnapshot = await getDocs(followersRef);
+            const followers = [];
+            followersQuerySnapshot.forEach((docSnapshot) => {
+                followers.push({
+                    id: docSnapshot.id,
+                    ...docSnapshot.data(),
+                });
+            });
+            userInfo.followers = followers;
+
+            resolve(userInfo);
         } catch (e) {
             return reject(e);
         }
