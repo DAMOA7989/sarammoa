@@ -13,11 +13,13 @@ import CommonButton from "components/button/CommonButton";
 import { useNavigateContext } from "utils/navigate";
 import { _follow, _unfollow } from "utils/firebase/user";
 import { useAuthContext } from "utils/auth";
-import { _isFollow } from "utils/firebase/user";
+import { _isFollow, _report } from "utils/firebase/user";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useModalContext } from "utils/modal";
 import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
 import { ReactComponent as ReportIcon } from "assets/images/icons/profile/report.svg";
+import { useStatusContext } from "utils/status";
+import { toast } from "react-toastify";
 
 const __TABS__ = [
     {
@@ -78,7 +80,10 @@ const __EXPAND__ = [
         key: "share",
         i18nKey: "text.profile.expand.share",
         icon: <ShareIcon />,
-        onClick: ({ modal, userInfo }) => {
+        onClick: ({ modal, userInfo, dispatch }) => {
+            dispatch({
+                type: "CLOSE_EXPAND",
+            });
             modal.displayModal({
                 pathname: "profile/Share",
                 params: {
@@ -95,7 +100,32 @@ const __EXPAND__ = [
         key: "report",
         i18nKey: "text.dropdown.report",
         icon: <ReportIcon />,
-        onClick: () => {},
+        onClick: ({ t, uid, task, dispatch }) => {
+            task.run();
+            _report({ uid })
+                .then(() => {
+                    toast.success(t("toast.user.report.fulfilled"));
+                    task.terminate();
+                    dispatch({
+                        type: "CLOSE_EXPAND",
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+
+                    switch (e.message) {
+                        case "already exist":
+                            toast.error(
+                                t("toast.user.report.rejected.already_exist")
+                            );
+                            break;
+                        default:
+                            toast.error(t("toast.user.report.rejected"));
+                            break;
+                    }
+                    task.terminate();
+                });
+        },
     },
 ];
 
@@ -105,6 +135,7 @@ const UserDetail = () => {
     const navigate = useNavigateContext();
     const { userInfo } = useAuthContext();
     const modal = useModalContext();
+    const { task } = useStatusContext();
     const location = useLocation();
     const tabRefs = {
         work: React.useRef(null),
@@ -445,10 +476,11 @@ const UserDetail = () => {
                             className={button.key}
                             icon={button.icon}
                             onClick={() => {
-                                dispatch({
-                                    type: "CLOSE_EXPAND",
-                                });
                                 button.onClick({
+                                    t,
+                                    uid,
+                                    task,
+                                    dispatch,
                                     modal,
                                     userInfo: state.userInfo,
                                 });

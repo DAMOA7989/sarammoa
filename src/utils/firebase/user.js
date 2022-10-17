@@ -98,3 +98,37 @@ export const _unfollow = ({ from, to }) =>
             return reject(e);
         }
     });
+
+export const _report = ({ uid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const type = "user";
+            const reportsRef = collection(db, "reports");
+            let aleradyCheckQuery = query(
+                reportsRef,
+                where("type", "==", type)
+            );
+            aleradyCheckQuery = query(
+                aleradyCheckQuery,
+                where("uid", "==", uid)
+            );
+
+            const aleradyCheckQuerySnapshot = await getDocs(aleradyCheckQuery);
+            const alreadyDocs = [];
+            aleradyCheckQuerySnapshot.forEach((docSnapshot) => {
+                alreadyDocs.push({ id: docSnapshot.id, ...docSnapshot.data() });
+            });
+            if (alreadyDocs.length > 0) {
+                throw new Error("already exist");
+            }
+
+            await addDoc(reportsRef, {
+                type,
+                uid,
+                createdAt: Timestamp.now(),
+            });
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });

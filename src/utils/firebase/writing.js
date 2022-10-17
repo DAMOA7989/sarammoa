@@ -448,12 +448,18 @@ export const _scrap = ({ uid, wid }) =>
 export const _report = ({ uid, wid }) =>
     new Promise(async (resolve, reject) => {
         try {
+            const type = "writing";
             const reportRef = collection(db, "reports");
             let alreadyCheckQuery = query(reportRef, where("uid", "==", uid));
             alreadyCheckQuery = query(
                 alreadyCheckQuery,
                 where("wid", "==", wid)
             );
+            alreadyCheckQuery = query(
+                alreadyCheckQuery,
+                where("type", "==", type)
+            );
+
             const aleradyCheckQuerySnapshot = await getDocs(alreadyCheckQuery);
             const alreadyDocs = [];
             aleradyCheckQuerySnapshot.forEach((docSnapshot) => {
@@ -464,6 +470,7 @@ export const _report = ({ uid, wid }) =>
             }
 
             await addDoc(reportRef, {
+                type,
                 uid,
                 wid,
                 createdAt: Timestamp.now(),

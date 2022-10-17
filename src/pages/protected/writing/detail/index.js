@@ -176,7 +176,7 @@ const __DROPDOWN_ITEMS__ = [
                     switch (e.message) {
                         case "already exist":
                             toast.error(
-                                "toast.writing.report.rejected.already_exist"
+                                t("toast.writing.report.rejected.already_exist")
                             );
                             break;
                         default:
