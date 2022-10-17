@@ -129,6 +129,15 @@ export const NavigateProvider = ({ children }) => {
                     }${pathname}`
                 );
             }
+        } else if (mode === "publish") {
+            if (replace) {
+                navigate(`/publish${pathname}`, { replace: true });
+                dispatch({
+                    type: "REPLACE_FINISH",
+                });
+            } else {
+                navigate(`/publish${pathname}`);
+            }
         } else {
             if (replace) {
                 navigate(

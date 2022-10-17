@@ -124,7 +124,7 @@ const Share = ({ wid, writingInfo }) => {
                 },
             });
         }
-    }, [writingInfo]);
+    }, []);
 
     return (
         <main className="modals-profile-share">

@@ -181,6 +181,24 @@ const App = () => {
                         <Route path="find" element={<EmailFind />} />
                     </Route>
                 </Route>
+                <Route path="/publish">
+                    <Route path="writing">
+                        <Route path=":wid" element={<WritingDetail />} />
+                    </Route>
+                    <Route path="user">
+                        <Route path=":uid" element={<UserDetail />}>
+                            <Route path="" element={<UserDetailWork />} />
+                            <Route
+                                path="history"
+                                element={<UserDetailHistory />}
+                            />
+                            <Route
+                                path="information"
+                                element={<UserDetailInformation />}
+                            />
+                        </Route>
+                    </Route>
+                </Route>
             </Routes>
             <Modal />
             <Pending />

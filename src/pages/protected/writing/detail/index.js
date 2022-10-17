@@ -335,6 +335,8 @@ const WritingDetail = () => {
                                                                             navigate,
                                                                             task,
                                                                             modal,
+                                                                            writingInfo:
+                                                                                state.writingInfo,
                                                                         }
                                                                     )
                                                                 }
@@ -365,6 +367,7 @@ const WritingDetail = () => {
                                                                             dispatch,
                                                                             navigate,
                                                                             task,
+                                                                            modal,
                                                                             writingInfo:
                                                                                 state.writingInfo,
                                                                         }

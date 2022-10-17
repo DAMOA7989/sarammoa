@@ -15,8 +15,9 @@ const __AVAILABLE_ITEMS__ = [
         i18nKey: "title.profile.share.copy_link",
         icon: <CopyLinkIcon />,
         onClick: ({ t, userInfo }) => {
+            const url = `${process.env.REACT_APP_HOST_URL}/publish/user/${userInfo.id}`;
             copyText({
-                text: `${process.env.REACT_APP_HOST_URL}/${userInfo?.nickname}`,
+                text: url,
             })
                 .then(() => {
                     toast(t("toast.share.clipboard.write"));
@@ -31,13 +32,13 @@ const __AVAILABLE_ITEMS__ = [
         i18nKey: "title.profile.share.email",
         icon: <EmailIcon />,
         onClick: ({ t, userInfo }) => {
+            const url = `${process.env.REACT_APP_HOST_URL}/publish/user/${userInfo.id}`;
             window.location.href = `mailto:?subject=${
                 userInfo.fullName
             }&body=${t("text.profile.share.email", {
                 app_name: t("app_name"),
                 user_name: userInfo?.fullname,
-                profile_url:
-                    process.env.REACT_APP_HOST_URL + "/user/" + userInfo.id,
+                profile_url: url,
             })}`;
         },
     },
@@ -46,6 +47,7 @@ const __AVAILABLE_ITEMS__ = [
         i18nKey: "title.profile.share.kakaotalk",
         icon: <KakaotalkIcon />,
         onClick: ({ t, userInfo }) => {
+            const url = `${process.env.REACT_APP_HOST_URL}/publish/user/${userInfo.id}`;
             const kakao = window.Kakao;
 
             if (!kakao.isInitialized()) {
@@ -57,24 +59,30 @@ const __AVAILABLE_ITEMS__ = [
                 text: `${t("text.profile.share.email", {
                     app_name: t("app_name"),
                     user_name: userInfo?.fullname,
-                    profile_url:
-                        process.env.REACT_APP_HOST_URL + "/user/" + userInfo.id,
+                    profile_url: url,
                 })}`,
                 link: {
-                    mobileWebUrl:
-                        process.env.REACT_APP_HOST_URL + "/user/" + userInfo.id,
-                    webUrl:
-                        process.env.REACT_APP_HOST_URL + "/user/" + userInfo.id,
+                    mobileWebUrl: url,
+                    webUrl: url,
                 },
             });
         },
     },
 ];
 
-const Share = ({}) => {
+const Share = ({ userInfo: _userInfo }) => {
     const { t } = useTranslation();
     const { dismissModal } = useModalContext();
     const { userInfo } = useAuthContext();
+    const [userDetailInfo, setUserDetailInfo] = React.useState(null);
+
+    React.useEffect(() => {
+        if (_userInfo && Object.keys(_userInfo).length > 0) {
+            setUserDetailInfo(_userInfo);
+        } else {
+            setUserDetailInfo(userInfo);
+        }
+    }, []);
 
     return (
         <main className="modals-profile-share">
@@ -87,7 +95,7 @@ const Share = ({}) => {
                         loading={false}
                         onClick={() => {
                             dismissModal();
-                            item.onClick({ t, userInfo });
+                            item.onClick({ t, userInfo: userDetailInfo });
                         }}
                         icon={item.icon}
                     >

@@ -23,31 +23,52 @@ const __TABS__ = [
     {
         key: "work",
         i18nKey: "tab.profile.work",
-        onClick: ({ uid, navigate }) => {
-            navigate.replace({
-                pathname: `/user/${uid}`,
-                mode: "sub",
-            });
+        onClick: ({ uid, location, navigate }) => {
+            if (location.pathname?.split?.("/")?.[1] === "sub") {
+                navigate.replace({
+                    pathname: `/user/${uid}`,
+                    mode: "sub",
+                });
+            } else if (location.pathname?.split?.("/")?.[1] === "publish") {
+                navigate.replace({
+                    pathname: `/user/${uid}`,
+                    mode: "publish",
+                });
+            }
         },
     },
     {
         key: "history",
         i18nKey: "tab.profile.history",
-        onClick: ({ uid, navigate }) => {
-            navigate.replace({
-                pathname: `/user/${uid}/history`,
-                mode: "sub",
-            });
+        onClick: ({ uid, location, navigate }) => {
+            if (location.pathname?.split?.("/")?.[1] === "sub") {
+                navigate.replace({
+                    pathname: `/user/${uid}/history`,
+                    mode: "sub",
+                });
+            } else if (location.pathname?.split?.("/")?.[1] === "publish") {
+                navigate.replace({
+                    pathname: `/user/${uid}/history`,
+                    mode: "publish",
+                });
+            }
         },
     },
     {
         key: "information",
         i18nKey: "tab.profile.information",
-        onClick: ({ uid, navigate }) => {
-            navigate.replace({
-                pathname: `/user/${uid}/information`,
-                mode: "sub",
-            });
+        onClick: ({ uid, location, navigate }) => {
+            if (location.pathname?.split?.("/")?.[1] === "sub") {
+                navigate.replace({
+                    pathname: `/user/${uid}/information`,
+                    mode: "sub",
+                });
+            } else if (location.pathname?.split?.("/")?.[1] === "publish") {
+                navigate.replace({
+                    pathname: `/user/${uid}/information`,
+                    mode: "publish",
+                });
+            }
         },
     },
 ];
@@ -57,10 +78,12 @@ const __EXPAND__ = [
         key: "share",
         i18nKey: "text.profile.expand.share",
         icon: <ShareIcon />,
-        onClick: ({ modal }) => {
+        onClick: ({ modal, userInfo }) => {
             modal.displayModal({
                 pathname: "profile/Share",
-                params: {},
+                params: {
+                    userInfo,
+                },
                 options: {
                     title: "title.profile.share",
                     layout: "responsive",
@@ -271,8 +294,6 @@ const UserDetail = () => {
             });
     };
 
-    console.log("d userInfo", state.userInfo);
-
     return (
         <>
             <main className="pages-public-user-detail">
@@ -320,30 +341,31 @@ const UserDetail = () => {
                             </div>
                         </div>
                     </div>
-                    {userInfo?.id !== uid && (
-                        <div className="buttons">
-                            <CommonButton
-                                color={"primary"}
-                                className={`follow ${
-                                    state.follow && "following"
-                                }`}
-                                type={state.follow ? "contrast" : "common"}
-                                onClick={
-                                    state.follow
-                                        ? onUnfollowHandler
-                                        : onFollowHandler
-                                }
-                                loading={state.followLoading}
-                            >
-                                {state.follow
-                                    ? t("btn.unfollow")
-                                    : t("btn.follow")}
-                            </CommonButton>
-                            <CommonButton className="message">
-                                {t("btn.message")}
-                            </CommonButton>
-                        </div>
-                    )}
+                    {userInfo?.id !== uid &&
+                        location.pathname?.split?.("/")?.[1] !== "publish" && (
+                            <div className="buttons">
+                                <CommonButton
+                                    color={"primary"}
+                                    className={`follow ${
+                                        state.follow && "following"
+                                    }`}
+                                    type={state.follow ? "contrast" : "common"}
+                                    onClick={
+                                        state.follow
+                                            ? onUnfollowHandler
+                                            : onFollowHandler
+                                    }
+                                    loading={state.followLoading}
+                                >
+                                    {state.follow
+                                        ? t("btn.unfollow")
+                                        : t("btn.follow")}
+                                </CommonButton>
+                                <CommonButton className="message">
+                                    {t("btn.message")}
+                                </CommonButton>
+                            </div>
+                        )}
                 </div>
                 <div className="outlet">
                     <nav className="tabs">
@@ -360,7 +382,11 @@ const UserDetail = () => {
                                         type="text"
                                         color="black"
                                         onClick={() =>
-                                            tab.onClick({ uid, navigate })
+                                            tab.onClick({
+                                                uid,
+                                                location,
+                                                navigate,
+                                            })
                                         }
                                     >
                                         {t(tab.i18nKey)}
@@ -422,7 +448,10 @@ const UserDetail = () => {
                                 dispatch({
                                     type: "CLOSE_EXPAND",
                                 });
-                                button.onClick({ modal });
+                                button.onClick({
+                                    modal,
+                                    userInfo: state.userInfo,
+                                });
                             }}
                         >
                             <span>{t(button.i18nKey)}</span>
