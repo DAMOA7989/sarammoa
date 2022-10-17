@@ -54,7 +54,7 @@ const NewsfeedCard = ({ writer, cover, title, onClick }) => {
     return (
         <article ref={cardRef} className="newsfeed-card" onClick={onClick}>
             <header className="writer">
-                <IdCard className="writer-card" size="large" user={writer} />
+                <IdCard className="writer-card" size="regular" user={writer} />
             </header>
             <div className="title-image">
                 {loaded ? (

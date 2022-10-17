@@ -80,7 +80,7 @@ export const _post = ({
 
             let _cover = null;
             if (cover instanceof Blob) {
-                const blob = await getResizedImageBlob(cover, 300, 300);
+                const blob = await getResizedImageBlob(cover, 480, 480);
                 const coverRef = ref(storage, `writings/${docId}/cover`);
                 await uploadBytes(coverRef, blob);
                 _cover = await getDownloadURL(coverRef);
@@ -152,7 +152,7 @@ export const _update = ({
             };
 
             if (cover instanceof Blob) {
-                const blob = await getResizedImageBlob(cover, 300, 300);
+                const blob = await getResizedImageBlob(cover, 480, 480);
                 const coverRef = ref(storage, `writings/${wid}/cover`);
                 await uploadBytes(coverRef, blob);
                 updateData.cover = await getDownloadURL(coverRef);

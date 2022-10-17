@@ -2,8 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigateContext } from "utils/navigate";
 import LazyImage from "components/surface/LazyImage";
-
-const SIZE = 300;
+import { getResizedImageBlob } from "utils/converter";
 
 const ProfileWorkAddCover = ({
     _idx,
@@ -65,29 +64,10 @@ const ProfileWorkAddCover = ({
                 reader.onload = () => {
                     const img = new Image();
                     img.onload = () => {
-                        const canvas = document.createElement("canvas");
-                        canvas.width = SIZE;
-                        canvas.height = SIZE;
-                        const ctx = canvas.getContext("2d");
-                        let sx, sy, sw, sh;
-
-                        imgSizeRate.current = img.width / img.height;
                         setCoverUrl(reader.result);
-
-                        if (imgSizeRate.current > 1) {
-                            sx = (img.width - img.height) / 2;
-                            sy = 0;
-                            sw = img.height;
-                            sh = img.height;
-                        } else {
-                            sx = 0;
-                            sy = (img.height - img.width) / 2;
-                            sw = img.width;
-                            sh = img.width;
-                        }
-
-                        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, SIZE, SIZE);
-                        canvas.toBlob((blob) => setCover(blob));
+                        getResizedImageBlob(prevCover.value).then((blob) =>
+                            setCover(blob)
+                        );
                     };
                     img.src = reader.result;
                 };
