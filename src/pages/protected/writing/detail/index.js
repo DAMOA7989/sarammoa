@@ -8,6 +8,7 @@ import {
     _delete,
     _switchPublishedField,
     _scrap,
+    _report,
 } from "utils/firebase/writing";
 import { useStatusContext, isOwner } from "utils/status";
 import LazyImage from "components/surface/LazyImage";
@@ -25,6 +26,7 @@ import { useOutsideClickListener } from "utils/hook";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import CommentCard from "components/surface/CommentCard";
 import { useModalContext } from "utils/modal";
+import { toast } from "react-toastify";
 
 const __DROPDOWN_ITEMS__ = [
     {
@@ -128,17 +130,29 @@ const __DROPDOWN_ITEMS__ = [
         key: "scrap",
         permission: ["read"],
         i18nKey: "text.dropdown.scrap",
-        onClick: ({ uid, wid, task, dispatch }) => {
+        onClick: ({ t, uid, wid, task, dispatch }) => {
             task.run();
             _scrap({ uid, wid })
                 .then(() => {
                     task.terminate();
+                    toast.success(t("toast.writing.scrap.fulfilled"));
                     dispatch({
                         type: "HIDE_MORE_DROPDOWN",
                     });
                 })
                 .catch((e) => {
                     console.dir(e);
+                    switch (e.message) {
+                        case "already exist":
+                            toast.error(
+                                t("toast.writing.scrap.rejected.already_exist")
+                            );
+                            break;
+                        default:
+                            toast.error(t("toast.writing.scrap.rejected"));
+                            break;
+                    }
+
                     task.terminate();
                 });
         },
@@ -147,7 +161,32 @@ const __DROPDOWN_ITEMS__ = [
         key: "report",
         permission: ["read"],
         i18nKey: "text.dropdown.report",
-        onClick: ({}) => {},
+        onClick: ({ t, uid, wid, task, dispatch }) => {
+            task.run();
+            _report({ uid, wid })
+                .then(() => {
+                    task.terminate();
+                    toast.success(t("toast.writing.report.fulfilled"));
+                    dispatch({
+                        type: "HIDE_MORE_DROPDOWN",
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    switch (e.message) {
+                        case "already exist":
+                            toast.error(
+                                "toast.writing.report.rejected.already_exist"
+                            );
+                            break;
+                        default:
+                            toast.error(t("toast.writing.report.rejected"));
+                            break;
+                    }
+
+                    task.terminate();
+                });
+        },
     },
 ];
 
@@ -344,6 +383,7 @@ const WritingDetail = () => {
                                                                 onClick={() =>
                                                                     item.onClick(
                                                                         {
+                                                                            t,
                                                                             uid: userInfo?.id,
                                                                             wid: state
                                                                                 .writingInfo
@@ -377,6 +417,7 @@ const WritingDetail = () => {
                                                                 onClick={() =>
                                                                     item.onClick(
                                                                         {
+                                                                            t,
                                                                             uid: userInfo?.id,
                                                                             wid: state
                                                                                 .writingInfo

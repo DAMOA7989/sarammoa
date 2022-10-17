@@ -426,6 +426,12 @@ export const _scrap = ({ uid, wid }) =>
     new Promise(async (resolve, reject) => {
         try {
             const scrapRef = doc(db, `users/${uid}/scraps/${wid}`);
+            const scrapSnapshot = await getDoc(scrapRef);
+
+            if (scrapSnapshot.exists()) {
+                throw new Error("already exist");
+            }
+
             await setDoc(
                 scrapRef,
                 {
@@ -433,6 +439,35 @@ export const _scrap = ({ uid, wid }) =>
                 },
                 { merge: true }
             );
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _report = ({ uid, wid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const reportRef = collection(db, "reports");
+            let alreadyCheckQuery = query(reportRef, where("uid", "==", uid));
+            alreadyCheckQuery = query(
+                alreadyCheckQuery,
+                where("wid", "==", wid)
+            );
+            const aleradyCheckQuerySnapshot = await getDocs(alreadyCheckQuery);
+            const alreadyDocs = [];
+            aleradyCheckQuerySnapshot.forEach((docSnapshot) => {
+                alreadyDocs.push({ id: docSnapshot.id, ...docSnapshot.data() });
+            });
+            if (alreadyDocs.length > 0) {
+                throw new Error("already exist");
+            }
+
+            await addDoc(reportRef, {
+                uid,
+                wid,
+                createdAt: Timestamp.now(),
+            });
             return resolve();
         } catch (e) {
             return reject(e);
