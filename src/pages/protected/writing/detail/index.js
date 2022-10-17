@@ -23,6 +23,7 @@ import RippleEffect from "components/surface/RippleEffect";
 import { useOutsideClickListener } from "utils/hook";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import CommentCard from "components/surface/CommentCard";
+import { useModalContext } from "utils/modal";
 
 const __DROPDOWN_ITEMS__ = [
     {
@@ -104,7 +105,19 @@ const __DROPDOWN_ITEMS__ = [
         key: "share",
         permission: ["write", "read"],
         i18nKey: "text.dropdown.share",
-        onClick: ({}) => {},
+        onClick: ({ wid, modal, writingInfo }) => {
+            modal.displayModal({
+                pathname: "writing/Share",
+                params: {
+                    wid,
+                    writingInfo,
+                },
+                options: {
+                    title: "title.profile.share",
+                    layout: "responsive",
+                },
+            });
+        },
     },
 
     {
@@ -127,6 +140,7 @@ const WritingDetail = () => {
     const { userInfo } = useAuthContext();
     const navigate = useNavigateContext();
     const { task } = useStatusContext();
+    const modal = useModalContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -320,6 +334,7 @@ const WritingDetail = () => {
                                                                             dispatch,
                                                                             navigate,
                                                                             task,
+                                                                            modal,
                                                                         }
                                                                     )
                                                                 }
@@ -350,6 +365,8 @@ const WritingDetail = () => {
                                                                             dispatch,
                                                                             navigate,
                                                                             task,
+                                                                            writingInfo:
+                                                                                state.writingInfo,
                                                                         }
                                                                     )
                                                                 }

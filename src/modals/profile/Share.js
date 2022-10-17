@@ -8,7 +8,6 @@ import { copyText } from "utils/string";
 import { toast } from "react-toastify";
 import { useModalContext } from "utils/modal";
 import { useAuthContext } from "utils/auth";
-import { CircularProgress } from "@mui/material";
 
 const __AVAILABLE_ITEMS__ = [
     {
@@ -80,8 +79,9 @@ const Share = ({}) => {
     return (
         <main className="modals-profile-share">
             <div className="container">
-                {__AVAILABLE_ITEMS__.map((item) => (
+                {__AVAILABLE_ITEMS__.map((item, idx) => (
                     <CommonButton
+                        key={idx}
                         type="contrast"
                         color="dark_gray"
                         loading={false}
