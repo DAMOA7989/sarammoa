@@ -421,3 +421,20 @@ export const _getWritings = ({ uid, lastVisible, limit: _limit = 5 }) =>
             return reject(e);
         }
     });
+
+export const _scrap = ({ uid, wid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const scrapRef = doc(db, `users/${uid}/scraps/${wid}`);
+            await setDoc(
+                scrapRef,
+                {
+                    createdAt: Timestamp.now(),
+                },
+                { merge: true }
+            );
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });

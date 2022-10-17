@@ -12,14 +12,10 @@ import { ReactComponent as SupportIcon } from "assets/images/tabs/support.svg";
 import { ReactComponent as ConnectIcon } from "assets/images/tabs/connect.svg";
 import { ReactComponent as NoticeIcon } from "assets/images/tabs/notice.svg";
 import { ReactComponent as ProfileIcon } from "assets/images/tabs/profile.svg";
-import { ReactComponent as NewsFeedActiveIcon } from "assets/images/tabs/newsfeed_active.svg";
-import { ReactComponent as SupportActiveIcon } from "assets/images/tabs/support_active.svg";
-import { ReactComponent as ConnectActiveIcon } from "assets/images/tabs/connect_active.svg";
-import { ReactComponent as NoticeActiveIcon } from "assets/images/tabs/notice_active.svg";
-import { ReactComponent as ProfileActiveIcon } from "assets/images/tabs/profile_active.svg";
 import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
 import CommonButton from "components/button/CommonButton";
+import RippleEffect from "components/surface/RippleEffect";
 
 const __OAUTH_BUTTONS__ = [
     {
@@ -73,7 +69,7 @@ const __TABS__ = [
         i18nKey: "tab.home",
         icon: {
             inactive: <NewsFeedIcon />,
-            active: <NewsFeedActiveIcon />,
+            // active: <NeewsFeedActiveIcon />,
         },
         color: styles?.primaryColor,
         onClick: ({ navigate }) => {
@@ -105,7 +101,7 @@ const __TABS__ = [
         i18nKey: "tab.connect",
         icon: {
             inactive: <ConnectIcon />,
-            active: <ConnectActiveIcon />,
+            // active: <ConnectActiveIcon />,
         },
         color: styles?.primaryColor,
         onClick: ({ navigate }) => {
@@ -121,7 +117,7 @@ const __TABS__ = [
         i18nKey: "tab.notice",
         icon: {
             inactive: <NoticeIcon />,
-            active: <NoticeActiveIcon />,
+            // active: <NoticeActiveIcon />,
         },
         color: styles?.primaryColor,
         onClick: ({ navigate }) => {
@@ -135,7 +131,7 @@ const __TABS__ = [
         key: "profile",
         icon: {
             inactive: <ProfileIcon />,
-            active: <ProfileActiveIcon />,
+            // active: <ProfileActiveIcon />,
         },
         color: styles?.primaryColor,
         onClick: ({ navigate }) => {
@@ -220,16 +216,16 @@ const BottomNavigation = () => {
                                     curTab === tab.key && "active"
                                 }`}
                             >
-                                <div
+                                <RippleEffect
                                     className="container"
                                     onClick={() => tab.onClick({ navigate })}
                                 >
                                     {tab.icon.inactive}
                                     <span>{t(tab.i18nKey)}</span>
-                                </div>
+                                </RippleEffect>
                             </li>
                         ))}
-                        <div
+                        {/* <div
                             className="indicator"
                             style={{
                                 backgroundColor:
@@ -239,7 +235,7 @@ const BottomNavigation = () => {
                                         )
                                     ]?.color || styles?.primaryColor,
                             }}
-                        ></div>
+                        ></div> */}
                     </ul>
                 </div>
             ) : (

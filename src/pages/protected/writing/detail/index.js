@@ -7,6 +7,7 @@ import {
     _leaveComment,
     _delete,
     _switchPublishedField,
+    _scrap,
 } from "utils/firebase/writing";
 import { useStatusContext, isOwner } from "utils/status";
 import LazyImage from "components/surface/LazyImage";
@@ -105,7 +106,10 @@ const __DROPDOWN_ITEMS__ = [
         key: "share",
         permission: ["write", "read"],
         i18nKey: "text.dropdown.share",
-        onClick: ({ wid, modal, writingInfo }) => {
+        onClick: ({ wid, modal, dispatch, writingInfo }) => {
+            dispatch({
+                type: "HIDE_MORE_DROPDOWN",
+            });
             modal.displayModal({
                 pathname: "writing/Share",
                 params: {
@@ -124,7 +128,20 @@ const __DROPDOWN_ITEMS__ = [
         key: "scrap",
         permission: ["read"],
         i18nKey: "text.dropdown.scrap",
-        onClick: ({}) => {},
+        onClick: ({ uid, wid, task, dispatch }) => {
+            task.run();
+            _scrap({ uid, wid })
+                .then(() => {
+                    task.terminate();
+                    dispatch({
+                        type: "HIDE_MORE_DROPDOWN",
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    task.terminate();
+                });
+        },
     },
     {
         key: "report",

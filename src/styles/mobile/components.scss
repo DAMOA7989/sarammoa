@@ -49,7 +49,7 @@
                         position: relative;
 
                         path {
-                            stroke: $gunmetal_color;
+                            stroke: black;
                             transition: stroke 0.3s;
                         }
                     }
@@ -67,10 +67,10 @@
                 &.active {
                     > .container {
                         > svg {
-                            transform: translateY(-0.625em) scale(1.2);
+                            // transform: translateY(-0.625em) scale(1.2);
 
                             path {
-                                stroke: white;
+                                stroke: $primary_color;
                             }
                         }
 
