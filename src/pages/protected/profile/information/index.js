@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ReactComponent as GpsIcon } from "assets/images/icons/profile/gps.svg";
 import { useOutletContext } from "react-router-dom";
 import RippleEffect from "components/surface/RippleEffect";
+import { useModalContext } from "utils/modal";
 
 const __BOXES__ = [
     {
@@ -21,19 +22,36 @@ const __BOXES__ = [
         key: "followers",
         i18nKey: "title.profile.information.followers",
         count: ({ userInfo }) => (userInfo?.followers || []).length,
-        onClick: () => {},
+        onClick: ({ uid, displayModal }) => {
+            displayModal({
+                pathname: "profile/Followers",
+                params: {
+                    uid,
+                },
+                options: {},
+            });
+        },
     },
     {
         key: "followings",
         i18nKey: "title.profile.information.followings",
         count: ({ userInfo }) => (userInfo?.following || []).length,
-        onClick: () => {},
+        onClick: ({ uid, displayModal }) => {
+            displayModal({
+                pathname: "profile/Following",
+                params: {
+                    uid,
+                },
+                options: {},
+            });
+        },
     },
 ];
 
 const Information = () => {
     const { t } = useTranslation();
     const { userInfo } = useOutletContext();
+    const { displayModal } = useModalContext();
 
     return (
         <div className="pages-protected-profile-information">
@@ -42,7 +60,14 @@ const Information = () => {
                     <ul>
                         {(__BOXES__ || []).map((box, idx) => (
                             <li key={idx}>
-                                <RippleEffect>
+                                <RippleEffect
+                                    onClick={() =>
+                                        box.onClick({
+                                            uid: userInfo?.id,
+                                            displayModal,
+                                        })
+                                    }
+                                >
                                     <div className="container">
                                         <span className="count">
                                             {box.count({ userInfo })}
