@@ -145,7 +145,6 @@ const Edit = () => {
                 uid: userInfo?.id,
                 payload,
             });
-            // userInfo?.refresh();
             goBack();
             setIsLoading(false);
         } catch (e) {

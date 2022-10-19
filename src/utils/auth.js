@@ -225,20 +225,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         init,
         user,
-        userInfo: userInfo
-            ? {
-                  ...userInfo,
-                  refresh: () => {
-                      _getUserInfo({ uid: userInfo?.id })
-                          .then((res) => {
-                              setUserInfo(res);
-                          })
-                          .catch((e) => {
-                              console.dir(e);
-                          });
-                  },
-              }
-            : null,
+        userInfo: userInfo,
         signUp,
         signIn,
         signOut,

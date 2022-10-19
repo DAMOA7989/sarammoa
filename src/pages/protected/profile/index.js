@@ -13,6 +13,10 @@ import { Skeleton } from "@mui/material";
 import RippleEffect from "components/surface/RippleEffect";
 import LazyImage from "components/surface/LazyImage";
 import LazyTypography from "components/surface/LazyTypography";
+import { _getFollowInfos } from "utils/firebase/user";
+import { ReactComponent as ThumbUpIcon } from "assets/images/icons/thumb_up.svg";
+import { ReactComponent as FollowInIcon } from "assets/images/icons/follow_from.svg";
+import { ReactComponent as FollowOutIcon } from "assets/images/icons/follow_to.svg";
 
 const __TABS__ = [
     {
@@ -81,7 +85,8 @@ const Profile = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const navigate = useNavigateContext();
-    const { userInfo } = useAuthContext();
+    const { userInfo: _userInfo } = useAuthContext();
+    const [userInfo, setUserInfo] = React.useState(_userInfo);
     const modal = useModalContext();
     const [curTab, setCurTab] = React.useState(null);
     const [openExpand, setOpenExpand] = React.useState(false);
@@ -102,6 +107,21 @@ const Profile = () => {
         });
         return setCurTab(_tab);
     }, [location.pathname]);
+
+    React.useEffect(() => {
+        const data = _userInfo;
+        if (_userInfo?.id) {
+            _getFollowInfos({ uid: _userInfo?.id })
+                .then((docs) => {
+                    data.following = docs.following;
+                    data.followers = docs.followers;
+                })
+                .catch((e) => {
+                    console.dir(e);
+                });
+        }
+        setUserInfo(data);
+    }, [_userInfo]);
 
     return (
         <>
@@ -150,17 +170,21 @@ const Profile = () => {
                                     </LazyTypography>
                                 </span>
                                 <div className="counts">
-                                    <div className="thumb-up">
-                                        <div className="icon" />
+                                    <div className="likes">
+                                        <ThumbUpIcon />
                                         <span className="count">0</span>
                                     </div>
-                                    <div className="follow-to">
-                                        <div className="icon" />
-                                        <span className="count">0</span>
+                                    <div className="following">
+                                        <FollowOutIcon />
+                                        <span className="count">
+                                            {(userInfo?.following || []).length}
+                                        </span>
                                     </div>
-                                    <div className="follow-from">
-                                        <div className="icon" />
-                                        <span className="count">0</span>
+                                    <div className="followers">
+                                        <FollowInIcon />
+                                        <span className="count">
+                                            {(userInfo?.followers || []).length}
+                                        </span>
                                     </div>
                                 </div>
                             </div>

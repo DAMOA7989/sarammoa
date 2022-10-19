@@ -139,29 +139,12 @@
                             }
                         }
 
-                        > .thumb-up {
-                            > .icon {
-                                &::after {
-                                    width: 90%;
-                                    height: 90%;
-                                    mask-image: url("/assets/images/icons/thumb_up.svg");
-                                }
-                            }
-                        }
-
-                        > .follow-to {
-                            > .icon {
-                                &::after {
-                                    mask-image: url("/assets/images/icons/follow_to.svg");
-                                }
-                            }
-                        }
-
-                        > .follow-from {
-                            > .icon {
-                                &::after {
-                                    mask-image: url("/assets/images/icons/follow_from.svg");
-                                }
+                        > .likes,
+                        > .following,
+                        > .followers {
+                            > .count {
+                                position: relative;
+                                bottom: 1.5px;
                             }
                         }
                     }
