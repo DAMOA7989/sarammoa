@@ -1,7 +1,8 @@
 @import "../include.scss";
 
 .pages-public-user-detail {
-    position: relative;
+    display: flex;
+    flex-direction: column;
 
     > header {
         position: absolute;
@@ -22,8 +23,8 @@
         padding: 4.5em 0 1.25em 0;
 
         > .profile-thumbnail {
-            width: 6.25em;
-            height: 6.25em;
+            width: 7.5em;
+            height: 7.5em;
             border-radius: 50%;
             overflow: hidden;
             box-shadow: $common_box_shadow;
