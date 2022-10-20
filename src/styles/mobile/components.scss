@@ -1236,3 +1236,48 @@
         }
     }
 }
+
+.search-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    background-color: rgba($link_water_color, 0.35);
+    padding: 0.375em 0.75em;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+
+    > svg {
+        path {
+            stroke: rgba($auro_metal_saurus_color, 0.5);
+            transition: stroke 0.15s;
+        }
+    }
+
+    > input {
+        flex: 1;
+        font-size: 0.875rem;
+        color: rgba($auro_metal_saurus_color, 0.5);
+        transition: color 0.15s;
+
+        &::placeholder {
+            color: rgba($auro_metal_saurus_color, 0.5);
+        }
+    }
+
+    &:focus-within {
+        > svg {
+            path {
+                stroke: $gunmetal_color;
+            }
+        }
+
+        > input {
+            color: $gunmetal_color;
+
+            // &::placeholder {
+            //     color: $gunmetal_color;
+            // }
+        }
+    }
+}
