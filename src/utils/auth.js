@@ -23,36 +23,47 @@ export const AuthProvider = ({ children }) => {
         status: "idle",
         payload: {},
     });
-    const [userInfo, setUserInfo] = React.useState(null);
+    const [userInfo, setUserInfo] = React.useState({
+        status: "idle",
+    });
 
     React.useEffect(() => {
-        auth.onAuthStateChanged(async (user) => {
+        auth.onAuthStateChanged(async (_user) => {
             setInit(true);
-            window.sessionStorage.removeItem("sm_sign_in");
-            if (user) {
+
+            if (_user) {
+                window.sessionStorage.removeItem("sm_sign_in");
                 setUser({
                     status: "fulfilled",
                     payload: {
-                        user,
+                        user: _user,
                     },
                 });
             } else {
-                setUser({
-                    status: "rejected",
-                    payload: {},
-                });
+                if (Boolean(sessionStorage.getItem("sm_sign_in"))) {
+                    setUser({
+                        status: "pending",
+                        payload: {},
+                    });
+                } else {
+                    setUser({
+                        status: "rejected",
+                        payload: {},
+                    });
+                }
+                window.sessionStorage.removeItem("sm_sign_in");
             }
         });
     }, []);
 
     React.useEffect(() => {
         if (user?.status !== "fulfilled") {
-            setUser(null);
-            setUserInfo(null);
+            setUserInfo({
+                status: user?.status || "idle",
+            });
             return;
         } else {
             const _user = user?.payload?.user;
-            setUser(user);
 
             // _logAccess({ uid: _user?.uid });
 
@@ -63,6 +74,7 @@ export const AuthProvider = ({ children }) => {
                         if (docSnap.exists()) {
                             if (docSnap.data()?.createdAt) {
                                 setUserInfo({
+                                    status: "fulfilled",
                                     id: docSnap.id,
                                     ...docSnap.data(),
                                 });
@@ -86,7 +98,9 @@ export const AuthProvider = ({ children }) => {
                             throw new Error();
                         }
                     } catch (e) {
-                        setUserInfo(null);
+                        setUserInfo({
+                            status: "rejected",
+                        });
                     }
 
                     task.terminate();
@@ -109,6 +123,9 @@ export const AuthProvider = ({ children }) => {
                         provider: window.sessionStorage.getItem("sm_sign_in"),
                     },
                 });
+                setUserInfo({
+                    status: "pending",
+                });
                 task.run();
             }
         }
@@ -122,6 +139,9 @@ export const AuthProvider = ({ children }) => {
                     payload: {
                         provider: type,
                     },
+                });
+                setUserInfo({
+                    status: "pending",
                 });
                 window.sessionStorage.setItem("sm_sign_in", type);
                 // task.run();
@@ -152,6 +172,9 @@ export const AuthProvider = ({ children }) => {
                     payload: {
                         provider: type,
                     },
+                });
+                setUserInfo({
+                    status: "pending",
                 });
                 window.sessionStorage.setItem("sm_sign_in", type);
                 task.run();
@@ -225,7 +248,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         init,
         user,
-        userInfo: userInfo,
+        userInfo,
         signUp,
         signIn,
         signOut,

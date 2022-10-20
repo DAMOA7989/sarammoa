@@ -5,6 +5,7 @@ import NewsfeedCard from "components/surface/NewsfeedCard";
 import { _getWritings } from "utils/firebase/writing";
 import { useAuthContext } from "utils/auth";
 import { useNavigateContext } from "utils/navigate";
+import { useStatusContext } from "utils/status";
 
 const __STORIES__ = [
     {
@@ -51,8 +52,9 @@ const __STORIES__ = [
 
 const NewsFeed = () => {
     const { t } = useTranslation();
-    const { userInfo } = useAuthContext();
+    const { user, userInfo } = useAuthContext();
     const navigate = useNavigateContext();
+    const { task } = useStatusContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -66,16 +68,10 @@ const NewsFeed = () => {
                         ...state,
                         page: state.page - 1,
                     };
-                case "INIT_WRITINGS":
-                    return {
-                        ...state,
-                        page: 0,
-                        writings: [],
-                    };
                 case "CLEAR_WRITINGS":
                     return {
                         ...state,
-                        page: -1,
+                        page: 0,
                         writings: [],
                     };
                 case "PUSH_WRITINGS_PENDING":
@@ -106,37 +102,32 @@ const NewsFeed = () => {
         }
     );
     const prevPage = React.useRef(-1);
-    const prevUid = React.useRef(undefined);
+    const prevUserInfo = React.useRef({ status: "idle" });
 
     React.useEffect(() => {
-        if (userInfo?.id !== prevUid.current) {
+        if (userInfo?.status === "idle" || userInfo?.status === "pending") {
             dispatch({
                 type: "CLEAR_WRITINGS",
             });
-        }
-        prevUid.current = userInfo?.id;
-    }, [userInfo?.id]);
-
-    React.useEffect(() => {
-        if (state.page < 0) {
-            dispatch({
-                type: "INIT_WRITINGS",
-            });
-        } else {
-            fetchWritings();
+            return;
         }
 
-        prevPage.current = state.page;
-    }, [state.page]);
+        if (userInfo?.status === "rejected") {
+            fetchWritings(null);
+        } else if (userInfo?.status === "fulfilled") {
+            fetchWritings(userInfo?.id);
+        }
+    }, [userInfo?.status, state.page]);
 
-    const fetchWritings = () => {
+    const fetchWritings = (uid) => {
+        if (typeof uid === "undefined") return;
         const lastVisible =
             state.writings && state.writings[state.writings.length - 1];
 
         dispatch({
             type: "PUSH_WRITINGS_PENDING",
         });
-        _getWritings({ uid: userInfo?.id, lastVisible })
+        _getWritings({ uid, lastVisible })
             .then(({ docs }) => {
                 dispatch({
                     type: "PUSH_WRITINGS_FULFILLED",
