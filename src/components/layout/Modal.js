@@ -2,8 +2,12 @@ import React from "react";
 import reactDom from "react-dom";
 import { useModalContext } from "utils/modal";
 import ModalHeader from "components/header/ModalHeader";
+import { useBlocker } from "utils/hook";
+import { UNSAFE_NavigationContext } from "react-router-dom";
 
 const Modal = () => {
+    const { navigator } = React.useContext(UNSAFE_NavigationContext);
+    const unblockRef = React.useRef(() => {});
     const { path, params, options, dismissModal } = useModalContext();
     const [display, setDisplay] = React.useState(Boolean(path));
     const modalContainerRef = React.useRef(null);
@@ -42,6 +46,25 @@ const Modal = () => {
             }, 200);
         }
     }, [path]);
+
+    React.useEffect(() => {
+        if (display) {
+            unblockRef.current = navigator.block((tx) => {
+                const autoUnblockingTx = {
+                    ...tx,
+                    retry: () => {
+                        unblockRef.current();
+                        tx.retry();
+                    },
+                };
+
+                dismissModal();
+            });
+        } else {
+            unblockRef.current?.();
+            unblockRef.current = () => {};
+        }
+    }, [display]);
 
     React.useEffect(() => {
         if (!modalRef.current) return;

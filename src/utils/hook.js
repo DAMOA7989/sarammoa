@@ -17,7 +17,7 @@ export const useBackListener = (callback) => {
 };
 
 export const useBlocker = (blocker, when = true) => {
-    const {} = React.useContext(UNSAFE_NavigationContext);
+    const { navigator } = React.useContext(UNSAFE_NavigationContext);
 
     React.useEffect(() => {
         if (!when) return;
