@@ -128,7 +128,10 @@
 
         > main {
             width: 100%;
-            // height: calc(100% - 60px);
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
     }
 }

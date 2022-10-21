@@ -22,13 +22,16 @@ const __BOXES__ = [
         key: "followers",
         i18nKey: "title.profile.information.followers",
         count: ({ userInfo }) => (userInfo?.followers || []).length,
-        onClick: ({ uid, displayModal }) => {
+        onClick: ({ t, uid, displayModal }) => {
             displayModal({
-                pathname: "profile/Followers",
+                pathname: "profile/Follow",
                 params: {
+                    type: "followers",
                     uid,
                 },
-                options: {},
+                options: {
+                    title: t("title.profile.information.followers"),
+                },
             });
         },
     },
@@ -36,13 +39,16 @@ const __BOXES__ = [
         key: "followings",
         i18nKey: "title.profile.information.followings",
         count: ({ userInfo }) => (userInfo?.following || []).length,
-        onClick: ({ uid, displayModal }) => {
+        onClick: ({ t, uid, displayModal }) => {
             displayModal({
-                pathname: "profile/Following",
+                pathname: "profile/Follow",
                 params: {
+                    type: "following",
                     uid,
                 },
-                options: {},
+                options: {
+                    title: t("title.profile.information.followings"),
+                },
             });
         },
     },
@@ -63,6 +69,7 @@ const Information = () => {
                                 <RippleEffect
                                     onClick={() =>
                                         box.onClick({
+                                            t,
                                             uid: userInfo?.id,
                                             displayModal,
                                         })

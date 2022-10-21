@@ -6,9 +6,13 @@ import LazyImage from "./LazyImage";
 import LazyTypography from "./LazyTypography";
 import RippleEffect from "./RippleEffect";
 import { CircularProgress } from "@mui/material";
+import { useNavigateContext } from "utils/navigate";
+import { useModalContext } from "utils/modal";
 
-const FollowCard = ({ className, pid, uid }) => {
+const FollowCard = ({ className, pid, uid, search }) => {
     const { t } = useTranslation();
+    const navigate = useNavigateContext();
+    const modal = useModalContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -62,12 +66,23 @@ const FollowCard = ({ className, pid, uid }) => {
                         ...state,
                         userInfoLoading: false,
                     };
+                case "SHOW_CARD":
+                    return {
+                        ...state,
+                        visibility: true,
+                    };
+                case "HIDE_CARD":
+                    return {
+                        ...state,
+                        visibility: false,
+                    };
             }
         },
         {
             userInfoLoading: false,
             userInfo: null,
             isFollow: false,
+            visibility: true,
         }
     );
 
@@ -99,11 +114,10 @@ const FollowCard = ({ className, pid, uid }) => {
     React.useEffect(() => {
         if (!state.userInfo) return;
 
-        const idx = (state.userInfo?.followers || []).findIndex(
-            (x) => x.id === pid
-        );
-
-        if (idx >= 0) {
+        if (
+            (state.userInfo?.followers || []).findIndex((x) => x.id === pid) >=
+            0
+        ) {
             dispatch({
                 type: "FOLLOW_FULFILLED",
             });
@@ -114,9 +128,39 @@ const FollowCard = ({ className, pid, uid }) => {
         }
     }, [state.userInfo]);
 
+    React.useEffect(() => {
+        if (!state.userInfo) return;
+
+        const _nickname = (state.userInfo?.nickname || "")
+            .trim()
+            .replaceAll(" ", "")
+            .toLowerCase();
+        const _search = (search || "").trim().replaceAll(" ", "").toLowerCase();
+
+        if (_nickname.includes(_search)) {
+            dispatch({
+                type: "SHOW_CARD",
+            });
+        } else {
+            dispatch({
+                type: "HIDE_CARD",
+            });
+        }
+    }, [state.userInfo, search]);
+
+    if (!state.visibility) return null;
     return (
         <div className={`follow-card ${className}`}>
-            <div className="profile">
+            <RippleEffect
+                className="profile"
+                onClick={() => {
+                    modal.dismissModal();
+                    navigate.push({
+                        pathname: `/user/${uid}`,
+                        mode: "sub",
+                    });
+                }}
+            >
                 <div className="profile-thumbnail">
                     <LazyImage
                         src={state.userInfo?.profileThumbnailUrl}
@@ -135,13 +179,16 @@ const FollowCard = ({ className, pid, uid }) => {
                         </LazyTypography>
                     </span>
                 </div>
-            </div>
-            {state.isFollowInit ? (
+            </RippleEffect>
+            {pid !== uid && state.isFollowInit ? (
                 <RippleEffect
                     className={`follow-button ${
                         state.isFollow ? "following" : "unfollowing"
                     }`}
-                    onClick={() => {
+                    onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+
                         if (state.isFollow) {
                             dispatch({
                                 type: "UNFOLLOW_PENDING",

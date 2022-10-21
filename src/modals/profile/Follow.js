@@ -3,9 +3,11 @@ import SearchBar from "components/input/SearchBar";
 import { useTranslation } from "react-i18next";
 import { _getUserInfo } from "utils/firebase/auth";
 import FollowCard from "components/surface/FollowCard";
+import { useAuthContext } from "utils/auth";
 
-const Following = ({ uid }) => {
+const Following = ({ type, uid }) => {
     const { t } = useTranslation();
+    const { userInfo } = useAuthContext();
     const [search, setSearch] = React.useState("");
     const [state, dispatch] = React.useReducer(
         (state, action) => {
@@ -27,11 +29,29 @@ const Following = ({ uid }) => {
                         userInfoLoading: false,
                         userInfo: null,
                     };
+                case "FETCH_PEOPLE_PENDING":
+                    return {
+                        ...state,
+                        peopleLoading: true,
+                    };
+                case "FETCH_PEOPLE_FULFILLED":
+                    return {
+                        ...state,
+                        peopleLoading: false,
+                        people: action.payload?.people,
+                    };
+                case "FETCH_PEOPLE_REJECTED":
+                    return {
+                        ...state,
+                        peopleLoading: false,
+                    };
             }
         },
         {
             userInfoLoading: false,
             userInfo: null,
+            peopleLoading: false,
+            people: [],
         }
     );
 
@@ -69,15 +89,31 @@ const Following = ({ uid }) => {
             </div>
             <div className="people following">
                 <ul>
-                    {(state.userInfo?.following || []).map((person, idx) => (
-                        <li key={idx}>
-                            <FollowCard
-                                className={`person ${person.id}`}
-                                pid={uid}
-                                uid={person.id}
-                            />
-                        </li>
-                    ))}
+                    {type === "following" ? (
+                        (state.userInfo?.following || []).map((person, idx) => (
+                            <li key={idx}>
+                                <FollowCard
+                                    className={`person ${person.id}`}
+                                    pid={userInfo?.id}
+                                    uid={person.id}
+                                    search={search}
+                                />
+                            </li>
+                        ))
+                    ) : type === "followers" ? (
+                        (state.userInfo?.followers || []).map((person, idx) => (
+                            <li key={idx}>
+                                <FollowCard
+                                    className={`person ${person.id}`}
+                                    pid={userInfo?.id}
+                                    uid={person.id}
+                                    search={search}
+                                />
+                            </li>
+                        ))
+                    ) : (
+                        <></>
+                    )}
                 </ul>
             </div>
         </main>
