@@ -18,6 +18,8 @@
         animation-timing-function: ease-in;
         animation-fill-mode: forwards;
         --modal-height: 50%;
+        display: flex;
+        flex-direction: column;
 
         &.display {
             animation-name: popup-full;
@@ -327,5 +329,33 @@
         position: absolute;
         bottom: 2.5em;
         width: calc(100% - 2.5em);
+    }
+}
+
+.modals-profile-following,
+.modals-profile-followers {
+    padding: 2.5em 1.25em;
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5em;
+
+    > .search {
+    }
+
+    > .people {
+        flex: 1;
+
+        > ul {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+
+            > li {
+                > .person {
+                }
+            }
+        }
     }
 }

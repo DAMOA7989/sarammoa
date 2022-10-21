@@ -1281,3 +1281,79 @@
         }
     }
 }
+
+.follow-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > .profile {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75em;
+
+        > .profile-thumbnail {
+            width: 3em;
+            height: 3em;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        > .display {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0;
+
+            > .nickname {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: $gunmetal_color;
+            }
+
+            > .position {
+                font-size: 0.75rem;
+                font-weight: 400;
+                color: $auro_metal_saurus_color;
+            }
+        }
+    }
+
+    > .follow-button {
+        padding: 0 0;
+        border: 1px solid $gunmetal_color;
+        height: auto;
+        border-radius: 1em;
+        width: 5em;
+        height: 2em;
+        font-size: 0.875rem;
+        font-weight: 500;
+        box-sizing: border-box;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        &.following {
+        }
+
+        &.unfollowing {
+            border: 1px solid $primary_color;
+            background-color: $primary_color;
+            color: white;
+            box-shadow: $common_box_shadow;
+
+            @media (hover: hover) {
+                &:hover {
+                    background-color: rgba($primary_color, 0.6);
+                }
+            }
+
+            &:active {
+                background-color: rgba($primary_color, 0.8);
+            }
+        }
+
+        > .container {
+        }
+    }
+}
