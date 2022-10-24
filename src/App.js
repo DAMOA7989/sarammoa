@@ -159,7 +159,7 @@ const App = () => {
                         <Route path="notice">
                             <Route path="">
                                 <Route
-                                    path=":mid"
+                                    path=":rid"
                                     element={<NoticeMessageDetail />}
                                 />
                             </Route>

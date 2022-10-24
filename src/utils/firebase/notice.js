@@ -34,3 +34,22 @@ export const _getMessages = ({ uid }) =>
             return reject(e);
         }
     });
+
+export const _getRoomInfo = ({ rid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const roomRef = doc(db, `messages/${rid}`);
+            const roomSnapshot = await getDoc(roomRef);
+
+            if (roomSnapshot.exists()) {
+                return resolve({
+                    id: roomSnapshot.id,
+                    ...roomSnapshot.data(),
+                });
+            } else {
+                throw new Error(`There is no room(id: ${rid})`);
+            }
+        } catch (e) {
+            return reject(e);
+        }
+    });

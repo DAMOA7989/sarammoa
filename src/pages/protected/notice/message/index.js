@@ -8,11 +8,13 @@ import {
     onSnapshot,
     query,
     collection,
+    collectionGroup,
     where,
     getDoc,
     doc,
     orderBy,
     limit,
+    getDocs,
 } from "firebase/firestore";
 import { useNavigateContext } from "utils/navigate";
 
@@ -20,98 +22,122 @@ const Message = () => {
     const { t } = useTranslation();
     const { userInfo } = useAuthContext();
     const navigate = useNavigateContext();
-    const _messagesRef = React.useRef([]);
-    const [messages, setMessages] = React.useState([]);
     const [lastMessages, setLastMessages] = React.useState({});
+    const [state, dispatch] = React.useReducer(
+        (state, action) => {
+            switch (action.type) {
+                case "FETCH_ROOMS_PENDING":
+                    return {
+                        roomsLoading: true,
+                    };
+                case "FETCH_ROOMS_FULFILLED":
+                    return {
+                        roomsLoading: false,
+                        rooms: action.payload?.docs,
+                    };
+                case "FETCH_ROOMS_REJECTED":
+                    return {
+                        roomsLoading: false,
+                    };
+            }
+        },
+        {
+            roomsLoading: false,
+            rooms: [],
+        }
+    );
 
     React.useEffect(() => {
         if (!Boolean(userInfo?.id)) return;
-        const messagesRef = collection(db, "messages");
-        const q = query(
-            messagesRef,
-            where("participants", "array-contains", userInfo?.id)
+        dispatch({
+            type: "FETCH_ROOMS_PENDING",
+        });
+
+        const participantsRef = collectionGroup(db, "participants");
+        const participantsQuery = query(
+            participantsRef,
+            where("id", "==", userInfo?.id),
+            orderBy("createdAt", "desc")
         );
 
-        const observers = [];
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const docs = [];
-            const tasks = [];
+        let observers = [];
+        const unsubscribe = onSnapshot(participantsQuery, (querySnapshot) => {
+            const rooms = [];
+            const roomTasks = [];
+            observers.forEach((f) => f());
+            observers = [];
             querySnapshot.forEach((docSnapshot) => {
-                const participants = docSnapshot.data()?.participants;
-                const counterpartId = (participants || []).filter(
-                    (x) => !x.includes(userInfo?.id)
-                )?.[0];
-                tasks.push(
-                    getDoc(doc(db, `users/${counterpartId}`)).then(
-                        (counterPartDocSnapshot) => {
-                            const counterpartDoc = {
-                                id: counterPartDocSnapshot.id,
-                                ...counterPartDocSnapshot.data(),
-                            };
-                            docs.push({
-                                id: docSnapshot.id,
-                                ...docSnapshot.data(),
-                                counterpart: counterpartDoc,
-                            });
-                        }
-                    )
+                const parentRef = docSnapshot.ref.parent.parent;
+                const parentDocId = parentRef.id;
+                roomTasks.push(
+                    getDoc(parentRef).then((parentDocSnapshot) => {
+                        rooms.push({
+                            id: parentDocId,
+                            title: parentDocSnapshot.data()?.title,
+                            thumbnailUrl:
+                                parentDocSnapshot.data()?.thumbnailUrl,
+                        });
+                    })
                 );
 
-                const sendCollectionRef = collection(
-                    db,
-                    `messages/${docSnapshot?.id}/sends`
-                );
+                const sendsRef = collection(db, `${parentRef.path}/sends`);
                 const sendQuery = query(
-                    sendCollectionRef,
+                    sendsRef,
                     orderBy("createdAt", "desc"),
                     limit(1)
                 );
                 observers.push(
-                    onSnapshot(sendQuery, (sendQuerySnapshot) => {
-                        let lastMessage = null;
-                        sendQuerySnapshot.forEach((sendDocSnapshot) => {
-                            lastMessage = {
-                                id: sendDocSnapshot.id,
-                                ...sendDocSnapshot.data(),
-                            };
-                        });
-
-                        setLastMessages({
-                            [docSnapshot.id]: lastMessage,
-                        });
+                    onSnapshot(sendQuery, (parentSendsQuerySnapshot) => {
+                        parentSendsQuerySnapshot.forEach(
+                            (parentSendsDocsSnapshot) => {
+                                setLastMessages({
+                                    [parentDocId]: {
+                                        id: parentSendsDocsSnapshot.id,
+                                        ...parentSendsDocsSnapshot.data(),
+                                    },
+                                });
+                            }
+                        );
                     })
                 );
             });
 
-            Promise.allSettled(tasks || []).then(() => {
-                _messagesRef.current = docs;
-            });
+            Promise.all(roomTasks)
+                .then(() => {
+                    dispatch({
+                        type: "FETCH_ROOMS_FULFILLED",
+                        payload: {
+                            docs: rooms,
+                        },
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    dispatch({
+                        type: "FETCH_ROOMS_REJECTED",
+                    });
+                });
         });
 
         return () => {
-            observers.forEach((f) => f());
             unsubscribe();
         };
     }, [userInfo?.id]);
 
-    React.useEffect(() => {
-        setMessages([...messages, ..._messagesRef.current]);
-    }, [_messagesRef.current]);
-
     return (
         <div className="pages-protected-notice-message">
             <ul className="messages">
-                {(messages || []).map((message, idx) => (
+                {(state.rooms || []).map((message, idx) => (
                     <li key={idx}>
                         <MessageCard
                             onClick={() => {
                                 navigate.push({
                                     pathname: `/notice/${message?.id}`,
                                     mode: "sub",
-                                    screenTitle: "test",
                                 });
                             }}
-                            user={message?.counterpart}
+                            thumbnailUrl={message?.thumbnailUrl}
+                            title={message?.title}
                             lastMessage={lastMessages?.[message?.id]}
                         />
                     </li>

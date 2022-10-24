@@ -70,24 +70,30 @@ exports.onCreateUser = functions
             }
         );
 
-        db.collection("messages")
-            .add({
-                updatedAt: serverTimeStamp,
-                createdAt: serverTimeStamp,
-            })
-            .then((docRef) => {
-                docRef.collection("participants").doc("sarammoa").set({
-                    id: "sarammoa",
-                    createdAt: serverTimeStamp,
-                });
-                docRef.collection("participants").doc(uid).set({
-                    id: uid,
-                    createdAt: serverTimeStamp,
-                });
-                docRef.collection("sends").add({
-                    sender: "sarammoa",
-                    message: "Nice to meet you!",
-                    createdAt: serverTimeStamp,
-                });
+        db.doc(`users/sarammoa`)
+            .get()
+            .then((docSnapshot) => {
+                db.collection("messages")
+                    .add({
+                        title: "sarammoa",
+                        thumbnailUrl: docSnapshot.data()?.profileThumbnailUrl,
+                        updatedAt: serverTimeStamp,
+                        createdAt: serverTimeStamp,
+                    })
+                    .then((docRef) => {
+                        docRef.collection("participants").doc("sarammoa").set({
+                            id: "sarammoa",
+                            createdAt: serverTimeStamp,
+                        });
+                        docRef.collection("participants").doc(uid).set({
+                            id: uid,
+                            createdAt: serverTimeStamp,
+                        });
+                        docRef.collection("sends").add({
+                            sender: "sarammoa",
+                            message: "Nice to meet you!",
+                            createdAt: serverTimeStamp,
+                        });
+                    });
             });
     });

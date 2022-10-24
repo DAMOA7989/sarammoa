@@ -1,7 +1,8 @@
 import React from "react";
 import { timestampToDate, dateToString } from "utils/date";
+import LazyImage from "./LazyImage";
 
-const MessageCard = ({ user: _user, lastMessage, onClick }) => {
+const MessageCard = ({ thumbnailUrl, title, lastMessage, onClick }) => {
     const timerRef = React.useRef(null);
     const containerRef = React.useRef(null);
     const rippleEffectRef = React.useRef(null);
@@ -41,14 +42,10 @@ const MessageCard = ({ user: _user, lastMessage, onClick }) => {
     return (
         <div ref={containerRef} className="message-card" onClick={onClick}>
             <div className="profile-thumbnail">
-                <img
-                    src={_user?.profileThumbnailUrl}
-                    alt="profile thumbnail"
-                    loading="lazy"
-                />
+                <LazyImage src={thumbnailUrl} alt="thumbnail" />
             </div>
             <div className="content">
-                <div className="nickname">{_user?.nickname}</div>
+                <div className="nickname">{title}</div>
                 <div className="message">{lastMessage?.message}</div>
             </div>
             <div className="date">
