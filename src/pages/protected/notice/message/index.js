@@ -22,7 +22,7 @@ const Message = () => {
     const { t } = useTranslation();
     const { userInfo } = useAuthContext();
     const navigate = useNavigateContext();
-    const [lastMessages, setLastMessages] = React.useState({});
+    const lastMessagesRef = React.useRef({});
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -88,16 +88,20 @@ const Message = () => {
                 );
                 observers.push(
                     onSnapshot(sendQuery, (parentSendsQuerySnapshot) => {
+                        let lastMessage = null;
                         parentSendsQuerySnapshot.forEach(
                             (parentSendsDocsSnapshot) => {
-                                setLastMessages({
-                                    [parentDocId]: {
-                                        id: parentSendsDocsSnapshot.id,
-                                        ...parentSendsDocsSnapshot.data(),
-                                    },
-                                });
+                                lastMessage = {
+                                    id: parentSendsDocsSnapshot.id,
+                                    ...parentSendsDocsSnapshot.data(),
+                                };
                             }
                         );
+
+                        lastMessagesRef.current = {
+                            ...lastMessagesRef.current,
+                            [parentDocId]: lastMessage,
+                        };
                     })
                 );
             });
@@ -138,7 +142,7 @@ const Message = () => {
                             }}
                             thumbnailUrl={message?.thumbnailUrl}
                             title={message?.title}
-                            lastMessage={lastMessages?.[message?.id]}
+                            lastMessage={lastMessagesRef.current?.[message?.id]}
                         />
                     </li>
                 ))}

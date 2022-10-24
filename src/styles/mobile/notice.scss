@@ -83,3 +83,47 @@
         padding: 0 1.25em;
     }
 }
+
+.protected-notice-message-detail {
+    > .messages {
+    }
+
+    > .type {
+        display: inline-flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.625em;
+        padding: 0.625em;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+
+        > .plus-icon,
+        > .send-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+        }
+
+        > .input-container {
+            flex: 1;
+            background-color: rgba($link_water_color, 0.4);
+            border-radius: 8px;
+            padding-left: 0.65em;
+            padding-right: 0.65em;
+            box-sizing: border-box;
+            display: inline-flex;
+            align-items: center;
+            height: 28px;
+            transition: all 0.15s;
+
+            > input {
+                width: 100%;
+                color: $gunmetal_color;
+            }
+        }
+    }
+}
