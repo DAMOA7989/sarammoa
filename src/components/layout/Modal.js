@@ -58,7 +58,14 @@ const Modal = () => {
                     },
                 };
 
-                dismissModal();
+                switch (tx.action) {
+                    case "POP":
+                        dismissModal();
+                        break;
+                    default:
+                        autoUnblockingTx.retry();
+                        break;
+                }
             });
         } else {
             unblockRef.current?.();
