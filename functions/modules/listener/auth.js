@@ -72,11 +72,18 @@ exports.onCreateUser = functions
 
         db.collection("messages")
             .add({
-                participants: ["sarammoa", uid],
                 updatedAt: serverTimeStamp,
                 createdAt: serverTimeStamp,
             })
             .then((docRef) => {
+                docRef.collection("participants").doc("sarammoa").set({
+                    id: "sarammoa",
+                    createdAt: serverTimeStamp,
+                });
+                docRef.collection("participants").doc(uid).set({
+                    id: uid,
+                    createdAt: serverTimeStamp,
+                });
                 docRef.collection("sends").add({
                     sender: "sarammoa",
                     message: "Nice to meet you!",
