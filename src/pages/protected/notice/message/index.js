@@ -139,6 +139,7 @@ const Message = () => {
                                     mode: "sub",
                                 });
                             }}
+                            rid={message.id}
                             thumbnailUrl={message?.thumbnailUrl}
                             title={message?.title}
                             lastMessage={lastMessagesRef.current?.[message?.id]}

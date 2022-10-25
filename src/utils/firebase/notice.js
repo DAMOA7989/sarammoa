@@ -34,6 +34,46 @@ export const _getRoomInfo = ({ rid }) =>
         }
     });
 
+export const _getCounterpartInfo = ({ myUid, rid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            await runTransaction(db, async (transaction) => {
+                const participantsRef = collection(
+                    db,
+                    `messages/${rid}/participants`
+                );
+                const participantsQuerySnapshot = await getDocs(
+                    participantsRef
+                );
+
+                let counterpartId = null;
+                participantsQuerySnapshot.forEach((participantSnapshot) => {
+                    if (participantSnapshot.id !== myUid) {
+                        counterpartId = participantSnapshot.id;
+                    }
+                });
+
+                if (!counterpartId) {
+                    throw new Error("There is no counterpart");
+                }
+
+                const userRef = doc(db, `users/${counterpartId}`);
+                const userSnapshot = await transaction.get(userRef);
+
+                if (userSnapshot.exists()) {
+                    return resolve({
+                        id: userSnapshot.id,
+                        ...userSnapshot.data(),
+                    });
+                } else {
+                    throw new Error("There is no counterpart info");
+                }
+            });
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
 export function _searchWithParticipants() {
     return new Promise(async (resolve, reject) => {
         try {
@@ -111,3 +151,19 @@ export function _createRoom() {
         }
     });
 }
+
+export const _sendMessage = ({ rid, uid, message }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const messageSendsRef = collection(db, `messages/${rid}/sends`);
+            await addDoc(messageSendsRef, {
+                sender: uid,
+                message,
+                createdAt: Timestamp.now(),
+            });
+
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });

@@ -1,60 +1,89 @@
 import React from "react";
 import { timestampToDate, dateToString } from "utils/date";
 import LazyImage from "./LazyImage";
+import LazyTypography from "./LazyTypography";
+import { _getCounterpartInfo } from "utils/firebase/notice";
+import { useAuthContext } from "utils/auth";
 
-const MessageCard = ({ thumbnailUrl, title, lastMessage, onClick }) => {
-    const timerRef = React.useRef(null);
-    const containerRef = React.useRef(null);
-    const rippleEffectRef = React.useRef(null);
+const MessageCard = ({ rid, thumbnailUrl, title, lastMessage, onClick }) => {
+    const { userInfo } = useAuthContext();
+    const [state, dispatch] = React.useReducer(
+        (state, action) => {
+            switch (action.type) {
+                case "TASK_DONE":
+                    return {
+                        ...state,
+                        loaded: true,
+                    };
+                case "SET_USER_INFO":
+                    return {
+                        ...state,
+                        loaded: true,
+                        userInfo: action.payload?.doc,
+                    };
+            }
+        },
+        {
+            loaded: false,
+            userInfo: null,
+        }
+    );
 
     React.useEffect(() => {
-        const eventHandler = (event) => {
-            event.preventDefault();
-            if (!containerRef.current.contains(event.target)) return;
-
-            const rect = containerRef.current.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            rippleEffectRef.current.style.left = `calc(${x}px - 1.75em)`;
-            rippleEffectRef.current.style.top = `calc(${y}px - 1.75em)`;
-
-            if (timerRef.current) {
-                clearTimeout(timerRef.current);
-                timerRef.current = null;
-                rippleEffectRef.current.classList.remove("active");
-            }
-
-            setTimeout(() => {
-                rippleEffectRef.current.classList.add("active");
-                timerRef.current = setTimeout(() => {
-                    rippleEffectRef.current.classList.remove("active");
-                }, 500);
-            }, 10);
-        };
-
-        containerRef.current.addEventListener("click", eventHandler);
-        return () => {
-            if (!containerRef.current) return;
-            containerRef.current.removeEventListener("click", eventHandler);
-        };
+        if (Boolean(thumbnailUrl) && Boolean(title)) {
+            dispatch({
+                type: "TASK_DONE",
+            });
+        } else {
+            _getCounterpartInfo({ myUid: userInfo?.id, rid })
+                .then((doc) => {
+                    dispatch({
+                        type: "SET_USER_INFO",
+                        payload: {
+                            doc,
+                        },
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                });
+        }
     }, []);
 
     return (
-        <div ref={containerRef} className="message-card" onClick={onClick}>
+        <div className="message-card" onClick={state.loaded ? onClick : null}>
             <div className="profile-thumbnail">
-                <LazyImage src={thumbnailUrl} alt="thumbnail" />
+                <LazyImage
+                    src={
+                        state.userInfo
+                            ? state.userInfo.profileThumbnailUrl
+                            : thumbnailUrl
+                    }
+                    alt="thumbnail"
+                />
             </div>
             <div className="content">
-                <div className="nickname">{title}</div>
-                <div className="message">{lastMessage?.message}</div>
+                <div className="nickname">
+                    <LazyTypography width={60}>
+                        {state.loaded &&
+                            (state.userInfo ? state.userInfo.nickname : title)}
+                    </LazyTypography>
+                </div>
+                <div className="message">
+                    <LazyTypography width={120}>
+                        {state.loaded && lastMessage?.message}
+                    </LazyTypography>
+                </div>
             </div>
             <div className="date">
-                {dateToString(
-                    timestampToDate(lastMessage?.createdAt),
-                    "message"
-                )}
+                <LazyTypography>
+                    {state.loaded &&
+                        dateToString(
+                            timestampToDate(lastMessage?.createdAt),
+                            "message"
+                        )}
+                </LazyTypography>
             </div>
-            <div ref={rippleEffectRef} className="ripple-effect" />
         </div>
     );
 };
