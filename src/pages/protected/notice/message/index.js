@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import MessageCard from "components/surface/MessageCard";
-import { _getMessages } from "utils/firebase/notice";
 import { useAuthContext } from "utils/auth";
 import { db } from "utils/firebase";
 import {

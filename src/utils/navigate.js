@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, createSearchParams } from "react-router-dom";
 import { useBackListener } from "utils/hook";
 
 const NavigateContext = React.createContext(null);
@@ -14,6 +14,7 @@ export const NavigateProvider = ({ children }) => {
                     ...state,
                     pathname: action.payload?.pathname,
                     mode: action.payload?.mode,
+                    query: action.payload?.query,
                     screenTitle: null,
                     routing: true,
                 };
@@ -22,6 +23,7 @@ export const NavigateProvider = ({ children }) => {
                     ...state,
                     pathname: action.payload?.pathname,
                     mode: action.payload?.mode,
+                    query: action.payload?.query,
                     screenTitle: null,
                     replace: true,
                     routing: true,
@@ -47,6 +49,9 @@ export const NavigateProvider = ({ children }) => {
                 return {
                     ...state,
                     routing: false,
+                    pathname: null,
+                    mode: null,
+                    query: {},
                 };
             case "SET_LAYOUT":
                 const _state = {
@@ -71,28 +76,31 @@ export const NavigateProvider = ({ children }) => {
     const [state, dispatch] = React.useReducer(reducer, {
         pathname: null,
         mode: null,
+        query: {},
         screenTitle: null,
         right: null,
         replace: false,
         routing: false,
     });
 
-    const push = ({ pathname: _pathname, mode: _mode }) => {
+    const push = ({ pathname: _pathname, mode: _mode, query = {} }) => {
         dispatch({
             type: "PUSH",
             payload: {
                 pathname: _pathname,
                 mode: _mode || "main",
+                query,
             },
         });
     };
 
-    const replace = ({ pathname: _pathname, mode: _mode }) => {
+    const replace = ({ pathname: _pathname, mode: _mode, query = {} }) => {
         dispatch({
             type: "REPLACE",
             payload: {
                 pathname: _pathname,
                 mode: _mode || "main",
+                query,
             },
         });
     };
@@ -108,7 +116,7 @@ export const NavigateProvider = ({ children }) => {
 
     React.useEffect(() => {
         if (!state.routing) return;
-        const { pathname, mode, replace } = state;
+        const { pathname, mode, replace, query } = state;
         if (typeof pathname === "number") {
             navigate(pathname);
         } else if (mode === "sub") {
@@ -116,7 +124,11 @@ export const NavigateProvider = ({ children }) => {
                 navigate(
                     `${
                         mode === "main" ? "" : mode === "sub" ? "/sub" : ""
-                    }${pathname}`,
+                    }${pathname}${
+                        Object.keys(query || {}).length > 0
+                            ? "?" + createSearchParams(query)
+                            : ""
+                    }`,
                     { replace: true }
                 );
                 dispatch({
@@ -126,24 +138,45 @@ export const NavigateProvider = ({ children }) => {
                 navigate(
                     `${
                         mode === "main" ? "" : mode === "sub" ? "/sub" : ""
-                    }${pathname}`
+                    }${pathname}${
+                        Object.keys(query || {}).length > 0
+                            ? "?" + createSearchParams(query)
+                            : ""
+                    }`
                 );
             }
         } else if (mode === "publish") {
             if (replace) {
-                navigate(`/publish${pathname}`, { replace: true });
+                navigate(
+                    `/publish${pathname}${
+                        Object.keys(query || {}).length > 0
+                            ? "?" + createSearchParams(query)
+                            : ""
+                    }`,
+                    { replace: true }
+                );
                 dispatch({
                     type: "REPLACE_FINISH",
                 });
             } else {
-                navigate(`/publish${pathname}`);
+                navigate(
+                    `/publish${pathname}${
+                        Object.keys(query || {}).length > 0
+                            ? "?" + createSearchParams(query)
+                            : ""
+                    }`
+                );
             }
         } else {
             if (replace) {
                 navigate(
                     `${
                         mode === "main" ? "" : mode === "sub" ? "/sub" : ""
-                    }${pathname}`,
+                    }${pathname}${
+                        Object.keys(query || {}).length > 0
+                            ? "?" + createSearchParams(query)
+                            : ""
+                    }`,
                     { replace: true }
                 );
                 dispatch({
@@ -153,7 +186,11 @@ export const NavigateProvider = ({ children }) => {
                 navigate(
                     `${
                         mode === "main" ? "" : mode === "sub" ? "/sub" : ""
-                    }${pathname}`
+                    }${pathname}${
+                        Object.keys(query || {}).length > 0
+                            ? "?" + createSearchParams(query)
+                            : ""
+                    }`
                 );
             }
         }

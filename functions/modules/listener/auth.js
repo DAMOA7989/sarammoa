@@ -77,6 +77,7 @@ exports.onCreateUser = functions
                     .add({
                         title: "sarammoa",
                         thumbnailUrl: docSnapshot.data()?.profileThumbnailUrl,
+                        type: "direct",
                         updatedAt: serverTimeStamp,
                         createdAt: serverTimeStamp,
                     })

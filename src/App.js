@@ -9,6 +9,7 @@ import {
     Connect,
     Notice,
     NoticeMessage,
+    NoticeMessageRedirect,
     NoticeMessageDetail,
     NoticeNotification,
     Profile,
@@ -157,12 +158,14 @@ const App = () => {
                             </Route>
                         </Route>
                         <Route path="notice">
-                            <Route path="">
-                                <Route
-                                    path=":rid"
-                                    element={<NoticeMessageDetail />}
-                                />
-                            </Route>
+                            <Route
+                                path="redirect"
+                                element={<NoticeMessageRedirect />}
+                            />
+                            <Route
+                                path=":rid"
+                                element={<NoticeMessageDetail />}
+                            />
                         </Route>
                         <Route path="writing">
                             <Route path=":wid" element={<WritingDetail />} />

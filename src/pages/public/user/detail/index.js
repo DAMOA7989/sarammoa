@@ -392,7 +392,19 @@ const UserDetail = () => {
                                         ? t("btn.unfollow")
                                         : t("btn.follow")}
                                 </CommonButton>
-                                <CommonButton className="message">
+                                <CommonButton
+                                    className="message"
+                                    onClick={() => {
+                                        navigate.push({
+                                            pathname: `/notice/redirect`,
+                                            mode: "sub",
+                                            query: {
+                                                from: userInfo?.id,
+                                                to: uid,
+                                            },
+                                        });
+                                    }}
+                                >
                                     {t("btn.message")}
                                 </CommonButton>
                             </div>

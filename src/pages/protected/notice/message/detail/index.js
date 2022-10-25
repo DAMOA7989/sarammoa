@@ -14,7 +14,7 @@ import { ReactComponent as PlusIcon } from "assets/images/icons/message/plus.svg
 import { ReactComponent as SendIcon } from "assets/images/icons/message/send.svg";
 import WoilonnInput from "components/input/WoilonnInput";
 
-const NoticeMessageDetail = () => {
+const NoticeMessageDetail = ({ type }) => {
     const { rid } = useParams();
     const navigate = useNavigateContext();
     const [state, dispatch] = React.useReducer(
@@ -168,6 +168,15 @@ const NoticeMessageDetail = () => {
                                 },
                             })
                         }
+                        onKeyPress={(event) => {
+                            if (!Boolean(state.type)) return;
+                            if (event.key === "Enter") {
+                                dispatch({
+                                    type: "TYPE_MESSAGE",
+                                    payload: {},
+                                });
+                            }
+                        }}
                     />
                 </div>
 
