@@ -10,7 +10,10 @@ import {
     where,
     getDocs,
     collectionGroup,
+    writeBatch,
+    runTransaction,
 } from "firebase/firestore";
+import { intersectionSet } from "utils/operator";
 
 export const _getRoomInfo = ({ rid }) =>
     new Promise(async (resolve, reject) => {
@@ -49,6 +52,7 @@ export function _searchWithParticipants() {
                     participantsRef,
                     where("id", "==", uid)
                 );
+
                 const participantsQuerySnapshot = await getDocs(
                     participantsQuery
                 );
@@ -63,12 +67,45 @@ export function _searchWithParticipants() {
                     const prevSet = new Set(parentIds);
                     const curSet = new Set(_parentIds);
 
-                    const intersectSet = prevSet & curSet;
+                    const intersectSet = intersectionSet(prevSet, curSet);
                     parentIds = Array.from(intersectSet);
                 }
             }
 
             return resolve(parentIds || []);
+        } catch (e) {
+            return reject(e);
+        }
+    });
+}
+
+export function _createRoom() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let rid = null;
+            await runTransaction(db, async (transaction) => {
+                const timestampNow = Timestamp.now();
+                const messagesRef = collection(db, "messages");
+                const messageDocRef = await addDoc(messagesRef, {
+                    type: "direct",
+                    updatedAt: timestampNow,
+                    createdAt: timestampNow,
+                });
+                rid = messageDocRef.id;
+
+                for (const uid of arguments) {
+                    const messageParticipantsRef = doc(
+                        db,
+                        `messages/${rid}/participants/${uid}`
+                    );
+                    transaction.set(messageParticipantsRef, {
+                        id: uid,
+                        createdAt: timestampNow,
+                    });
+                }
+            });
+
+            return resolve(rid);
         } catch (e) {
             return reject(e);
         }

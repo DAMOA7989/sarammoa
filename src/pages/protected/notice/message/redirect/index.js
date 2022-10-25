@@ -1,7 +1,11 @@
 import React from "react";
 import { CircularProgress } from "@mui/material";
 import { useSearchParams, Navigate, useLocation } from "react-router-dom";
-import { _searchWithParticipants, _getRoomInfo } from "utils/firebase/notice";
+import {
+    _searchWithParticipants,
+    _getRoomInfo,
+    _createRoom,
+} from "utils/firebase/notice";
 import { useNavigateContext } from "utils/navigate";
 
 const NoticeMessageRedirect = ({}) => {
@@ -20,7 +24,7 @@ const NoticeMessageRedirect = ({}) => {
                     return {
                         ...state,
                         finish: true,
-                        toUrl: action.payload?.rid,
+                        toRid: action.payload?.rid,
                     };
             }
         },
@@ -38,32 +42,45 @@ const NoticeMessageRedirect = ({}) => {
             .then((rids) => {
                 const tasks = [];
                 for (const rid of rids) {
-                    tasks.push(
-                        _getRoomInfo({ rid })
-                            .then((doc) => {
-                                if (doc?.type === "direct") {
-                                    dispatch({
-                                        type: "SET_TO_RID",
-                                        payload: {
-                                            rid,
-                                        },
-                                    });
-                                }
+                    tasks.push(_getRoomInfo({ rid }));
+                }
+
+                Promise.all(tasks).then((result) => {
+                    const filteredDocs = (result || []).filter(
+                        (x) => x.type === "direct"
+                    );
+                    if ((filteredDocs || []).length === 0) {
+                        _createRoom(from, to)
+                            .then((docId) => {
+                                dispatch({
+                                    type: "SET_TO_RID",
+                                    payload: {
+                                        rid: docId,
+                                    },
+                                });
                             })
                             .catch((e) => {
                                 console.dir(e);
-                            })
-                    );
-                }
-
-                Promise.all(tasks).then(() =>
-                    dispatch({
-                        type: "TASK_FINISH",
-                    })
-                );
+                                dispatch({
+                                    type: "TASK_FINISH",
+                                });
+                            });
+                    } else {
+                        const doc = filteredDocs[0];
+                        dispatch({
+                            type: "SET_TO_RID",
+                            payload: {
+                                rid: doc.id,
+                            },
+                        });
+                    }
+                });
             })
             .catch((e) => {
                 console.dir(e);
+                dispatch({
+                    type: "TASK_FINISH",
+                });
             });
     }, []);
 
@@ -71,12 +88,6 @@ const NoticeMessageRedirect = ({}) => {
         if (state.toRid) {
             navigate.replace({
                 pathname: `/notice/${state.toRid}`,
-                mode: "sub",
-            });
-            return null;
-        } else {
-            navigate.replace({
-                pathname: `/notice/new`,
                 mode: "sub",
             });
             return null;
