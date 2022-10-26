@@ -13,7 +13,8 @@ import {
     writeBatch,
     runTransaction,
 } from "firebase/firestore";
-import { intersectionSet } from "utils/operator";
+import { intersection } from "utils/operator";
+import { _getUserInfo } from "./auth";
 
 export const _getRoomInfo = ({ rid }) =>
     new Promise(async (resolve, reject) => {
@@ -74,6 +75,33 @@ export const _getCounterpartInfo = ({ myUid, rid }) =>
         }
     });
 
+export const _getParticipantInfos = ({ rid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const participantsRef = collection(
+                db,
+                `messages/${rid}/participants`
+            );
+            const participantsQuerySnapshot = await getDocs(participantsRef);
+
+            const tasks = [];
+            participantsQuerySnapshot.forEach((participantDocSnapshot) => {
+                const participantUid = participantDocSnapshot.id;
+                tasks.push(_getUserInfo({ uid: participantUid }));
+            });
+
+            const result = await Promise.all(tasks);
+
+            const obj = {};
+            result.forEach((x) => {
+                obj[x.id] = x;
+            });
+            return resolve(obj);
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
 export function _searchWithParticipants() {
     return new Promise(async (resolve, reject) => {
         try {
@@ -107,7 +135,7 @@ export function _searchWithParticipants() {
                     const prevSet = new Set(parentIds);
                     const curSet = new Set(_parentIds);
 
-                    const intersectSet = intersectionSet(prevSet, curSet);
+                    const intersectSet = intersection(prevSet, curSet);
                     parentIds = Array.from(intersectSet);
                 }
             }

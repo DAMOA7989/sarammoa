@@ -9,11 +9,18 @@ import {
 } from "firebase/firestore";
 import { db } from "utils/firebase";
 import { useNavigateContext } from "utils/navigate";
-import { _getRoomInfo, _createRoom, _sendMessage } from "utils/firebase/notice";
+import {
+    _getRoomInfo,
+    _createRoom,
+    _sendMessage,
+    _getParticipantInfos,
+} from "utils/firebase/notice";
 import { ReactComponent as PlusIcon } from "assets/images/icons/message/plus.svg";
 import { ReactComponent as SendIcon } from "assets/images/icons/message/send.svg";
-import WoilonnInput from "components/input/WoilonnInput";
 import { useAuthContext } from "utils/auth";
+import { intersection } from "utils/operator";
+import LazyImage from "components/surface/LazyImage";
+import LazyTypography from "components/surface/LazyTypography";
 
 const NoticeMessageDetail = ({ type }) => {
     const { rid } = useParams();
@@ -39,17 +46,50 @@ const NoticeMessageDetail = ({ type }) => {
                         ...state,
                         roomInfoLoading: false,
                     };
-                case "MESSAGES_ADDED":
+                case "FETCH_PARTICIPANTS_PENDING":
                     return {
                         ...state,
+                        participantsLoading: true,
                     };
-                case "MESSAGES_REMOVED":
+                case "FETCH_PARTICIPANTS_FULFILLED":
                     return {
                         ...state,
+                        participantsLoading: false,
+                        participants: action.payload?.participants,
                     };
-                case "MESSAGES_MODIFIED":
+                case "FETCH_PARTICIPANTS_REJECTED":
                     return {
                         ...state,
+                        participantsLoading: false,
+                    };
+                case "FETCH_MESSAGES":
+                    const addedDocs = action.payload?.addedDocs || [];
+                    const modifiedDocs = action.payload?.modifiedDocs || [];
+                    const removedDocs = action.payload?.removedDocs || [];
+
+                    let docs = [...state.messages, ...addedDocs];
+
+                    const docIds = docs.map((x) => x.id);
+                    const docIdsSet = new Set(docIds);
+                    const removedDocIds = removedDocs.map((x) => x.id);
+                    const removedDocIdsSet = new Set(removedDocIds);
+                    const intersectionSet = intersection(
+                        docIdsSet,
+                        removedDocIdsSet
+                    );
+                    const intersectionArray = Array.from(intersectionSet);
+                    docs = docs.filter(
+                        (x) => !intersectionArray.includes(x.id)
+                    );
+
+                    docs.sort((a, b) => {
+                        return a.createdAt.toDate() - b.createdAt.toDate();
+                    });
+
+                    return {
+                        ...state,
+                        init: true,
+                        messages: docs,
                     };
                 case "CLEAR_MESSAGE":
                     return {
@@ -64,8 +104,11 @@ const NoticeMessageDetail = ({ type }) => {
             }
         },
         {
+            init: false,
             roomInfoLoading: false,
             roomInfo: null,
+            participantsLoading: false,
+            participants: {},
             messagesLoading: false,
             messages: [],
             type: "",
@@ -99,6 +142,26 @@ const NoticeMessageDetail = ({ type }) => {
                     type: "FETCH_ROOM_INFO_REJECTED",
                 });
             });
+        dispatch({
+            type: "FETCH_PARTICIPANTS_PENDING",
+        });
+        _getParticipantInfos({
+            rid,
+        })
+            .then((participants) => {
+                dispatch({
+                    type: "FETCH_PARTICIPANTS_FULFILLED",
+                    payload: {
+                        participants,
+                    },
+                });
+            })
+            .catch((e) => {
+                console.dir(e);
+                dispatch({
+                    type: "FETCH_PARTICIPANTS_REJECTED",
+                });
+            });
     }, [rid]);
 
     React.useEffect(() => {
@@ -111,28 +174,39 @@ const NoticeMessageDetail = ({ type }) => {
             limit(10)
         );
         const unsubscribe = onSnapshot(sendsQuery, (querySnapshot) => {
+            const addedDocs = [];
+            const modifiedDocs = [];
+            const removedDocs = [];
             querySnapshot.docChanges().forEach((change) => {
-                console.log("d doc", change.type, change.doc.data());
                 switch (change.type) {
                     case "added":
-                        dispatch({
-                            type: "MESSAGES_ADDED",
-                            payload: {
-                                docs: change.doc.data(),
-                            },
+                        addedDocs.push({
+                            id: change.doc.id,
+                            ...change.doc.data(),
                         });
                         break;
                     case "modified":
-                        dispatch({
-                            type: "MESSAGES_MODIFIED",
+                        modifiedDocs.push({
+                            id: change.doc.id,
+                            ...change.doc.data(),
                         });
                         break;
                     case "removed":
-                        dispatch({
-                            type: "MESSAGES_REMOVED",
+                        removedDocs.push({
+                            id: change.doc.id,
+                            ...change.doc.data(),
                         });
                         break;
                 }
+            });
+
+            dispatch({
+                type: "FETCH_MESSAGES",
+                payload: {
+                    addedDocs,
+                    modifiedDocs,
+                    removedDocs,
+                },
             });
         });
 
@@ -179,13 +253,85 @@ const NoticeMessageDetail = ({ type }) => {
         });
     }, [rid, state.type]);
 
+    console.log("d participants", state.participants);
+
     return (
         <main className="protected-notice-message-detail">
             <div className="messages">
                 <ul>
-                    {(state.messages || []).map((message, idx) => (
-                        <li key={idx}>{message.message}</li>
-                    ))}
+                    {(state.messages || []).map((message, idx) => {
+                        return (
+                            <li key={idx}>
+                                <div
+                                    className={`container ${
+                                        state.messages?.[idx - 1]?.sender ===
+                                        message.sender
+                                            ? ""
+                                            : "new"
+                                    }`}
+                                >
+                                    <div
+                                        className={`sender-profile-thumbnail`}
+                                        style={{
+                                            display:
+                                                message.sender !== userInfo?.id
+                                                    ? "inline-flex"
+                                                    : "none",
+                                        }}
+                                    >
+                                        {message.sender !== userInfo?.id && (
+                                            <LazyImage
+                                                src={
+                                                    state.participants?.[
+                                                        message.sender
+                                                    ]?.profileThumbnailUrl
+                                                }
+                                                alt="sender profile thumbnail"
+                                            />
+                                        )}
+                                    </div>
+                                    <div
+                                        className={`message-container ${
+                                            message.sender === userInfo?.id
+                                                ? "right"
+                                                : "left"
+                                        }`}
+                                    >
+                                        {state.messages?.[idx - 1]?.sender !==
+                                            message.sender && (
+                                            <span className="nickname">
+                                                <LazyTypography
+                                                    width={60}
+                                                    fontSize={"0.875rem"}
+                                                >
+                                                    {
+                                                        state.participants?.[
+                                                            message.sender
+                                                        ]?.nickname
+                                                    }
+                                                </LazyTypography>
+                                            </span>
+                                        )}
+                                        <div className={`message`}>
+                                            {message.message}
+                                        </div>
+                                    </div>
+                                    <div className="sender-profile-thumbnail">
+                                        {message.sender === userInfo?.id && (
+                                            <LazyImage
+                                                src={
+                                                    state.participants?.[
+                                                        message.sender
+                                                    ]?.profileThumbnailUrl
+                                                }
+                                                alt="sender profile thumbnail"
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
             <div className="type">

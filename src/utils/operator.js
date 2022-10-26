@@ -1,4 +1,4 @@
-export const intersectionSet = (setA, setB) => {
+export const intersection = (setA, setB) => {
     const result = new Set();
 
     for (const elem of setA) {

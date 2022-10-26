@@ -86,6 +86,67 @@
 
 .protected-notice-message-detail {
     > .messages {
+        padding: 0 0.625em 3em 0.625em;
+
+        > ul {
+            > li {
+                > .container {
+                    display: flex;
+                    gap: 0.5em;
+                    padding: 0.25em 0;
+
+                    &.new {
+                        padding-top: 0.75em;
+
+                        > .sender-profile-thumbnail {
+                            visibility: visible;
+                        }
+                    }
+
+                    > .sender-profile-thumbnail {
+                        width: 2.75em;
+                        height: 2.75em;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        visibility: hidden;
+                    }
+
+                    > .message-container {
+                        flex: 1;
+                        display: inline-flex;
+                        flex-direction: column;
+
+                        &.left {
+                            align-items: flex-start;
+
+                            > .message {
+                                background-color: rgba($link_water_color, 0.4);
+                            }
+                        }
+
+                        &.right {
+                            align-items: flex-end;
+
+                            > .message {
+                                background-color: rgba($primary_color, 0.25);
+                            }
+                        }
+
+                        > .nickname {
+                            font-size: 0.875rem;
+                            font-weight: 400;
+                            color: $gunmetal_color;
+                            margin-bottom: 0.25em;
+                        }
+
+                        > .message {
+                            padding: 0.625em;
+                            border-radius: 8px;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     > .type {
@@ -98,6 +159,7 @@
         bottom: 0;
         left: 0;
         width: 100%;
+        background-color: white;
 
         > .plus-icon,
         > .send-icon {
