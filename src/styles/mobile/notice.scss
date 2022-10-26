@@ -121,6 +121,15 @@
 
                             > .message {
                                 background-color: rgba($link_water_color, 0.4);
+
+                                &::after {
+                                    content: attr(data-createdAt);
+                                    position: absolute;
+                                    font-size: 0.75rem;
+                                    color: rgba($auro_metal_saurus_color, 0.8);
+                                    left: calc(100% + 0.5em);
+                                    bottom: 0;
+                                }
                             }
                         }
 
@@ -129,6 +138,15 @@
 
                             > .message {
                                 background-color: rgba($primary_color, 0.25);
+
+                                &::before {
+                                    content: attr(data-createdAt);
+                                    position: absolute;
+                                    font-size: 0.75rem;
+                                    color: rgba($auro_metal_saurus_color, 0.8);
+                                    right: calc(100% + 0.5em);
+                                    bottom: 0;
+                                }
                             }
                         }
 
@@ -140,6 +158,7 @@
                         }
 
                         > .message {
+                            position: relative;
                             padding: 0.625em;
                             border-radius: 8px;
                         }

@@ -39,3 +39,17 @@ export const displayTime = (sec) => {
 
     return `${mm}:${ss}`;
 };
+
+export const displayDate = (format, date) => {
+    const milliseconds = date.getTime();
+    const sec = milliseconds / 1000;
+
+    switch (format) {
+        case "hh:mm":
+            let hh = String(date.getHours());
+            if (hh.length < 2) hh = "0" + hh;
+            let mm = String(date.getMinutes());
+            if (mm.length < 2) mm = "0" + mm;
+            return `${hh}:${mm}`;
+    }
+};

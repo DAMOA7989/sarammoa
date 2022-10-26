@@ -21,6 +21,7 @@ import { useAuthContext } from "utils/auth";
 import { intersection } from "utils/operator";
 import LazyImage from "components/surface/LazyImage";
 import LazyTypography from "components/surface/LazyTypography";
+import { displayDate } from "utils/string";
 
 const NoticeMessageDetail = ({ type }) => {
     const { rid } = useParams();
@@ -253,8 +254,6 @@ const NoticeMessageDetail = ({ type }) => {
         });
     }, [rid, state.type]);
 
-    console.log("d participants", state.participants);
-
     return (
         <main className="protected-notice-message-detail">
             <div className="messages">
@@ -272,12 +271,12 @@ const NoticeMessageDetail = ({ type }) => {
                                 >
                                     <div
                                         className={`sender-profile-thumbnail`}
-                                        style={{
-                                            display:
-                                                message.sender !== userInfo?.id
-                                                    ? "inline-flex"
-                                                    : "none",
-                                        }}
+                                        onClick={() =>
+                                            navigate.push({
+                                                pathname: `/user/${message.sender}`,
+                                                mode: "sub",
+                                            })
+                                        }
                                     >
                                         {message.sender !== userInfo?.id && (
                                             <LazyImage
@@ -312,7 +311,13 @@ const NoticeMessageDetail = ({ type }) => {
                                                 </LazyTypography>
                                             </span>
                                         )}
-                                        <div className={`message`}>
+                                        <div
+                                            className={`message`}
+                                            data-createdAt={displayDate(
+                                                "hh:mm",
+                                                message.createdAt.toDate()
+                                            )}
+                                        >
                                             {message.message}
                                         </div>
                                     </div>
