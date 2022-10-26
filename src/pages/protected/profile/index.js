@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation } from "react-router-dom";
-import styles from "styles/include.scss";
 import { useNavigateContext } from "utils/navigate";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useAuthContext } from "utils/auth";
@@ -9,7 +8,6 @@ import CommonButton from "components/button/CommonButton";
 import { useModalContext } from "utils/modal";
 import { ReactComponent as EditIcon } from "assets/images/icons/profile/edit.svg";
 import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
-import { Skeleton } from "@mui/material";
 import RippleEffect from "components/surface/RippleEffect";
 import LazyImage from "components/surface/LazyImage";
 import LazyTypography from "components/surface/LazyTypography";
@@ -17,6 +15,8 @@ import { _getFollowInfos } from "utils/firebase/user";
 import { ReactComponent as ThumbUpIcon } from "assets/images/icons/thumb_up.svg";
 import { ReactComponent as FollowInIcon } from "assets/images/icons/follow_from.svg";
 import { ReactComponent as FollowOutIcon } from "assets/images/icons/follow_to.svg";
+import { ReactComponent as GearIcon } from "assets/images/icons/gear.svg";
+import { ReactComponent as DotsVerticalIcon } from "assets/images/icons/dots_vertical.svg";
 
 const __TABS__ = [
     {
@@ -136,12 +136,12 @@ const Profile = () => {
                                 });
                             }}
                         >
-                            <div className="gear-icon"></div>
+                            <GearIcon />
                         </RippleEffect>
                         <RippleEffect
                             onClick={() => setOpenExpand(!openExpand)}
                         >
-                            <div className="dots-vertical-icon"></div>
+                            <DotsVerticalIcon />
                         </RippleEffect>
                     </header>
                     <div className="profile">
