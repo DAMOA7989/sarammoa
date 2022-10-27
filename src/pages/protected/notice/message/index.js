@@ -27,15 +27,26 @@ const Message = () => {
             switch (action.type) {
                 case "FETCH_ROOMS_PENDING":
                     return {
+                        ...state,
                         roomsLoading: true,
                     };
                 case "FETCH_ROOMS_FULFILLED":
+                    let _rooms = [
+                        ...state.rooms,
+                        ...(action.payload?.docs || []),
+                    ];
+                    _rooms.sort(
+                        (a, b) => a.createdAt.toDate() - b.createdAt.toDate()
+                    );
+
                     return {
+                        ...state,
                         roomsLoading: false,
-                        rooms: action.payload?.docs,
+                        rooms: _rooms,
                     };
                 case "FETCH_ROOMS_REJECTED":
                     return {
+                        ...state,
                         roomsLoading: false,
                     };
             }
@@ -72,9 +83,7 @@ const Message = () => {
                     getDoc(parentRef).then((parentDocSnapshot) => {
                         rooms.push({
                             id: parentDocId,
-                            title: parentDocSnapshot.data()?.title,
-                            thumbnailUrl:
-                                parentDocSnapshot.data()?.thumbnailUrl,
+                            ...parentDocSnapshot.data(),
                         });
                     })
                 );

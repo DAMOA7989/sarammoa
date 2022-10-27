@@ -1,9 +1,9 @@
 import React from "react";
-import { timestampToDate, dateToString } from "utils/date";
 import LazyImage from "./LazyImage";
 import LazyTypography from "./LazyTypography";
 import { _getCounterpartInfo } from "utils/firebase/notice";
 import { useAuthContext } from "utils/auth";
+import { displayDate } from "utils/string";
 
 const MessageCard = ({ rid, thumbnailUrl, title, lastMessage, onClick }) => {
     const { userInfo } = useAuthContext();
@@ -78,10 +78,11 @@ const MessageCard = ({ rid, thumbnailUrl, title, lastMessage, onClick }) => {
             <div className="date">
                 <LazyTypography>
                     {state.loaded &&
-                        dateToString(
-                            timestampToDate(lastMessage?.createdAt),
-                            "message"
-                        )}
+                        `${lastMessage.createdAt.toDate().toDateString()} 
+                        ${displayDate(
+                            "hh:mm",
+                            lastMessage.createdAt.toDate()
+                        )}`}
                 </LazyTypography>
             </div>
         </div>

@@ -115,6 +115,17 @@ const NoticeMessageDetail = ({ type }) => {
             type: "",
         }
     );
+    const observerRef = React.useRef(
+        new IntersectionObserver((entries, observer) => {
+            if (entries?.[0].intersectionRatio === 1) {
+                canScrollToEndRef.current = true;
+            } else {
+                canScrollToEndRef.current = false;
+            }
+        }, {})
+    );
+    const canScrollToEndRef = React.useRef(false);
+    const messagesEndRef = React.useRef(null);
 
     React.useLayoutEffect(() => {
         navigate.setLayout({
@@ -213,6 +224,22 @@ const NoticeMessageDetail = ({ type }) => {
 
         return () => unsubscribe();
     }, []);
+
+    React.useEffect(() => {
+        observerRef.current.observe(messagesEndRef.current);
+    }, []);
+
+    const scrollToEnd = () => {
+        messagesEndRef.current?.scrollIntoView();
+    };
+
+    React.useEffect(() => {
+        if (!state.messages.length) return;
+
+        if (canScrollToEndRef.current) {
+            scrollToEnd();
+        }
+    }, [state.messages]);
 
     const onSubmitHandler = React.useCallback(() => {
         if (!Boolean(state.type)) return;
@@ -337,6 +364,7 @@ const NoticeMessageDetail = ({ type }) => {
                             </li>
                         );
                     })}
+                    <div ref={messagesEndRef} />
                 </ul>
             </div>
             <div className="type">
