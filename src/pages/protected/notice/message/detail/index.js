@@ -6,6 +6,7 @@ import {
     query,
     orderBy,
     limit,
+    startAfter,
 } from "firebase/firestore";
 import { db } from "utils/firebase";
 import { useNavigateContext } from "utils/navigate";
@@ -47,6 +48,16 @@ const NoticeMessageDetail = ({ type }) => {
                         ...state,
                         roomInfoLoading: false,
                     };
+                case "INCREASE_PAGE":
+                    return {
+                        ...state,
+                        page: state.page + 1,
+                    };
+                case "DECREASE_PAGE":
+                    return {
+                        ...state,
+                        page: state.page - 1,
+                    };
                 case "FETCH_PARTICIPANTS_PENDING":
                     return {
                         ...state,
@@ -70,18 +81,18 @@ const NoticeMessageDetail = ({ type }) => {
 
                     let docs = [...state.messages, ...addedDocs];
 
-                    const docIds = docs.map((x) => x.id);
-                    const docIdsSet = new Set(docIds);
-                    const removedDocIds = removedDocs.map((x) => x.id);
-                    const removedDocIdsSet = new Set(removedDocIds);
-                    const intersectionSet = intersection(
-                        docIdsSet,
-                        removedDocIdsSet
-                    );
-                    const intersectionArray = Array.from(intersectionSet);
-                    docs = docs.filter(
-                        (x) => !intersectionArray.includes(x.id)
-                    );
+                    // const docIds = docs.map((x) => x.id);
+                    // const docIdsSet = new Set(docIds);
+                    // const removedDocIds = removedDocs.map((x) => x.id);
+                    // const removedDocIdsSet = new Set(removedDocIds);
+                    // const intersectionSet = intersection(
+                    //     docIdsSet,
+                    //     removedDocIdsSet
+                    // );
+                    // const intersectionArray = Array.from(intersectionSet);
+                    // docs = docs.filter(
+                    //     (x) => !intersectionArray.includes(x.id)
+                    // );
 
                     docs.sort((a, b) => {
                         return a.createdAt.toDate() - b.createdAt.toDate();
@@ -112,10 +123,12 @@ const NoticeMessageDetail = ({ type }) => {
             participants: {},
             messagesLoading: false,
             messages: [],
+            page: 0,
+            offset: 10,
             type: "",
         }
     );
-    const observerRef = React.useRef(
+    const scrollObserverRef = React.useRef(
         new IntersectionObserver((entries, observer) => {
             if (entries?.[0].intersectionRatio === 1) {
                 canScrollToEndRef.current = true;
@@ -124,8 +137,22 @@ const NoticeMessageDetail = ({ type }) => {
             }
         }, {})
     );
+    const infiniteScrollObserverRef = React.useRef(
+        new IntersectionObserver((entries) => {
+            if (entries?.[0].intersectionRatio === 1) {
+                dispatch({
+                    type: "INCREASE_PAGE",
+                });
+            }
+        }, {})
+    );
+    const prevScrollHeightRef = React.useRef(0);
+    const containerRef = React.useRef(null);
     const canScrollToEndRef = React.useRef(false);
+    const messagesStartRef = React.useRef(null);
     const messagesEndRef = React.useRef(null);
+    const inputRef = React.useRef(null);
+    const unsubscribesRef = React.useRef([]);
 
     React.useLayoutEffect(() => {
         navigate.setLayout({
@@ -180,11 +207,24 @@ const NoticeMessageDetail = ({ type }) => {
         if (!rid) return;
 
         const sendsRef = collection(db, `messages/${rid}/sends`);
-        const sendsQuery = query(
-            sendsRef,
-            orderBy("createdAt", "desc"),
-            limit(10)
-        );
+        let sendsQuery = null;
+        if (state.page === 0) {
+            unsubscribesRef.current.forEach((f) => f());
+            unsubscribesRef.current = [];
+            sendsQuery = query(
+                sendsRef,
+                orderBy("createdAt", "desc"),
+                limit(state.offset)
+            );
+        } else {
+            sendsQuery = query(
+                sendsRef,
+                orderBy("createdAt", "desc"),
+                startAfter(state.messages[0].docSnapshot),
+                limit(state.offset)
+            );
+        }
+
         const unsubscribe = onSnapshot(sendsQuery, (querySnapshot) => {
             const addedDocs = [];
             const modifiedDocs = [];
@@ -193,18 +233,21 @@ const NoticeMessageDetail = ({ type }) => {
                 switch (change.type) {
                     case "added":
                         addedDocs.push({
+                            docSnapshot: change.doc,
                             id: change.doc.id,
                             ...change.doc.data(),
                         });
                         break;
                     case "modified":
                         modifiedDocs.push({
+                            docSnapshot: change.doc,
                             id: change.doc.id,
                             ...change.doc.data(),
                         });
                         break;
                     case "removed":
                         removedDocs.push({
+                            docSnapshot: change.doc,
                             id: change.doc.id,
                             ...change.doc.data(),
                         });
@@ -221,12 +264,16 @@ const NoticeMessageDetail = ({ type }) => {
                 },
             });
         });
+        unsubscribesRef.current.push(unsubscribe);
 
-        return () => unsubscribe();
-    }, []);
+        containerRef.current.scrollTop =
+            containerRef.current.scrollHeight - prevScrollHeightRef.current;
+        prevScrollHeightRef.current = containerRef.current.scrollHeight;
+    }, [state.page]);
 
     React.useEffect(() => {
-        observerRef.current.observe(messagesEndRef.current);
+        scrollObserverRef.current.observe(messagesEndRef.current);
+        infiniteScrollObserverRef.current.observe(messagesStartRef.current);
     }, []);
 
     const scrollToEnd = () => {
@@ -253,10 +300,12 @@ const NoticeMessageDetail = ({ type }) => {
                         message: state.type,
                     })
                         .then(() => {
-                            navigate.replace({
-                                pathname: `/notice/${docId}`,
-                                mode: "sub",
-                            });
+                            setTimeout(() => {
+                                navigate.replace({
+                                    pathname: `/notice/${docId}`,
+                                    mode: "sub",
+                                });
+                            }, 100);
                         })
                         .catch((e) => {
                             console.dir(e);
@@ -271,7 +320,9 @@ const NoticeMessageDetail = ({ type }) => {
                 uid: userInfo?.id,
                 message: state.type,
             })
-                .then(() => {})
+                .then(() => {
+                    inputRef.current.focus();
+                })
                 .catch((e) => {
                     console.dir(e);
                 });
@@ -282,9 +333,10 @@ const NoticeMessageDetail = ({ type }) => {
     }, [rid, state.type]);
 
     return (
-        <main className="protected-notice-message-detail">
+        <main ref={containerRef} className="protected-notice-message-detail">
             <div className="messages">
                 <ul>
+                    <div ref={messagesStartRef} />
                     {(state.messages || []).map((message, idx) => {
                         return (
                             <li key={idx}>
@@ -373,6 +425,7 @@ const NoticeMessageDetail = ({ type }) => {
                 </div>
                 <div className="input-container">
                     <input
+                        ref={inputRef}
                         value={state.type}
                         onChange={(event) =>
                             dispatch({
