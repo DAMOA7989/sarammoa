@@ -304,12 +304,10 @@ const NoticeMessageDetail = ({ type }) => {
                         message: state.type,
                     })
                         .then(() => {
-                            setTimeout(() => {
-                                navigate.replace({
-                                    pathname: `/notice/${docId}`,
-                                    mode: "sub",
-                                });
-                            }, 100);
+                            navigate.replace({
+                                pathname: `/notice/${docId}`,
+                                mode: "sub",
+                            });
                         })
                         .catch((e) => {
                             console.dir(e);
@@ -324,7 +322,9 @@ const NoticeMessageDetail = ({ type }) => {
                 uid: userInfo?.id,
                 message: state.type,
             })
-                .then(() => {})
+                .then(() => {
+                    scrollToEnd();
+                })
                 .catch((e) => {
                     console.dir(e);
                 });

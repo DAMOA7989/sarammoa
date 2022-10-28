@@ -307,6 +307,21 @@
                     background-color: rgba($tertiary_color, 0.8);
                 }
             }
+
+            &.light-gray {
+                background-color: $link_water_color;
+                color: $gunmetal_color;
+
+                @media (hover: hover) {
+                    &:hover {
+                        background-color: rgba($link_water_color, 0.6);
+                    }
+                }
+
+                &:active {
+                    background-color: rgba($link_water_color, 0.8);
+                }
+            }
         }
     }
 

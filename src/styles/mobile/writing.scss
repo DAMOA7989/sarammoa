@@ -195,4 +195,45 @@
             }
         }
     }
+
+    > .like-button {
+        position: fixed;
+        bottom: 1.25em;
+        right: 1.25em;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+
+        > .container {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 0.25em;
+
+            > span {
+            }
+        }
+
+        &.like {
+            > .container {
+                > span {
+                    font-size: 0.8125em;
+                    color: $gunmetal_color;
+                }
+
+                > svg {
+                    width: 16px;
+                    height: 16px;
+
+                    > path {
+                        stroke: $gunmetal_color;
+                    }
+                }
+            }
+        }
+
+        &.dislike {
+            > .container {
+            }
+        }
+    }
 }

@@ -27,6 +27,8 @@ import { BottomSheet } from "react-spring-bottom-sheet";
 import CommentCard from "components/surface/CommentCard";
 import { useModalContext } from "utils/modal";
 import { toast } from "react-toastify";
+import { ReactComponent as LikeIcon } from "assets/images/icons/writing/thumb_up.svg";
+import { CircularProgress } from "@mui/material";
 
 const __DROPDOWN_ITEMS__ = [
     {
@@ -259,6 +261,38 @@ const WritingDetail = () => {
                         ...state,
                         openCommentsBottomSheet: false,
                     };
+                case "FETCH_LIKE_PENDING":
+                    return {
+                        ...state,
+                        likeLoading: true,
+                    };
+                case "FETCH_LIKE_FULFILLED":
+                    return {
+                        ...state,
+                        likeLoading: false,
+                        like: true,
+                    };
+                case "FETCH_LIKE_REJECTED":
+                    return {
+                        ...state,
+                        likeLoading: false,
+                    };
+                case "FETCH_DISLIKE_PENDING":
+                    return {
+                        ...state,
+                        likeLoading: true,
+                    };
+                case "FETCH_DISLIKE_FULFILLED":
+                    return {
+                        ...state,
+                        likeLoading: false,
+                        like: false,
+                    };
+                case "FETCH_DISLIKE_REJECTED":
+                    return {
+                        ...state,
+                        likeLoading: false,
+                    };
             }
         },
         {
@@ -268,6 +302,8 @@ const WritingDetail = () => {
             comment: "",
             showMoreDropdown: false,
             openCommentsBottomSheet: false,
+            likeLoading: false,
+            like: false,
         }
     );
     const moreRef = React.useRef(null);
@@ -306,6 +342,32 @@ const WritingDetail = () => {
                 // task.terminate();
             });
     }, [wid]);
+
+    const onLikeHandler = () => {
+        if (state.likeLoading) return;
+
+        if (state.like) {
+            dispatch({
+                type: "FETCH_DISLIKE_PENDING",
+            });
+
+            setTimeout(() => {
+                dispatch({
+                    type: "FETCH_DISLIKE_FULFILLED",
+                });
+            }, 1000);
+        } else {
+            dispatch({
+                type: "FETCH_LIKE_PENDING",
+            });
+
+            setTimeout(() => {
+                dispatch({
+                    type: "FETCH_LIKE_FULFILLED",
+                });
+            }, 1000);
+        }
+    };
 
     return (
         <>
@@ -612,6 +674,39 @@ const WritingDetail = () => {
                         />
                     </div>
                 </div>
+                {state.writingInfo?.writer?.id &&
+                    state.writingInfo?.writer?.id !== userInfo?.id && (
+                        <CommonButton
+                            className={`like-button ${
+                                state.likeLoading
+                                    ? "pending"
+                                    : state.like
+                                    ? "like"
+                                    : "dislike"
+                            }`}
+                            color={state.like ? "light-gray" : "primary"}
+                            onClick={onLikeHandler}
+                        >
+                            {state.likeLoading ? (
+                                <CircularProgress
+                                    color={state.like ? "black" : "white"}
+                                    size={20}
+                                />
+                            ) : (
+                                <>
+                                    {state.like && (
+                                        <span>
+                                            {
+                                                (state.writingInfo?.likes || [])
+                                                    .length
+                                            }
+                                        </span>
+                                    )}
+                                    <LikeIcon />
+                                </>
+                            )}
+                        </CommonButton>
+                    )}
             </main>
             <BottomSheet
                 open={state.openCommentsBottomSheet}
