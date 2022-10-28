@@ -78,10 +78,13 @@ const MessageCard = ({ rid, thumbnailUrl, title, lastMessage, onClick }) => {
             <div className="date">
                 <LazyTypography>
                     {state.loaded &&
-                        `${lastMessage.createdAt.toDate().toDateString()} 
+                        `${
+                            lastMessage?.createdAt?.toDate().toDateString() ||
+                            ""
+                        } 
                         ${displayDate(
                             "hh:mm",
-                            lastMessage.createdAt.toDate()
+                            lastMessage?.createdAt?.toDate()
                         )}`}
                 </LazyTypography>
             </div>

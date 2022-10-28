@@ -139,13 +139,14 @@ const NoticeMessageDetail = ({ type }) => {
     );
     const infiniteScrollObserverRef = React.useRef(
         new IntersectionObserver((entries) => {
-            if (entries?.[0].intersectionRatio === 1) {
+            if (entries?.[0].intersectionRatio === 1 && initRef.current) {
                 dispatch({
                     type: "INCREASE_PAGE",
                 });
             }
         }, {})
     );
+    const initRef = React.useRef(false);
     const prevScrollHeightRef = React.useRef(0);
     const containerRef = React.useRef(null);
     const canScrollToEndRef = React.useRef(false);
@@ -204,7 +205,7 @@ const NoticeMessageDetail = ({ type }) => {
     }, [rid]);
 
     React.useEffect(() => {
-        if (!rid) return;
+        if (!rid || rid === "new") return;
 
         const sendsRef = collection(db, `messages/${rid}/sends`);
         let sendsQuery = null;
@@ -269,7 +270,7 @@ const NoticeMessageDetail = ({ type }) => {
         containerRef.current.scrollTop =
             containerRef.current.scrollHeight - prevScrollHeightRef.current;
         prevScrollHeightRef.current = containerRef.current.scrollHeight;
-    }, [state.page]);
+    }, [rid, state.page]);
 
     React.useEffect(() => {
         scrollObserverRef.current.observe(messagesEndRef.current);
@@ -285,6 +286,9 @@ const NoticeMessageDetail = ({ type }) => {
 
         if (canScrollToEndRef.current) {
             scrollToEnd();
+        }
+        if (state.messages.length >= state.offset) {
+            initRef.current = true;
         }
     }, [state.messages]);
 
@@ -320,9 +324,7 @@ const NoticeMessageDetail = ({ type }) => {
                 uid: userInfo?.id,
                 message: state.type,
             })
-                .then(() => {
-                    inputRef.current.focus();
-                })
+                .then(() => {})
                 .catch((e) => {
                     console.dir(e);
                 });
@@ -439,6 +441,9 @@ const NoticeMessageDetail = ({ type }) => {
                             if (!Boolean(state.type)) return;
 
                             if (event.key === "Enter") {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                inputRef.current.focus();
                                 onSubmitHandler();
                             }
                         }}
@@ -446,7 +451,15 @@ const NoticeMessageDetail = ({ type }) => {
                 </div>
 
                 {Boolean(state.type) && (
-                    <div className="send-icon" onClick={onSubmitHandler}>
+                    <div
+                        className="send-icon"
+                        onClick={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            inputRef.current.focus();
+                            onSubmitHandler();
+                        }}
+                    >
                         <SendIcon />
                     </div>
                 )}

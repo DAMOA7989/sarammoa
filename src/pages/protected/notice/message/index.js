@@ -24,6 +24,7 @@ const Message = () => {
     const lastMessagesRef = React.useRef({});
     const [state, dispatch] = React.useReducer(
         (state, action) => {
+            let rooms = [];
             switch (action.type) {
                 case "FETCH_ROOMS_PENDING":
                     return {
@@ -31,23 +32,37 @@ const Message = () => {
                         roomsLoading: true,
                     };
                 case "FETCH_ROOMS_FULFILLED":
-                    let _rooms = [
-                        ...state.rooms,
-                        ...(action.payload?.docs || []),
-                    ];
-                    _rooms.sort(
-                        (a, b) => a.createdAt.toDate() - b.createdAt.toDate()
-                    );
+                    rooms = action.payload?.docs || [];
 
                     return {
                         ...state,
                         roomsLoading: false,
-                        rooms: _rooms,
+                        rooms,
                     };
                 case "FETCH_ROOMS_REJECTED":
                     return {
                         ...state,
                         roomsLoading: false,
+                    };
+                case "FETCH_LAST_MESSAGE":
+                    const parentDocId = action.payload?.parentDocId;
+                    const lastMessage = action.payload?.lastMessage || {};
+
+                    rooms = state.rooms;
+                    const idx = rooms.findIndex((x) => x.id === parentDocId);
+
+                    if (idx >= 0) {
+                        rooms[idx].lastMessage = lastMessage;
+                    }
+                    rooms.sort(
+                        (a, b) =>
+                            b.lastMessage?.createdAt?.toDate() -
+                            a.lastMessage?.createdAt?.toDate()
+                    );
+
+                    return {
+                        ...state,
+                        rooms,
                     };
             }
         },
@@ -72,50 +87,60 @@ const Message = () => {
 
         let observers = [];
         const unsubscribe = onSnapshot(participantsQuery, (querySnapshot) => {
-            const rooms = [];
             const roomTasks = [];
             observers.forEach((f) => f());
             observers = [];
+
             querySnapshot.forEach((docSnapshot) => {
                 const parentRef = docSnapshot.ref.parent.parent;
-                const parentDocId = parentRef.id;
-                roomTasks.push(
-                    getDoc(parentRef).then((parentDocSnapshot) => {
-                        rooms.push({
-                            id: parentDocId,
-                            ...parentDocSnapshot.data(),
-                        });
-                    })
-                );
-
-                const sendsRef = collection(db, `${parentRef.path}/sends`);
-                const sendQuery = query(
-                    sendsRef,
-                    orderBy("createdAt", "desc"),
-                    limit(1)
-                );
-                observers.push(
-                    onSnapshot(sendQuery, (parentSendsQuerySnapshot) => {
-                        let lastMessage = null;
-                        parentSendsQuerySnapshot.forEach(
-                            (parentSendsDocsSnapshot) => {
-                                lastMessage = {
-                                    id: parentSendsDocsSnapshot.id,
-                                    ...parentSendsDocsSnapshot.data(),
-                                };
-                            }
-                        );
-
-                        lastMessagesRef.current = {
-                            ...lastMessagesRef.current,
-                            [parentDocId]: lastMessage,
-                        };
-                    })
-                );
+                roomTasks.push(getDoc(parentRef));
             });
 
             Promise.all(roomTasks)
-                .then(() => {
+                .then((parentDocSnapshots) => {
+                    const rooms = [];
+                    for (const parentDocSnapshot of parentDocSnapshots) {
+                        const parentDoc = {
+                            id: parentDocSnapshot.id,
+                            ...parentDocSnapshot.data(),
+                        };
+                        rooms.push(parentDoc);
+
+                        const sendsRef = collection(
+                            db,
+                            `messages/${parentDocSnapshot.id}/sends`
+                        );
+                        const sendQuery = query(
+                            sendsRef,
+                            orderBy("createdAt", "desc"),
+                            limit(1)
+                        );
+                        observers.push(
+                            onSnapshot(
+                                sendQuery,
+                                (parentSendsQuerySnapshot) => {
+                                    let lastMessage = null;
+                                    parentSendsQuerySnapshot.forEach(
+                                        (parentSendsDocsSnapshot) => {
+                                            lastMessage = {
+                                                id: parentSendsDocsSnapshot.id,
+                                                ...parentSendsDocsSnapshot.data(),
+                                            };
+                                        }
+                                    );
+
+                                    dispatch({
+                                        type: "FETCH_LAST_MESSAGE",
+                                        payload: {
+                                            parentDocId: parentDocSnapshot.id,
+                                            lastMessage: lastMessage,
+                                        },
+                                    });
+                                }
+                            )
+                        );
+                    }
+
                     dispatch({
                         type: "FETCH_ROOMS_FULFILLED",
                         payload: {
@@ -140,7 +165,7 @@ const Message = () => {
         <div className="pages-protected-notice-message">
             <ul className="messages">
                 {(state.rooms || []).map((message, idx) => (
-                    <li key={idx}>
+                    <li key={message.id}>
                         <MessageCard
                             onClick={() => {
                                 navigate.push({
@@ -151,7 +176,7 @@ const Message = () => {
                             rid={message.id}
                             thumbnailUrl={message?.thumbnailUrl}
                             title={message?.title}
-                            lastMessage={lastMessagesRef.current?.[message?.id]}
+                            lastMessage={message?.lastMessage}
                         />
                     </li>
                 ))}
