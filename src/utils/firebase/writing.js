@@ -512,3 +512,27 @@ export const _dislike = ({ uid, wid }) =>
             return reject(e);
         }
     });
+
+export const _view = ({ uid, wid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            try {
+                await _isOwner({ uid, wid });
+                throw new Error("You are owner of this writing");
+            } catch (e) {
+                if (e.message === "You are owner of this writing") {
+                    throw new Error("You are owner of this writing");
+                }
+            }
+
+            const writingViewsRef = collection(db, `writings/${wid}/views`);
+            await addDoc(writingViewsRef, {
+                uid,
+                createdAt: Timestamp.now(),
+            });
+
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });

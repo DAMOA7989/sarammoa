@@ -11,6 +11,7 @@ import {
     _report,
     _like,
     _dislike,
+    _view,
 } from "utils/firebase/writing";
 import { useStatusContext, isOwner } from "utils/status";
 import LazyImage from "components/surface/LazyImage";
@@ -329,25 +330,44 @@ const WritingDetail = () => {
         if (!Boolean(wid)) return;
 
         dispatch({ type: "SET_WRITING_INFO_PENDING" });
-        // task.run();
-        _getWritingDetail({ wid })
-            .then((doc) => {
-                const idx = (doc?.likes || []).findIndex(
-                    (x) => x.id === userInfo?.id
-                );
-                dispatch({
-                    type: "SET_WRITING_INFO_FULFILLED",
-                    payload: {
-                        doc,
-                        like: idx >= 0 ? true : false,
-                    },
-                });
-                // task.terminate();
+        _view({ uid: userInfo?.id, wid })
+            .then(() => {
+                _getWritingDetail({ wid })
+                    .then((doc) => {
+                        const idx = (doc?.likes || []).findIndex(
+                            (x) => x.id === userInfo?.id
+                        );
+                        dispatch({
+                            type: "SET_WRITING_INFO_FULFILLED",
+                            payload: {
+                                doc,
+                                like: idx >= 0 ? true : false,
+                            },
+                        });
+                    })
+                    .catch((e) => {
+                        console.dir(e);
+                        dispatch({ type: "SET_WRITING_INFO_REJECTED" });
+                    });
             })
             .catch((e) => {
-                console.dir(e);
-                dispatch({ type: "SET_WRITING_INFO_REJECTED" });
-                // task.terminate();
+                _getWritingDetail({ wid })
+                    .then((doc) => {
+                        const idx = (doc?.likes || []).findIndex(
+                            (x) => x.id === userInfo?.id
+                        );
+                        dispatch({
+                            type: "SET_WRITING_INFO_FULFILLED",
+                            payload: {
+                                doc,
+                                like: idx >= 0 ? true : false,
+                            },
+                        });
+                    })
+                    .catch((e) => {
+                        console.dir(e);
+                        dispatch({ type: "SET_WRITING_INFO_REJECTED" });
+                    });
             });
     }, [wid]);
 
