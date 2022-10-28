@@ -8,7 +8,7 @@ const WoilonnInput = ({
     label,
     type,
     placeholder,
-    value,
+    value: _value,
     onChange,
     onKeyPress,
     disabled,
@@ -21,6 +21,8 @@ const WoilonnInput = ({
 }) => {
     const textareaRef = React.useRef(null);
     const containerRef = React.useRef(null);
+
+    const value = React.useMemo(() => _value, [_value]);
 
     React.useEffect(() => {
         if (multiline) {
@@ -86,4 +88,4 @@ const WoilonnInput = ({
     );
 };
 
-export default WoilonnInput;
+export default React.memo(WoilonnInput);
