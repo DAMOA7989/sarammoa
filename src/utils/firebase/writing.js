@@ -480,3 +480,35 @@ export const _report = ({ uid, wid }) =>
             return reject(e);
         }
     });
+
+export const _like = ({ uid, wid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const writingLikeRef = doc(db, `writings/${wid}/likes/${uid}`);
+            await setDoc(
+                writingLikeRef,
+                {
+                    createdAt: Timestamp.now(),
+                },
+                {
+                    merge: true,
+                }
+            );
+
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _dislike = ({ uid, wid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const writingLikeRef = doc(db, `writings/${wid}/likes/${uid}`);
+            await deleteDoc(writingLikeRef);
+
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });

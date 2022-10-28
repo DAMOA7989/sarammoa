@@ -9,6 +9,8 @@ import {
     _switchPublishedField,
     _scrap,
     _report,
+    _like,
+    _dislike,
 } from "utils/firebase/writing";
 import { useStatusContext, isOwner } from "utils/status";
 import LazyImage from "components/surface/LazyImage";
@@ -213,6 +215,8 @@ const WritingDetail = () => {
                         ...state,
                         writingInfoLoading: false,
                         writingInfo: action.payload?.doc,
+                        likeLoading: false,
+                        like: action.payload?.like,
                     };
                 case "SET_WRITING_INFO_REJECTED":
                     return {
@@ -302,8 +306,8 @@ const WritingDetail = () => {
             comment: "",
             showMoreDropdown: false,
             openCommentsBottomSheet: false,
-            likeLoading: false,
-            like: false,
+            likeLoading: true,
+            like: null,
         }
     );
     const moreRef = React.useRef(null);
@@ -328,10 +332,14 @@ const WritingDetail = () => {
         // task.run();
         _getWritingDetail({ wid })
             .then((doc) => {
+                const idx = (doc?.likes || []).findIndex(
+                    (x) => x.id === userInfo?.id
+                );
                 dispatch({
                     type: "SET_WRITING_INFO_FULFILLED",
                     payload: {
                         doc,
+                        like: idx >= 0 ? true : false,
                     },
                 });
                 // task.terminate();
@@ -351,21 +359,35 @@ const WritingDetail = () => {
                 type: "FETCH_DISLIKE_PENDING",
             });
 
-            setTimeout(() => {
-                dispatch({
-                    type: "FETCH_DISLIKE_FULFILLED",
+            _dislike({ uid: userInfo?.id, wid })
+                .then(() => {
+                    dispatch({
+                        type: "FETCH_DISLIKE_FULFILLED",
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    dispatch({
+                        type: "FETCH_DISLIKE_REJECTED",
+                    });
                 });
-            }, 1000);
         } else {
             dispatch({
                 type: "FETCH_LIKE_PENDING",
             });
 
-            setTimeout(() => {
-                dispatch({
-                    type: "FETCH_LIKE_FULFILLED",
+            _like({ uid: userInfo?.id, wid })
+                .then(() => {
+                    dispatch({
+                        type: "FETCH_LIKE_FULFILLED",
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    dispatch({
+                        type: "FETCH_LIKE_REJECTED",
+                    });
                 });
-            }, 1000);
         }
     };
 
