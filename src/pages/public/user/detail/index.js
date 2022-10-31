@@ -11,7 +11,12 @@ import { ReactComponent as FollowInIcon } from "assets/images/icons/follow_from.
 import { ReactComponent as FollowOutIcon } from "assets/images/icons/follow_to.svg";
 import CommonButton from "components/button/CommonButton";
 import { useNavigateContext } from "utils/navigate";
-import { _follow, _unfollow } from "utils/firebase/user";
+import {
+    _follow,
+    _unfollow,
+    _countTotalLikes,
+    _countTotalViews,
+} from "utils/firebase/user";
 import { useAuthContext } from "utils/auth";
 import { _isFollow, _report } from "utils/firebase/user";
 import { BottomSheet } from "react-spring-bottom-sheet";
@@ -266,12 +271,34 @@ const UserDetail = () => {
         dispatch({ type: "SET_USER_INFO_PENDING" });
         _getUserInfo({ uid })
             .then((doc) => {
-                dispatch({
-                    type: "SET_USER_INFO_FULFILLED",
-                    payload: {
-                        doc,
-                    },
-                });
+                const tasks = [];
+                tasks.push(
+                    _countTotalLikes({ uid })
+                        .then((docs) => {
+                            doc.likes = docs;
+                        })
+                        .catch((e) => {
+                            console.dir(e);
+                        })
+                );
+                tasks.push(
+                    _countTotalViews({ uid })
+                        .then((docs) => {
+                            doc.views = docs;
+                        })
+                        .catch((e) => {
+                            console.dir(e);
+                        })
+                );
+
+                Promise.all(tasks).then(() =>
+                    dispatch({
+                        type: "SET_USER_INFO_FULFILLED",
+                        payload: {
+                            doc,
+                        },
+                    })
+                );
             })
             .catch((e) => {
                 console.dir(e);

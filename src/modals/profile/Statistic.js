@@ -67,6 +67,86 @@ const __DATAS__ = {
 const Statistic = ({ uid }) => {
     const { t } = useTranslation();
 
+    const [state, dispatch] = React.useReducer(
+        (state, action) => {
+            switch (action.type) {
+                case "FETCH_VIEWS_PENDING":
+                    return {
+                        ...state,
+                        loading: true,
+                    };
+                case "FETCH_VIEWS_FULFILLED":
+                    return {
+                        ...state,
+                        loading: false,
+                        views: action.payload?.docs,
+                    };
+                case "FETCH_VIEWS_REJECTED":
+                    return {
+                        ...state,
+                        loading: false,
+                    };
+                case "FETCH_LIKES_PENDING":
+                    return {
+                        ...state,
+                        loading: true,
+                    };
+                case "FETCH_LIKES_FULFILLED":
+                    return {
+                        ...state,
+                        loading: false,
+                        likes: action.payload?.docs,
+                    };
+                case "FETCH_LIKES_REJECTED":
+                    return {
+                        ...state,
+                        loading: false,
+                    };
+                case "FETCH_COMMENTS_PENDING":
+                    return {
+                        ...state,
+                        loading: true,
+                    };
+                case "FETCH_COMMENTS_FULFILLED":
+                    return {
+                        ...state,
+                        loading: false,
+                        comments: action.payload?.docs,
+                    };
+                case "FETCH_COMMENTS_REJECTED":
+                    return {
+                        ...state,
+                        loading: false,
+                    };
+                case "FETCH_PROFILE_VIEWS_PENDING":
+                    return {
+                        ...state,
+                        loading: true,
+                    };
+                case "FETCH_PROFILE_VIEWS_FULFILLED":
+                    return {
+                        ...state,
+                        loading: false,
+                        profileViews: action.payload?.docs,
+                    };
+                case "FETCH_PROFILE_VIEWS_REJECTED":
+                    return {
+                        ...state,
+                        loading: false,
+                    };
+            }
+        },
+        {
+            loading: false,
+            views: [],
+            likes: [],
+            comments: [],
+            profileViews: [],
+        }
+    );
+
+    React.useEffect(() => {}, []);
+
     return (
         <main className="modals-profile-statistic">
             {Object.entries(__DATAS__ || {}).map(([key, value], idx) => (
