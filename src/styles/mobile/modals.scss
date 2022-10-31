@@ -362,3 +362,47 @@
         }
     }
 }
+
+.modals-profile-statistic {
+    > .period {
+        padding: 2.5em 1.25em;
+        display: flex;
+        flex-direction: column;
+        gap: 2.5em;
+
+        > .title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: $gunmetal_color;
+            text-align: center;
+        }
+
+        > ul {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25em;
+
+            > li {
+                > .container {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 0.75em;
+
+                    > .count {
+                        font-size: 1.5rem;
+                        font-weight: 600;
+                        color: $gunmetal_color;
+                    }
+
+                    > .label {
+                        font-size: 0.875rem;
+                        font-weight: 400;
+                        color: $gunmetal_color;
+                    }
+                }
+            }
+        }
+    }
+}

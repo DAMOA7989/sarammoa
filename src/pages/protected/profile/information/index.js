@@ -10,13 +10,33 @@ const __BOXES__ = [
         key: "views",
         i18nKey: "title.profile.information.views",
         count: ({ userInfo }) => (userInfo?.views || []).length,
-        onClick: () => {},
+        onClick: ({ t, uid, displayModal }) => {
+            displayModal({
+                pathname: "profile/Statistic",
+                params: {
+                    uid,
+                },
+                options: {
+                    title: t("title.profile.information.statistic"),
+                },
+            });
+        },
     },
     {
         key: "appereciations",
         i18nKey: "title.profile.information.appreciations",
         count: ({ userInfo }) => (userInfo?.likes || []).length,
-        onClick: () => {},
+        onClick: ({ t, uid, displayModal }) => {
+            displayModal({
+                pathname: "profile/Statistic",
+                params: {
+                    uid,
+                },
+                options: {
+                    title: t("title.profile.information.statistic"),
+                },
+            });
+        },
     },
     {
         key: "followers",
