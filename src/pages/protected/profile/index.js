@@ -12,6 +12,7 @@ import RippleEffect from "components/surface/RippleEffect";
 import LazyImage from "components/surface/LazyImage";
 import LazyTypography from "components/surface/LazyTypography";
 import { _getFollowInfos } from "utils/firebase/user";
+import { _countTotalLikes, _countTotalViews } from "utils/firebase/writing";
 import { ReactComponent as ThumbUpIcon } from "assets/images/icons/thumb_up.svg";
 import { ReactComponent as FollowInIcon } from "assets/images/icons/follow_from.svg";
 import { ReactComponent as FollowOutIcon } from "assets/images/icons/follow_to.svg";
@@ -115,6 +116,20 @@ const Profile = () => {
                 .then((docs) => {
                     data.following = docs.following;
                     data.followers = docs.followers;
+                })
+                .catch((e) => {
+                    console.dir(e);
+                });
+            _countTotalLikes({ uid: _userInfo?.id })
+                .then((docs) => {
+                    data.likes = docs;
+                })
+                .catch((e) => {
+                    console.dir(e);
+                });
+            _countTotalViews({ uid: _userInfo?.id })
+                .then((docs) => {
+                    data.views = docs;
                 })
                 .catch((e) => {
                     console.dir(e);

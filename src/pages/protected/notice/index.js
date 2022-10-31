@@ -58,7 +58,7 @@ const Notice = () => {
                                 className="container"
                                 onClick={() => tab.onClick({ navigate })}
                             >
-                                <button>{t(tab.i18nKey)}</button>
+                                <span>{t(tab.i18nKey)}</span>
                             </div>
                         </li>
                     ))}

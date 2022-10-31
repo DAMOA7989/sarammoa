@@ -41,10 +41,7 @@ const ProfileWorkAddCover = ({
                         setScreenIdx(screenIdx - 1);
                     },
                 },
-                screenTitle:
-                    mode === "modify"
-                        ? "title.profile.work.modify"
-                        : "title.profile.work.add",
+                screenTitle: "title.profile.work.add.cover",
             });
 
             for (const content of contents) {

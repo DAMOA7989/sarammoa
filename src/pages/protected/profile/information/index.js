@@ -9,13 +9,13 @@ const __BOXES__ = [
     {
         key: "views",
         i18nKey: "title.profile.information.views",
-        count: ({ userInfo }) => 0,
+        count: ({ userInfo }) => (userInfo?.views || []).length,
         onClick: () => {},
     },
     {
         key: "appereciations",
         i18nKey: "title.profile.information.appreciations",
-        count: ({ userInfo }) => 5,
+        count: ({ userInfo }) => (userInfo?.likes || []).length,
         onClick: () => {},
     },
     {
