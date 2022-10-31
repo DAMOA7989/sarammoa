@@ -18,7 +18,7 @@ import {
     _countTotalViews,
 } from "utils/firebase/user";
 import { useAuthContext } from "utils/auth";
-import { _isFollow, _report } from "utils/firebase/user";
+import { _isFollow, _report, _viewProfile } from "utils/firebase/user";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useModalContext } from "utils/modal";
 import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
@@ -243,6 +243,12 @@ const UserDetail = () => {
                     });
                 }
             })
+            .catch((e) => {
+                console.dir(e);
+            });
+
+        _viewProfile({ fromUid: userInfo?.id, toUid: uid })
+            .then(() => {})
             .catch((e) => {
                 console.dir(e);
             });

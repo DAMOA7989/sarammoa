@@ -1,62 +1,60 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import {
+    _countTotalLikes,
+    _countTotalViews,
+    _getTotalComments,
+    _getTotalProfileViews,
+} from "utils/firebase/user";
 
 const __DATAS__ = {
     entire: {
         views: {
             i18nKey: "title.profile.information.views",
-            count: () => {
-                return 0;
-            },
+            count: ({ state }) => (state.views || []).length,
             onClick: () => {},
         },
         likes: {
             i18nKey: "title.profile.information.appreciations",
-            count: () => {
-                return 0;
-            },
+            count: ({ state }) => (state.likes || []).length,
             onClick: () => {},
         },
         comments: {
             i18nKey: "title.profile.information.comments",
-            count: () => {
-                return 0;
-            },
+            count: ({ state }) => (state.comments || []).length,
             onClick: () => {},
         },
         profileViews: {
             i18nKey: "title.profile.information.profile_views",
-            count: () => {
-                return 0;
-            },
+            count: ({ state }) => (state.profileViews || []).length,
             onClick: () => {},
         },
     },
     today: {
         views: {
             i18nKey: "title.profile.information.views",
-            count: () => {
+            count: ({ state }) => {
                 return 0;
             },
             onClick: () => {},
         },
         likes: {
             i18nKey: "title.profile.information.appreciations",
-            count: () => {
+            count: ({ state }) => {
                 return 0;
             },
             onClick: () => {},
         },
         comments: {
             i18nKey: "title.profile.information.comments",
-            count: () => {
+            count: ({ state }) => {
                 return 0;
             },
             onClick: () => {},
         },
         profileViews: {
             i18nKey: "title.profile.information.profile_views",
-            count: () => {
+            count: ({ state }) => {
                 return 0;
             },
             onClick: () => {},
@@ -70,82 +68,196 @@ const Statistic = ({ uid }) => {
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
-                case "FETCH_VIEWS_PENDING":
+                case "FETCH_PENDING":
                     return {
                         ...state,
                         loading: true,
                     };
-                case "FETCH_VIEWS_FULFILLED":
+                case "FETCH_FULFILLED":
                     return {
                         ...state,
                         loading: false,
+                    };
+                case "FETCH_REJECTED":
+                    return {
+                        ...state,
+                        loading: false,
+                    };
+                case "FETCH_VIEWS_PENDING":
+                    return {
+                        ...state,
+                        viewsLoading: true,
+                    };
+                case "FETCH_VIEWS_FULFILLED":
+                    return {
+                        ...state,
+                        viewsLoading: false,
                         views: action.payload?.docs,
                     };
                 case "FETCH_VIEWS_REJECTED":
                     return {
                         ...state,
-                        loading: false,
+                        viewsLoading: false,
                     };
                 case "FETCH_LIKES_PENDING":
                     return {
                         ...state,
-                        loading: true,
+                        likesLoading: true,
                     };
                 case "FETCH_LIKES_FULFILLED":
                     return {
                         ...state,
-                        loading: false,
+                        likesLoading: false,
                         likes: action.payload?.docs,
                     };
                 case "FETCH_LIKES_REJECTED":
                     return {
                         ...state,
-                        loading: false,
+                        likesLoading: false,
                     };
                 case "FETCH_COMMENTS_PENDING":
                     return {
                         ...state,
-                        loading: true,
+                        commentsLoading: true,
                     };
                 case "FETCH_COMMENTS_FULFILLED":
                     return {
                         ...state,
-                        loading: false,
+                        commentsLoading: false,
                         comments: action.payload?.docs,
                     };
                 case "FETCH_COMMENTS_REJECTED":
                     return {
                         ...state,
-                        loading: false,
+                        commentsLoading: false,
                     };
                 case "FETCH_PROFILE_VIEWS_PENDING":
                     return {
                         ...state,
-                        loading: true,
+                        profileViewsLoading: true,
                     };
                 case "FETCH_PROFILE_VIEWS_FULFILLED":
                     return {
                         ...state,
-                        loading: false,
+                        profileViewsLoading: false,
                         profileViews: action.payload?.docs,
                     };
                 case "FETCH_PROFILE_VIEWS_REJECTED":
                     return {
                         ...state,
-                        loading: false,
+                        profileViewsLoading: false,
                     };
             }
         },
         {
-            loading: false,
+            loading: true,
+            viewsLoading: false,
             views: [],
+            likesLoading: false,
             likes: [],
+            commentsLoading: false,
             comments: [],
+            profileViewsLoading: false,
             profileViews: [],
         }
     );
 
-    React.useEffect(() => {}, []);
+    React.useEffect(() => {
+        dispatch({
+            type: "FETCH_PENDING",
+        });
+
+        const tasks = [];
+        dispatch({
+            type: "FETCH_VIEWS_PENDING",
+        });
+        tasks.push(
+            _countTotalLikes({ uid })
+                .then((docs) => {
+                    dispatch({
+                        type: "FETCH_VIEWS_FULFILLED",
+                        payload: {
+                            docs,
+                        },
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    dispatch({
+                        type: "FETCH_VIEWS_REJECTED",
+                    });
+                })
+        );
+
+        dispatch({
+            type: "FETCH_LIKES_PENDING",
+        });
+        tasks.push(
+            _countTotalViews({ uid })
+                .then((docs) => {
+                    dispatch({
+                        type: "FETCH_LIKES_FULFILLED",
+                        payload: {
+                            docs,
+                        },
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    dispatch({
+                        type: "FETCH_LIKES_REJECTED",
+                    });
+                })
+        );
+
+        dispatch({
+            type: "FETCH_COMMENTS_PENDING",
+        });
+        tasks.push(
+            _getTotalComments({ uid })
+                .then((docs) => {
+                    dispatch({
+                        type: "FETCH_COMMENTS_FULFILLED",
+                        payload: {
+                            docs,
+                        },
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    dispatch({
+                        type: "FETCH_COMMENTS_REJECTED",
+                    });
+                })
+        );
+
+        dispatch({
+            type: "FETCH_PROFILE_VIEWS_PENDING",
+        });
+        tasks.push(
+            _getTotalProfileViews({ uid })
+                .then((docs) => {
+                    dispatch({
+                        type: "FETCH_PROFILE_VIEWS_FULFILLED",
+                        payload: {
+                            docs,
+                        },
+                    });
+                })
+                .catch((e) => {
+                    console.dir(e);
+                    dispatch({
+                        type: "FETCH_PROFILE_VIEWS_REJECTED",
+                    });
+                })
+        );
+
+        Promise.all(tasks).then(() =>
+            dispatch({
+                type: "FETCH_FULFILLED",
+            })
+        );
+    }, []);
 
     return (
         <main className="modals-profile-statistic">
@@ -160,7 +272,7 @@ const Statistic = ({ uid }) => {
                                 <li key={`${key}-${key2}`}>
                                     <div className="container">
                                         <span className="count">
-                                            {value2.count()}
+                                            {value2.count({ state })}
                                         </span>
                                         <span className="label">
                                             {t(value2.i18nKey)}

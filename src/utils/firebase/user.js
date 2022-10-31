@@ -267,3 +267,92 @@ export const _countTotalViews = ({ uid }) =>
             return reject(e);
         }
     });
+
+export const _getTotalComments = ({ uid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const writingsRef = collection(db, "writings");
+            const writingsQuery = query(
+                writingsRef,
+                where("writer", "==", uid)
+            );
+
+            const writingsQuerySnapshot = await getDocs(writingsQuery);
+            const commentsTasks = [];
+            writingsQuerySnapshot.forEach((writingDocSnapshot) => {
+                const commentsRef = collection(
+                    db,
+                    `writings/${writingDocSnapshot.id}/comments`
+                );
+                commentsTasks.push(getDocs(commentsRef));
+            });
+
+            const comments = [];
+            await Promise.all(commentsTasks).then((result) => {
+                for (const querySnapshot of result) {
+                    querySnapshot.forEach((docSnapshot) => {
+                        comments.push({
+                            id: docSnapshot.id,
+                            ...docSnapshot.data(),
+                        });
+                    });
+                }
+            });
+
+            return resolve(comments);
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _getTotalProfileViews = ({ uid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const userProfileViewsRef = collection(
+                db,
+                `users/${uid}/profileViews`
+            );
+            const userProfileViewsQuery = query(
+                userProfileViewsRef,
+                orderBy("createdAt", "desc")
+            );
+            const userProfileViewsQuerySnapshot = await getDocs(
+                userProfileViewsQuery
+            );
+            const profileViews = [];
+            userProfileViewsQuerySnapshot.forEach(
+                (userProfileViewDocSnapshot) => {
+                    profileViews.push({
+                        id: userProfileViewDocSnapshot.id,
+                        ...userProfileViewDocSnapshot.data(),
+                    });
+                }
+            );
+
+            return resolve(profileViews);
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _viewProfile = ({ fromUid, toUid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            if (fromUid === toUid) {
+                throw new Error("You are watching your profile");
+            }
+
+            const userProfileViewsRef = collection(
+                db,
+                `users/${toUid}/profileViews`
+            );
+            await addDoc(userProfileViewsRef, {
+                uid: fromUid,
+                createdAt: Timestamp.now(),
+            });
+
+            return resolve();
+        } catch (e) {
+            return reject(e);
+        }
+    });
