@@ -6,6 +6,7 @@ import {
     _getTotalComments,
     _getTotalProfileViews,
 } from "utils/firebase/user";
+import CountUp from "react-countup";
 
 const __DATAS__ = {
     entire: {
@@ -307,12 +308,23 @@ const Statistic = ({ uid }) => {
                             ([key2, value2], idx) => (
                                 <li key={`${key}-${key2}`}>
                                     <div className="container">
-                                        <span className="count">
-                                            {value2.count({ state })}
-                                        </span>
-                                        <span className="label">
-                                            {t(value2.i18nKey)}
-                                        </span>
+                                        <CountUp
+                                            start={0}
+                                            end={value2.count({ state })}
+                                            duration={0.7}
+                                        >
+                                            {({ countUpRef, start }) => (
+                                                <>
+                                                    <span
+                                                        className="count"
+                                                        ref={countUpRef}
+                                                    ></span>
+                                                    <span className="label">
+                                                        {t(value2.i18nKey)}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </CountUp>
                                     </div>
                                 </li>
                             )
