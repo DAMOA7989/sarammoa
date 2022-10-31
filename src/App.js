@@ -41,10 +41,12 @@ import Pending from "components/layout/Pending";
 import { useStatusContext } from "utils/status";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useStoreContext } from "utils/store";
 
 const App = () => {
-    const { init, user } = useAuthContext();
+    const { init, user, userInfo } = useAuthContext();
     const location = useLocation();
+    const { messages } = useStoreContext();
 
     React.useEffect(() => {
         const initClient = () => {
@@ -55,6 +57,13 @@ const App = () => {
             gapi.load("client:auth2", initClient);
         };
     }, []);
+
+    React.useEffect(() => {
+        if (!userInfo?.id) return;
+
+        const unobserve = messages.observe({ uid: userInfo?.id });
+        return () => unobserve();
+    }, [userInfo?.id]);
 
     React.useEffect(() => {
         // setIsLoading(true);

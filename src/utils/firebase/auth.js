@@ -23,6 +23,7 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { httpsCallable } from "firebase/functions";
+import { getResizedImageBlob } from "utils/converter";
 
 export const _getRedirectResult = async () => await getRedirectResult(auth);
 
@@ -148,9 +149,15 @@ export const _getUserInfo = ({ uid }) =>
         }
     });
 
-export const _uploadProfileThumbnail = ({ uid, profileThumbnailBlob }) =>
+export const _uploadProfileThumbnail = ({
+    uid,
+    profileThumbnailBlob: _profileThumbnailBlob,
+}) =>
     new Promise(async (resolve, reject) => {
         try {
+            const profileThumbnailBlob = await getResizedImageBlob(
+                _profileThumbnailBlob
+            );
             const profileThumbnailRef = ref(storage, `${uid}/profileThumbnail`);
             await uploadBytes(profileThumbnailRef, profileThumbnailBlob);
             const url = await getDownloadURL(profileThumbnailRef);
