@@ -34,28 +34,64 @@ const __DATAS__ = {
         views: {
             i18nKey: "title.profile.information.views",
             count: ({ state }) => {
-                return 0;
+                const filtered = (state.views || []).filter((x) => {
+                    const viewDate = x.createdAt.toDate().getTime();
+                    const beforeAnHourDate =
+                        new Date().getTime() - 24 * 60 * 60 * 1000;
+
+                    if (viewDate - beforeAnHourDate >= 0) return true;
+                    return false;
+                });
+
+                return filtered.length;
             },
             onClick: () => {},
         },
         likes: {
             i18nKey: "title.profile.information.appreciations",
             count: ({ state }) => {
-                return 0;
+                const filtered = (state.likes || []).filter((x) => {
+                    const viewDate = x.createdAt.toDate().getTime();
+                    const beforeAnHourDate =
+                        new Date().getTime() - 24 * 60 * 60 * 1000;
+
+                    if (viewDate - beforeAnHourDate >= 0) return true;
+                    return false;
+                });
+
+                return filtered.length;
             },
             onClick: () => {},
         },
         comments: {
             i18nKey: "title.profile.information.comments",
             count: ({ state }) => {
-                return 0;
+                const filtered = (state.comments || []).filter((x) => {
+                    const viewDate = x.createdAt.toDate().getTime();
+                    const beforeAnHourDate =
+                        new Date().getTime() - 24 * 60 * 60 * 1000;
+
+                    if (viewDate - beforeAnHourDate >= 0) return true;
+                    return false;
+                });
+
+                return filtered.length;
             },
             onClick: () => {},
         },
         profileViews: {
             i18nKey: "title.profile.information.profile_views",
             count: ({ state }) => {
-                return 0;
+                const filtered = (state.profileViews || []).filter((x) => {
+                    const viewDate = x.createdAt.toDate().getTime();
+                    const beforeAnHourDate =
+                        new Date().getTime() - 24 * 60 * 60 * 1000;
+
+                    if (viewDate - beforeAnHourDate >= 0) return true;
+                    return false;
+                });
+
+                return filtered.length;
             },
             onClick: () => {},
         },
