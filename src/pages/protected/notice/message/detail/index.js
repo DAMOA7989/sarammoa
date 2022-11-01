@@ -124,7 +124,7 @@ const NoticeMessageDetail = ({ type }) => {
             messagesLoading: false,
             messages: [],
             page: 0,
-            offset: 20,
+            offset: 200,
             type: "",
         }
     );

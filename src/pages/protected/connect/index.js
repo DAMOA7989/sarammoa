@@ -1,7 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const Connect = () => {
-    return <main>connect</main>;
+    const { t } = useTranslation();
+
+    return <main className="pages-protected-connect">connect</main>;
 };
 
 export default Connect;
