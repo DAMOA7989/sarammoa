@@ -2,8 +2,10 @@ import React from "react";
 import { _getUserInfo } from "utils/firebase/auth";
 import LazyImage from "./LazyImage";
 import LazyTypography from "./LazyTypography";
+import { useNavigateContext } from "utils/navigate";
 
 const PersonCard = ({ uid }) => {
+    const navigate = useNavigateContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -39,7 +41,6 @@ const PersonCard = ({ uid }) => {
         });
         _getUserInfo({ uid })
             .then((doc) => {
-                console.log("d doc", doc);
                 dispatch({
                     type: "FETCH_USER_INFO_FULFILLED",
                     payload: {
@@ -56,7 +57,15 @@ const PersonCard = ({ uid }) => {
     }, [uid]);
 
     return (
-        <div className="person-card">
+        <div
+            className="person-card"
+            onClick={() => {
+                navigate.push({
+                    pathname: `/user/${uid}`,
+                    mode: "sub",
+                });
+            }}
+        >
             <div className="profile-thumbnail">
                 <LazyImage
                     src={state.userInfo?.profileThumbnailUrl}

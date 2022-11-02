@@ -5,9 +5,12 @@ import { ReactComponent as ArrowRightIcon } from "assets/images/icons/connect/ar
 import { _getUsers } from "utils/firebase/user";
 import PersonCard from "components/surface/PersonCard";
 import TeamCard from "components/surface/TeamCard";
+import { ReactComponent as PlusIcon } from "assets/images/icons/connect/plus.svg";
+import { useNavigateContext } from "utils/navigate";
 
 const Connect = () => {
     const { t } = useTranslation();
+    const navigate = useNavigateContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -98,6 +101,21 @@ const Connect = () => {
         <main className="pages-protected-connect">
             <div className="team">
                 <h1 className="title">{t("title.connect.joined_team")}</h1>
+                <div className="content">
+                    <CommonButton
+                        className="create-team-btn"
+                        color="primary"
+                        onClick={() =>
+                            navigate.push({
+                                pathname: `/connect/create`,
+                                mode: "sub",
+                            })
+                        }
+                    >
+                        <PlusIcon />
+                        {t("btn.create_team")}
+                    </CommonButton>
+                </div>
             </div>
             <div className="people">
                 <header>
@@ -106,6 +124,12 @@ const Connect = () => {
                         className="more-btn"
                         type="text"
                         color="primary"
+                        onClick={() =>
+                            navigate.push({
+                                pathname: "/connect/people",
+                                mode: "sub",
+                            })
+                        }
                     >
                         {t("btn.more")}
                         <ArrowRightIcon />
@@ -128,6 +152,12 @@ const Connect = () => {
                         className="more-btn"
                         type="text"
                         color="primary"
+                        onClick={() =>
+                            navigate.push({
+                                pathname: "/connect/teams",
+                                mode: "sub",
+                            })
+                        }
                     >
                         {t("btn.more")}
                         <ArrowRightIcon />

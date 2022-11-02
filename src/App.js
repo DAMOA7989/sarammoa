@@ -7,6 +7,9 @@ import {
     KakaoSignin,
     Protected,
     Connect,
+    ConnectCreate,
+    ConnectPeople,
+    ConnectTeams,
     Notice,
     NoticeMessage,
     NoticeMessageRedirect,
@@ -114,7 +117,7 @@ const App = () => {
                         }
                     >
                         <Route path="support" element={<Support />} />
-                        <Route path="connect" element={<Connect />} />
+                        <Route path="connect" element={<Connect />}></Route>
                         <Route path="notice" element={<Notice />}>
                             <Route path="" element={<NoticeMessage />} />
                             <Route
@@ -165,6 +168,11 @@ const App = () => {
                                     element={<ProfileWorkAdd />}
                                 />
                             </Route>
+                        </Route>
+                        <Route path="connect">
+                            <Route path="create" element={<ConnectCreate />} />
+                            <Route path="people" element={<ConnectPeople />} />
+                            <Route path="teams" element={<ConnectTeams />} />
                         </Route>
                         <Route path="notice">
                             <Route

@@ -6,6 +6,9 @@ export { default as KakaoSignin } from "./auth/kakao/signin";
 export { default as Protected } from "./protected";
 
 export { default as Connect } from "./protected/connect";
+export { default as ConnectCreate } from "./protected/connect/create";
+export { default as ConnectPeople } from "./protected/connect/people";
+export { default as ConnectTeams } from "./protected/connect/teams";
 
 export { default as Notice } from "./protected/notice";
 export { default as NoticeMessage } from "./protected/notice/message";
