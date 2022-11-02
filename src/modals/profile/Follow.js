@@ -1,7 +1,7 @@
 import React from "react";
 import SearchBar from "components/input/SearchBar";
 import { useTranslation } from "react-i18next";
-import { _getUserInfo } from "utils/firebase/auth";
+import { _getUserInfoDetail } from "utils/firebase/auth";
 import FollowCard from "components/surface/FollowCard";
 import { useAuthContext } from "utils/auth";
 
@@ -61,7 +61,7 @@ const Following = ({ type, uid }) => {
         dispatch({
             type: "FETCH_USER_INFO_PENDING",
         });
-        _getUserInfo({ uid })
+        _getUserInfoDetail({ uid })
             .then((doc) => {
                 dispatch({
                     type: "FETCH_USER_INFO_FULFILLED",

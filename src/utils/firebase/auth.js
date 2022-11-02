@@ -108,6 +108,25 @@ export const _setUserInfo = ({ uid, payload }) =>
 export const _getUserInfo = ({ uid }) =>
     new Promise(async (resolve, reject) => {
         try {
+            const userRef = doc(db, `users/${uid}`);
+            const userDocSnapshot = await getDoc(userRef);
+
+            if (userDocSnapshot.exists()) {
+                return resolve({
+                    id: userDocSnapshot.id,
+                    ...userDocSnapshot.data(),
+                });
+            } else {
+                throw new Error("There is no user");
+            }
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _getUserInfoDetail = ({ uid }) =>
+    new Promise(async (resolve, reject) => {
+        try {
             const docRef = doc(db, "users", uid);
             const docSnap = await getDoc(docRef);
 

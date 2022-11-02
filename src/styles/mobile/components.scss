@@ -1372,3 +1372,43 @@
         }
     }
 }
+
+.person-card {
+    width: 8em;
+    height: 11em;
+    border-radius: 8px;
+    box-shadow: $common_box_shadow;
+    overflow: hidden;
+
+    > .profile-thumbnail {
+        width: 8em;
+        height: 8em;
+    }
+
+    > .info {
+        display: flex;
+        height: calc(100% - 8em);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0 0.5em;
+
+        > .nickname {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: $gunmetal_color;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        > .position {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: $auro_metal_saurus_color;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

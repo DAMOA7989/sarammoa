@@ -356,3 +356,28 @@ export const _viewProfile = ({ fromUid, toUid }) =>
             return reject(e);
         }
     });
+
+export const _getUsers = ({ limit: _limit = 100 }) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const usersRef = collection(db, "users");
+            const usersQuery = query(
+                usersRef,
+                orderBy("createdAt", "desc"),
+                limit(_limit)
+            );
+            const usersQuerySnapshot = await getDocs(usersQuery);
+
+            const users = [];
+            usersQuerySnapshot.forEach((userDocSnapshot) => {
+                users.push({
+                    id: userDocSnapshot.id,
+                    ...userDocSnapshot.data(),
+                });
+            });
+
+            return resolve(users);
+        } catch (e) {
+            return reject(e);
+        }
+    });

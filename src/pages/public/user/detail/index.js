@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, Outlet, useLocation } from "react-router-dom";
-import { _getUserInfo } from "utils/firebase/auth";
+import { _getUserInfoDetail } from "utils/firebase/auth";
 import LazyImage from "components/surface/LazyImage";
 import LazyTypography from "components/surface/LazyTypography";
 import RippleEffect from "components/surface/RippleEffect";
@@ -275,7 +275,7 @@ const UserDetail = () => {
         if (!Boolean(uid)) return;
 
         dispatch({ type: "SET_USER_INFO_PENDING" });
-        _getUserInfo({ uid })
+        _getUserInfoDetail({ uid })
             .then((doc) => {
                 const tasks = [];
                 tasks.push(

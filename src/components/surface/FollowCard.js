@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { _getUserInfo } from "utils/firebase/auth";
+import { _getUserInfoDetail } from "utils/firebase/auth";
 import { _follow, _unfollow } from "utils/firebase/user";
 import LazyImage from "./LazyImage";
 import LazyTypography from "./LazyTypography";
@@ -94,7 +94,7 @@ const FollowCard = ({ className, pid, uid, search }) => {
         dispatch({
             type: "FETCH_USER_INFO_PENDING",
         });
-        _getUserInfo({ uid })
+        _getUserInfoDetail({ uid })
             .then((doc) => {
                 dispatch({
                     type: "FETCH_USER_INFO_FULFILLED",

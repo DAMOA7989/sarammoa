@@ -1,14 +1,14 @@
 import React from "react";
 import LazyImage from "./LazyImage";
 import LazyTypography from "./LazyTypography";
-import { _getUserInfo } from "utils/firebase/auth";
+import { _getUserInfoDetail } from "utils/firebase/auth";
 
 const CommentCard = ({ writerId, message, createdAt }) => {
     const [loaded, setLoaded] = React.useState(false);
     const [writerInfo, setWriterInfo] = React.useState(null);
 
     React.useEffect(() => {
-        _getUserInfo({ uid: writerId })
+        _getUserInfoDetail({ uid: writerId })
             .then((result) => {
                 setWriterInfo(result);
                 setLoaded(true);

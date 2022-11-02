@@ -14,7 +14,7 @@ import {
     runTransaction,
 } from "firebase/firestore";
 import { intersection } from "utils/operator";
-import { _getUserInfo } from "./auth";
+import { _getUserInfoDetail } from "./auth";
 
 export const _getRoomInfo = ({ rid }) =>
     new Promise(async (resolve, reject) => {
@@ -87,7 +87,7 @@ export const _getParticipantInfos = ({ rid }) =>
             const tasks = [];
             participantsQuerySnapshot.forEach((participantDocSnapshot) => {
                 const participantUid = participantDocSnapshot.id;
-                tasks.push(_getUserInfo({ uid: participantUid }));
+                tasks.push(_getUserInfoDetail({ uid: participantUid }));
             });
 
             const result = await Promise.all(tasks);

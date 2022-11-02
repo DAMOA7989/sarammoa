@@ -4,7 +4,7 @@ import {
     _logAccess,
     _signInWithRedirect,
     _signOut,
-    _getUserInfo,
+    _getUserInfoDetail,
     _createUserWithEmailAndPassword,
     _signInWithEmailAndPassword,
 } from "utils/firebase/auth";

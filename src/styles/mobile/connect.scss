@@ -1,0 +1,84 @@
+@import "../include.scss";
+
+.pages-protected-connect {
+    > .team {
+        padding: 2.5em 1.25em 1.25em 1.25em;
+
+        > .title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: $gunmetal_color;
+        }
+    }
+
+    > .people {
+        padding: 1.25em 0;
+
+        > header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.25em;
+            margin-bottom: 0.5em;
+
+            > .title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: $gunmetal_color;
+            }
+
+            > .more-btn {
+                svg {
+                    position: relative;
+                    top: 1px;
+                    margin-left: 4px;
+                }
+            }
+        }
+
+        > .cards {
+            width: 100%;
+            overflow: auto;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            > ul {
+                display: flex;
+                flex-wrap: nowrap;
+                padding: 0.5em;
+                gap: 0.75em;
+
+                > li {
+                }
+            }
+        }
+    }
+
+    > .teams {
+        padding: 1.25em 0 2.5em 0;
+
+        > header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1.25em;
+            margin-bottom: 0.5em;
+
+            > .title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: $gunmetal_color;
+            }
+
+            > .more-btn {
+                svg {
+                    position: relative;
+                    top: 1px;
+                    margin-left: 4px;
+                }
+            }
+        }
+    }
+}
