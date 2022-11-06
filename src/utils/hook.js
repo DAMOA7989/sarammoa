@@ -67,3 +67,17 @@ export const useOutsideClickListener = (ref, callback) => {
         };
     }, [ref, callback]);
 };
+
+export const useCloseDropdownListener = (ref, callback) => {
+    React.useEffect(() => {
+        const eventHandler = (event) => {
+            if (!ref.current) return;
+            if (ref.current.contains(event.target)) return;
+
+            if (callback) callback();
+        };
+
+        window.document.addEventListener("click", eventHandler);
+        return () => window.document.removeEventListener("click", eventHandler);
+    }, [ref]);
+};

@@ -65,7 +65,7 @@ const WoilonnInput = ({
                                 type={type}
                                 value={value}
                                 onChange={onChange}
-                                rows="1"
+                                rows="3"
                                 autoFocus={autoFocus ? autoFocus : false}
                             />
                         ) : (

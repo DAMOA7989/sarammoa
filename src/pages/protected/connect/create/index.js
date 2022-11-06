@@ -6,7 +6,7 @@ const ConnectCreate = () => {
     const navigate = useNavigateContext();
     const [screenIdx, setScreenIdx] = React.useState(0);
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         switch (screenIdx) {
             case 0:
                 navigate.replace({

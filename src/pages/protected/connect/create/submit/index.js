@@ -23,6 +23,7 @@ const ConnectCreateSubmit = () => {
                     setScreenIdx(screenIdx - 1);
                 },
             },
+            screenTitle: "title.connect.create.submit",
         });
     }, []);
 

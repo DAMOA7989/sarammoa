@@ -8,6 +8,8 @@ const SubHeader = () => {
     const { t } = useTranslation();
     const navigate = useNavigateContext();
 
+    console.log("d navigate", navigate.state);
+
     return (
         <header className="components-header-sub-header">
             <div className="container">

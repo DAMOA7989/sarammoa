@@ -23,6 +23,7 @@ const ConnectCreateInvite = () => {
                     setScreenIdx(screenIdx - 1);
                 },
             },
+            screenTitle: "title.connect.create.invite",
         });
     }, []);
 
