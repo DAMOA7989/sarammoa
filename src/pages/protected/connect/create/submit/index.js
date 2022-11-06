@@ -1,32 +1,34 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigateContext } from "utils/navigate";
+import { useOutletContext } from "react-router-dom";
 
-const ConnectCreateSubmit = ({ _idx, screenIdx, setScreenIdx }) => {
+const ConnectCreateSubmit = () => {
     const { t } = useTranslation();
+    const { screenIdx, setScreenIdx } = useOutletContext();
     const navigate = useNavigateContext();
     const [canSubmit, setCanSubmit] = React.useState(false);
 
     React.useLayoutEffect(() => {
-        if (screenIdx === _idx) {
-            navigate.setLayout({
-                right: {
-                    submit: {
-                        title: t("btn.submit"),
-                        onClick: onSubmitHandler,
-                        disabled: !canSubmit,
-                    },
+        navigate.setLayout({
+            right: {
+                submit: {
+                    title: t("btn.submit"),
+                    onClick: onSubmitHandler,
+                    disabled: !canSubmit,
                 },
-                goBack: {
-                    onClick: () => {
-                        setScreenIdx(screenIdx - 1);
-                    },
+            },
+            goBack: {
+                onClick: () => {
+                    setScreenIdx(screenIdx - 1);
                 },
-            });
-        }
-    }, [screenIdx, canSubmit]);
+            },
+        });
+    }, []);
 
-    const onSubmitHandler = () => {};
+    const onSubmitHandler = () => {
+        console.log("d submit");
+    };
 
     return <main className="protected-connect-create-submit">submit</main>;
 };

@@ -1,26 +1,35 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-import ScreenCarousel from "components/layout/ScreenCarousel";
-import ConnectCreateInfo from "./info";
-import ConnectCreateInvite from "./invite";
-import ConnectCreateSubmit from "./submit";
+import { Outlet } from "react-router-dom";
+import { useNavigateContext } from "utils/navigate";
 
 const ConnectCreate = () => {
-    const { t } = useTranslation();
+    const navigate = useNavigateContext();
     const [screenIdx, setScreenIdx] = React.useState(0);
 
-    return (
-        <ScreenCarousel
-            mode="sub"
-            screenIdx={screenIdx}
-            setScreenIdx={setScreenIdx}
-            screens={[
-                <ConnectCreateInfo />,
-                <ConnectCreateInvite />,
-                <ConnectCreateSubmit />,
-            ]}
-        />
-    );
+    React.useEffect(() => {
+        switch (screenIdx) {
+            case 0:
+                navigate.replace({
+                    pathname: "/connect/create",
+                    mode: "sub",
+                });
+                break;
+            case 1:
+                navigate.replace({
+                    pathname: "/connect/create/invite",
+                    mode: "sub",
+                });
+                break;
+            case 2:
+                navigate.replace({
+                    pathname: "/connect/create/submit",
+                    mode: "sub",
+                });
+                break;
+        }
+    }, [screenIdx]);
+
+    return <Outlet context={{ screenIdx, setScreenIdx }} />;
 };
 
 export default ConnectCreate;

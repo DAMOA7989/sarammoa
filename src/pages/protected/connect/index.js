@@ -105,6 +105,7 @@ const Connect = () => {
                     <CommonButton
                         className="create-team-btn"
                         color="primary"
+                        type="text"
                         onClick={() =>
                             navigate.push({
                                 pathname: `/connect/create`,

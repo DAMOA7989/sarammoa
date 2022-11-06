@@ -8,6 +8,9 @@ import {
     Protected,
     Connect,
     ConnectCreate,
+    ConnectCreateInfo,
+    ConnectCreateInvite,
+    ConnectCreateSubmit,
     ConnectPeople,
     ConnectTeams,
     Notice,
@@ -170,7 +173,20 @@ const App = () => {
                             </Route>
                         </Route>
                         <Route path="connect">
-                            <Route path="create" element={<ConnectCreate />} />
+                            <Route path="create" element={<ConnectCreate />}>
+                                <Route
+                                    path=""
+                                    element={<ConnectCreateInfo />}
+                                />
+                                <Route
+                                    path="invite"
+                                    element={<ConnectCreateInvite />}
+                                />
+                                <Route
+                                    path="submit"
+                                    element={<ConnectCreateSubmit />}
+                                />
+                            </Route>
                             <Route path="people" element={<ConnectPeople />} />
                             <Route path="teams" element={<ConnectTeams />} />
                         </Route>

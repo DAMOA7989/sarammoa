@@ -7,6 +7,9 @@ export { default as Protected } from "./protected";
 
 export { default as Connect } from "./protected/connect";
 export { default as ConnectCreate } from "./protected/connect/create";
+export { default as ConnectCreateInfo } from "./protected/connect/create/info";
+export { default as ConnectCreateInvite } from "./protected/connect/create/invite";
+export { default as ConnectCreateSubmit } from "./protected/connect/create/submit";
 export { default as ConnectPeople } from "./protected/connect/people";
 export { default as ConnectTeams } from "./protected/connect/teams";
 
