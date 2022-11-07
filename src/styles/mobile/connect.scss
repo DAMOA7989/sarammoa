@@ -114,3 +114,66 @@
         }
     }
 }
+
+.protected-connect-create-info {
+    padding: 2.5em 1.25em;
+
+    > .inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75em;
+        margin-bottom: 2.5em;
+
+        > .purpose {
+        }
+
+        > .title {
+        }
+
+        > .description {
+        }
+    }
+
+    > .member-composition {
+        padding: 1em;
+        box-shadow: $common_box_shadow;
+
+        > header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2em;
+        }
+
+        > main {
+            margin-bottom: 2em;
+
+            > ul {
+                > li {
+                    > .container {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                }
+            }
+        }
+
+        > footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            > .edit-btn {
+                width: 100%;
+                box-shadow: $common_box_shadow;
+
+                svg {
+                    path {
+                        stroke: $primary_color;
+                    }
+                }
+            }
+        }
+    }
+}

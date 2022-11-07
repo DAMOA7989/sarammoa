@@ -62,6 +62,7 @@ const WoilonnInput = ({
                         ) : multiline ? (
                             <textarea
                                 ref={textareaRef}
+                                placeholder={placeholder || null}
                                 type={type}
                                 value={value}
                                 onChange={onChange}

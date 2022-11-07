@@ -209,7 +209,7 @@ const Statistic = ({ uid }) => {
             type: "FETCH_VIEWS_PENDING",
         });
         tasks.push(
-            _countTotalLikes({ uid })
+            _countTotalViews({ uid })
                 .then((docs) => {
                     dispatch({
                         type: "FETCH_VIEWS_FULFILLED",
@@ -230,7 +230,7 @@ const Statistic = ({ uid }) => {
             type: "FETCH_LIKES_PENDING",
         });
         tasks.push(
-            _countTotalViews({ uid })
+            _countTotalLikes({ uid })
                 .then((docs) => {
                     dispatch({
                         type: "FETCH_LIKES_FULFILLED",
