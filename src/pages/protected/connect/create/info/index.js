@@ -10,12 +10,14 @@ import { ReactComponent as EditIcon } from "assets/images/icons/connect/edit.svg
 import RippleEffect from "components/surface/RippleEffect";
 import { useModalContext } from "utils/modal";
 import _ from "lodash";
+import { useModal } from "utils/modal";
 
 const ConnectCreateInfo = () => {
     const { t } = useTranslation();
     const { screenIdx, setScreenIdx } = useOutletContext();
     const modal = useModalContext();
     const navigate = useNavigateContext();
+    useModal({});
 
     const [state, dispatch] = React.useReducer(
         (state, action) => {

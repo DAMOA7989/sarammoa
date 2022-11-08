@@ -1,4 +1,6 @@
 import React from "react";
+import { useRecoilState, useResetRecoilState } from "recoil";
+import { modalSelectorFamily } from "recoil/modal";
 
 const ModalContext = React.createContext(null);
 
@@ -36,3 +38,22 @@ export const ModalProvider = ({ children }) => {
 };
 
 export const useModalContext = () => React.useContext(ModalContext);
+
+export const useModal = ({ pathname = "", params = {}, options = {} }) => {
+    const [modal, setModal] = useRecoilState(modalSelectorFamily(pathname));
+    const resetModal = useResetRecoilState(modalSelectorFamily(pathname));
+
+    const open = () => {
+        setModal((current) => ({ ...current, isOpen: true }));
+    };
+
+    const hide = () => {
+        setModal((current) => ({ ...current, isOpen: false }));
+    };
+
+    const close = () => {
+        resetModal();
+    };
+
+    return { modal, open, hide, close };
+};
