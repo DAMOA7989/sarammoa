@@ -10,7 +10,7 @@ const Modal = ({ modalId }) => {
         instance: { id: pathname, params, options, isOpen },
         close,
     } = useModal(modalId);
-    const [display, setDisplay] = React.useState(isOpen);
+    const [display, setDisplay] = React.useState(false);
     const modalContainerRef = React.useRef(null);
     const modalRef = React.useRef(null);
     const timerRef = React.useRef(null);
@@ -38,8 +38,7 @@ const Modal = ({ modalId }) => {
         timerRef.current = null;
 
         if (isOpen) {
-            ModalComponentRef.current =
-                require(`modals/${pathname}.js`).default;
+            ModalComponentRef.current = require(`modals/${modalId}.js`).default;
             setDisplay(true);
         } else {
             timerRef.current = setTimeout(() => {
@@ -109,7 +108,9 @@ const Modal = ({ modalId }) => {
         }
     }, [isOpen]);
 
-    if (!display) return null;
+    if (!display) {
+        return null;
+    }
     return (
         <div ref={modalContainerRef} className={`modal-container`}>
             <div

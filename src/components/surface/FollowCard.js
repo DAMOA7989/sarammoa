@@ -7,12 +7,10 @@ import LazyTypography from "./LazyTypography";
 import RippleEffect from "./RippleEffect";
 import { CircularProgress } from "@mui/material";
 import { useNavigateContext } from "utils/navigate";
-import { useModal } from "utils/modal";
 
-const FollowCard = ({ className, pid, uid, search }) => {
+const FollowCard = ({ className, pid, uid, search, followModal }) => {
     const { t } = useTranslation();
     const navigate = useNavigateContext();
-    // const modal = useModal()
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -154,7 +152,7 @@ const FollowCard = ({ className, pid, uid, search }) => {
             <RippleEffect
                 className="profile"
                 onClick={() => {
-                    // modal.dismissModal();
+                    followModal.close();
                     navigate.push({
                         pathname: `/user/${uid}`,
                         mode: "sub",

@@ -4,11 +4,13 @@ import { useTranslation } from "react-i18next";
 import { _getUserInfoDetail } from "utils/firebase/auth";
 import FollowCard from "components/surface/FollowCard";
 import { useAuthContext } from "utils/auth";
+import { useModal } from "utils/modal";
 
 const Following = ({ modalId, type, uid }) => {
     const { t } = useTranslation();
     const { userInfo } = useAuthContext();
     const [search, setSearch] = React.useState("");
+    const followModal = useModal(modalId);
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -97,6 +99,7 @@ const Following = ({ modalId, type, uid }) => {
                                     pid={userInfo?.id}
                                     uid={person.id}
                                     search={search}
+                                    followModal={followModal}
                                 />
                             </li>
                         ))
@@ -108,6 +111,7 @@ const Following = ({ modalId, type, uid }) => {
                                     pid={userInfo?.id}
                                     uid={person.id}
                                     search={search}
+                                    followModal={followModal}
                                 />
                             </li>
                         ))

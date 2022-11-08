@@ -9,9 +9,11 @@ const ModalFactory = () => {
 
     if ((modalIds || []).length > 0) {
         return reactDom.createPortal(
-            (modalIds || []).map((modalId) => (
-                <Modal key={modalId} modalId={modalId} />
-            )),
+            <>
+                {(modalIds || []).map((modalId) => (
+                    <Modal key={modalId} modalId={modalId} />
+                ))}
+            </>,
             document.getElementById("modals")
         );
     } else {
