@@ -39,7 +39,9 @@ const WoilonnInput = ({
     }, [multiline, value]);
 
     return (
-        <div className={`woilonn-input ${className}`}>
+        <div
+            className={`woilonn-input ${className} ${Boolean(value) && "fill"}`}
+        >
             {Boolean(label) && (
                 <div className={`label ${required && "required"}`}>
                     {label}

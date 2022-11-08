@@ -136,7 +136,12 @@
 
     > .member-composition {
         padding: 1em;
-        box-shadow: $common_box_shadow;
+        border-radius: 8px;
+        border: 1px solid rgba($auro_metal_saurus_color, 0.7);
+
+        &.fill {
+            border: 1px solid $auro_metal_saurus_color;
+        }
 
         > header {
             display: flex;

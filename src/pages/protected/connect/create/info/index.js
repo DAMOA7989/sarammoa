@@ -103,7 +103,10 @@ const ConnectCreateInfo = () => {
             });
 
         if (
-            Object.values(state.members).reduce((p, c) => p + c.person, 0) === 0
+            Object.values(state.members).reduce(
+                (p, c) => p + Number(c.person),
+                0
+            ) === 0
         )
             return dispatch({
                 type: "SET_CAN_NEXT",
@@ -185,7 +188,15 @@ const ConnectCreateInfo = () => {
                     multiline={true}
                 />
             </div>
-            <div className="member-composition">
+            <div
+                className={`member-composition ${
+                    Object.values(state.members).reduce(
+                        (previousValue, currentValue) =>
+                            previousValue + Number(currentValue.person),
+                        0
+                    ) > 0 && "fill"
+                }`}
+            >
                 <header>
                     <h3 className="title">
                         {t("title.connect.create.info.member_composition")}
@@ -194,7 +205,7 @@ const ConnectCreateInfo = () => {
                         state.members
                     ).reduce(
                         (previousValue, currentValue) =>
-                            previousValue + currentValue.person,
+                            previousValue + Number(currentValue.person),
                         0
                     )} ${t("text.person")}`}</span>
                 </header>

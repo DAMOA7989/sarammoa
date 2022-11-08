@@ -10,17 +10,17 @@ import CommonButton from "components/button/CommonButton";
 const MemberComposition = ({ modalId, state, dispatch }) => {
     const { t } = useTranslation();
     const [position, setPosition] = React.useState(null);
-    const [person, setPerson] = React.useState(0);
+    const [person, setPerson] = React.useState("");
     const [canAdd, setCanAdd] = React.useState(false);
 
     React.useEffect(() => {
         if (!position) return setCanAdd(false);
-        if (person < 1) return setCanAdd(false);
+        if (!Boolean(person)) return setCanAdd(false);
         setCanAdd(true);
     }, [position, person]);
 
     const onAddHandler = () => {
-        if (!position || person < 1) return;
+        if (!position || !Boolean(person)) return;
 
         dispatch({
             type: "ADD_MEMBER_COMPOSITION",
@@ -30,7 +30,7 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
             },
         });
         setPosition(null);
-        setPerson(0);
+        setPerson("");
     };
 
     const onRemoveHandler = (key) => {};
@@ -46,7 +46,7 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
                 </span>
                 <span className="total">
                     {Object.values(state?.members || {}).reduce(
-                        (p, c) => p + c.person,
+                        (p, c) => p + Number(c.person),
                         0
                     )}
                 </span>
@@ -57,34 +57,12 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
                         ([position, value], idx) => (
                             <li key={position}>
                                 <div className="container">
-                                    {/* <WoilonnSelect
-                                        value={position}
-                                        onChange={(item) => setPosition(item)}
-                                        datas={[
-                                            {
-                                                key: "developer",
-                                                i18nKey: "text.developer",
-                                            },
-                                            {
-                                                key: "designer",
-                                                i18nKey: "text.designer",
-                                            },
-                                            {
-                                                key: "planner",
-                                                i18nKey: "text.planner",
-                                            },
-                                            {
-                                                key: "marketer",
-                                                i18nKey: "text.marketer",
-                                            },
-                                        ]}
-                                    /> */}
                                     <div className="position">
                                         {t(value.i18nKey)}
                                     </div>
                                     <div className="person">{value.person}</div>
                                     <RippleEffect
-                                        style={{ padding: "0.625em" }}
+                                        className="remove"
                                         onClick={() =>
                                             onRemoveHandler(position)
                                         }
@@ -96,38 +74,47 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
                         )
                     )}
                 </ul>
-                <div>
-                    <WoilonnSelect
-                        value={position}
-                        onChange={(item) => setPosition(item)}
-                        datas={[
-                            {
-                                key: "developer",
-                                i18nKey: "text.developer",
-                            },
-                            {
-                                key: "designer",
-                                i18nKey: "text.designer",
-                            },
-                            {
-                                key: "planner",
-                                i18nKey: "text.planner",
-                            },
-                            {
-                                key: "marketer",
-                                i18nKey: "text.marketer",
-                            },
-                        ]}
-                    />
-                    <WoilonnInput
-                        type="number"
-                        value={person}
-                        onChange={(event) =>
-                            setPerson(Number(event.target.value))
-                        }
-                    />
+                <div className="add-row">
+                    <div className="position">
+                        <WoilonnSelect
+                            value={position}
+                            onChange={(item) => setPosition(item)}
+                            datas={[
+                                {
+                                    key: "developer",
+                                    i18nKey: "text.developer",
+                                },
+                                {
+                                    key: "designer",
+                                    i18nKey: "text.designer",
+                                },
+                                {
+                                    key: "planner",
+                                    i18nKey: "text.planner",
+                                },
+                                {
+                                    key: "marketer",
+                                    i18nKey: "text.marketer",
+                                },
+                            ]}
+                        />
+                    </div>
+                    <div className="person">
+                        <WoilonnInput
+                            type="number"
+                            value={person}
+                            onChange={(event) => {
+                                const { value } = event.target;
+                                const onlyNumberPersonValue = value
+                                    .replace(/[^0-9.]/g, "")
+                                    .replace(/(\..*)\./g, "$1");
+                                setPerson(onlyNumberPersonValue);
+                            }}
+                        />
+                    </div>
+
                     <RippleEffect
-                        style={{ padding: "0.625em" }}
+                        className="remove"
                         onClick={() => onRemoveHandler(position)}
                     >
                         <RemoveIcon />

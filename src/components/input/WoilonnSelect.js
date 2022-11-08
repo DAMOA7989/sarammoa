@@ -34,7 +34,7 @@ const WoilonnSelect = ({
             <div
                 className={`woilonn-select ${className} ${
                     openDropdown ? "open" : "close"
-                }`}
+                } ${value && "fill"}`}
             >
                 {Boolean(label) && (
                     <div className={`label ${required && "required"}`}>
