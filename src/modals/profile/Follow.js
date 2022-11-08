@@ -5,7 +5,7 @@ import { _getUserInfoDetail } from "utils/firebase/auth";
 import FollowCard from "components/surface/FollowCard";
 import { useAuthContext } from "utils/auth";
 
-const Following = ({ type, uid }) => {
+const Following = ({ modalId, type, uid }) => {
     const { t } = useTranslation();
     const { userInfo } = useAuthContext();
     const [search, setSearch] = React.useState("");

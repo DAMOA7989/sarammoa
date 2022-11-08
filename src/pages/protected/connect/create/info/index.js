@@ -8,16 +8,14 @@ import CommonButton from "components/button/CommonButton";
 import { ReactComponent as PlusIcon } from "assets/images/icons/connect/plus.svg";
 import { ReactComponent as EditIcon } from "assets/images/icons/connect/edit.svg";
 import RippleEffect from "components/surface/RippleEffect";
-import { useModalContext } from "utils/modal";
 import _ from "lodash";
 import { useModal } from "utils/modal";
 
 const ConnectCreateInfo = () => {
     const { t } = useTranslation();
     const { screenIdx, setScreenIdx } = useOutletContext();
-    const modal = useModalContext();
+    const modal = useModal("connect/create/MemberComposition");
     const navigate = useNavigateContext();
-    useModal({});
 
     const [state, dispatch] = React.useReducer(
         (state, action) => {
@@ -223,8 +221,7 @@ const ConnectCreateInfo = () => {
                         color="primary"
                         style={{ padding: "0.625em" }}
                         onClick={() => {
-                            modal.displayModal({
-                                pathname: "connect/create/MemberComposition",
+                            modal.open({
                                 params: {
                                     state,
                                     dispatch,

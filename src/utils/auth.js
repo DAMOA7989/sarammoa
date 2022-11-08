@@ -11,13 +11,13 @@ import {
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "utils/firebase";
 import { useStatusContext } from "utils/status";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 
 const AuthContext = React.createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const { task } = useStatusContext();
-    const { displayModal } = useModalContext();
+    const initUserModal = useModal("auth/InitUser");
     const [init, setInit] = React.useState(false);
     const [user, setUser] = React.useState({
         status: "idle",
@@ -80,8 +80,7 @@ export const AuthProvider = ({ children }) => {
                                 });
 
                                 if (!docSnap.data()?.init) {
-                                    displayModal({
-                                        pathname: "auth/InitUser",
+                                    initUserModal.open({
                                         params: {
                                             ...docSnap.data(),
                                             uid: docSnap.id,

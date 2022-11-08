@@ -5,7 +5,7 @@ import { useNavigateContext } from "utils/navigate";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import { useAuthContext } from "utils/auth";
 import CommonButton from "components/button/CommonButton";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 import { ReactComponent as EditIcon } from "assets/images/icons/profile/edit.svg";
 import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
 import RippleEffect from "components/surface/RippleEffect";
@@ -70,8 +70,7 @@ const __EXPAND__ = [
         i18nKey: "text.profile.expand.share",
         icon: <ShareIcon />,
         onClick: ({ modal }) => {
-            modal.displayModal({
-                pathname: "profile/Share",
+            modal.open({
                 params: {},
                 options: {
                     title: "title.profile.share",
@@ -88,7 +87,7 @@ const Profile = () => {
     const navigate = useNavigateContext();
     const { userInfo: _userInfo } = useAuthContext();
     const [userInfo, setUserInfo] = React.useState(_userInfo);
-    const modal = useModalContext();
+    const shareModal = useModal("profile/Share");
     const [curTab, setCurTab] = React.useState(null);
     const [openExpand, setOpenExpand] = React.useState(false);
     const tabRefs = {
@@ -276,7 +275,7 @@ const Profile = () => {
                             className={button.key}
                             onClick={() => {
                                 setOpenExpand(false);
-                                button.onClick({ navigate, modal });
+                                button.onClick({ navigate, modal: shareModal });
                             }}
                         >
                             <span>{t(button.i18nKey)}</span>

@@ -20,7 +20,7 @@ import {
 import { useAuthContext } from "utils/auth";
 import { _isFollow, _report, _viewProfile } from "utils/firebase/user";
 import { BottomSheet } from "react-spring-bottom-sheet";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 import { ReactComponent as ShareIcon } from "assets/images/icons/profile/share.svg";
 import { ReactComponent as ReportIcon } from "assets/images/icons/profile/report.svg";
 import { useStatusContext } from "utils/status";
@@ -85,12 +85,11 @@ const __EXPAND__ = [
         key: "share",
         i18nKey: "text.profile.expand.share",
         icon: <ShareIcon />,
-        onClick: ({ modal, userInfo, dispatch }) => {
+        onClick: ({ shareModal, userInfo, dispatch }) => {
             dispatch({
                 type: "CLOSE_EXPAND",
             });
-            modal.displayModal({
-                pathname: "profile/Share",
+            shareModal.open({
                 params: {
                     userInfo,
                 },
@@ -139,7 +138,7 @@ const UserDetail = () => {
     const { uid } = useParams();
     const navigate = useNavigateContext();
     const { userInfo } = useAuthContext();
-    const modal = useModalContext();
+    const shareModal = useModal("profile/Share");
     const { task } = useStatusContext();
     const location = useLocation();
     const tabRefs = {
@@ -526,7 +525,7 @@ const UserDetail = () => {
                                     uid,
                                     task,
                                     dispatch,
-                                    modal,
+                                    shareModal,
                                     userInfo: state.userInfo,
                                 });
                             }}

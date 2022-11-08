@@ -1,16 +1,14 @@
 import React from "react";
-import { useModal } from "utils/modal";
-import { UNSAFE_NavigationContext } from "react-router-dom";
+import reactDom from "react-dom";
+import { useModalContext } from "utils/modal";
 import ModalHeader from "components/header/ModalHeader";
+import { UNSAFE_NavigationContext } from "react-router-dom";
 
-const Modal = ({ modalId }) => {
+const Modal = () => {
     const { navigator } = React.useContext(UNSAFE_NavigationContext);
     const unblockRef = React.useRef(() => {});
-    const {
-        instance: { id: pathname, params, options, isOpen },
-        close,
-    } = useModal(modalId);
-    const [display, setDisplay] = React.useState(isOpen);
+    const { path, params, options, dismissModal } = useModalContext();
+    const [display, setDisplay] = React.useState(Boolean(path));
     const modalContainerRef = React.useRef(null);
     const modalRef = React.useRef(null);
     const timerRef = React.useRef(null);
@@ -22,7 +20,7 @@ const Modal = ({ modalId }) => {
         const eventHandler = (event) => {
             if (!modalRef.current) return;
             if (!modalRef.current.contains(event.target)) {
-                close();
+                dismissModal();
             }
         };
 
@@ -37,17 +35,16 @@ const Modal = ({ modalId }) => {
         clearTimeout(timerRef.current);
         timerRef.current = null;
 
-        if (isOpen) {
-            ModalComponentRef.current =
-                require(`modals/${pathname}.js`).default;
+        if (path) {
             setDisplay(true);
+            ModalComponentRef.current = require(`modals/${path}.js`).default;
         } else {
             timerRef.current = setTimeout(() => {
                 setDisplay(false);
                 ModalComponentRef.current = null;
             }, 200);
         }
-    }, [isOpen]);
+    }, [path]);
 
     React.useEffect(() => {
         if (display) {
@@ -62,7 +59,7 @@ const Modal = ({ modalId }) => {
 
                 switch (tx.action) {
                     case "POP":
-                        close();
+                        dismissModal();
                         break;
                     default:
                         autoUnblockingTx.retry();
@@ -102,34 +99,36 @@ const Modal = ({ modalId }) => {
 
     React.useEffect(() => {
         const rootElem = window.document.getElementById("root");
-        if (isOpen) {
+        if (Boolean(path)) {
             rootElem.classList.add("hasModal");
         } else {
             rootElem.classList.remove("hasModal");
         }
-    }, [isOpen]);
+    }, [path]);
 
-    if (!display) return null;
-    return (
+    const el = document.getElementById("modal");
+    if (!display) {
+        return reactDom.createPortal(null, el);
+    }
+    // const ModalComponent =
+    return reactDom.createPortal(
         <div ref={modalContainerRef} className={`modal-container`}>
             <div
                 ref={modalRef}
-                className={`modal ${isOpen ? "display" : "dismiss"} ${
+                className={`modal ${Boolean(path) ? "display" : "dismiss"} ${
                     optionsRef.current?.hasButton ? "has-button" : ""
                 } ${optionsRef.current?.layout}`}
             >
                 <>
                     {(typeof options?.goBackButton === "boolean" &&
                         !options?.goBackButton) || (
-                        <ModalHeader
-                            title={optionsRef.current?.title}
-                            modalId={modalId}
-                        />
+                        <ModalHeader title={optionsRef.current?.title} />
                     )}
-                    <ModalComponentRef.current modalId={modalId} {...params} />
+                    <ModalComponentRef.current {...params} />
                 </>
             </div>
-        </div>
+        </div>,
+        el
     );
 };
 

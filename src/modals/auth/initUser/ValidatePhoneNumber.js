@@ -10,13 +10,19 @@ import {
     _setUserInfo,
 } from "utils/firebase/auth";
 import { toast } from "react-toastify";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 import { CircularProgress } from "@mui/material";
 import { useAuthContext } from "utils/auth";
 
-const ValidatePhoneNumber = ({ uid, _idx, screenIdx, setScreenIdx }) => {
+const ValidatePhoneNumber = ({
+    modalId,
+    uid,
+    _idx,
+    screenIdx,
+    setScreenIdx,
+}) => {
     const { t } = useTranslation();
-    const { dismissModal } = useModalContext();
+    const modal = useModal(modalId);
     const { signOut } = useAuthContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
@@ -233,7 +239,7 @@ const ValidatePhoneNumber = ({ uid, _idx, screenIdx, setScreenIdx }) => {
                 dispatch({
                     type: "SUBMIT_FULFILLED",
                 });
-                dismissModal();
+                modal.close();
             })
             .catch((e) => {
                 console.dir(e);
@@ -254,7 +260,7 @@ const ValidatePhoneNumber = ({ uid, _idx, screenIdx, setScreenIdx }) => {
                         className="sign-out-button"
                         type="text"
                         color="primary"
-                        onClick={() => signOut().then(dismissModal)}
+                        onClick={() => signOut().then(() => modal.close())}
                     >
                         {t("text.setup.sign_out")}
                     </CommonButton>

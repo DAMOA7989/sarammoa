@@ -7,11 +7,11 @@ import { _agree } from "utils/firebase/auth";
 import { CircularProgress } from "@mui/material";
 import CommonButton from "components/button/CommonButton";
 import { useAuthContext } from "utils/auth";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 
-const Agreement = ({ uid, _idx, screenIdx, setScreenIdx }) => {
+const Agreement = ({ modalId, uid, _idx, screenIdx, setScreenIdx }) => {
     const { t } = useTranslation();
-    const { dismissModal } = useModalContext();
+    const modal = useModal(modalId);
     const { signOut } = useAuthContext();
     const [state, dispatch] = React.useReducer(
         (state, action) => {
@@ -147,7 +147,7 @@ const Agreement = ({ uid, _idx, screenIdx, setScreenIdx }) => {
                         className="sign-out-button"
                         type="text"
                         color="primary"
-                        onClick={() => signOut().then(dismissModal)}
+                        onClick={() => signOut().then(() => modal.close())}
                     >
                         {t("text.setup.sign_out")}
                     </CommonButton>

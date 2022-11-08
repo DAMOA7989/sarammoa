@@ -1,6 +1,6 @@
 import React from "react";
 
-const ChangeLang = () => {
+const ChangeLang = ({ modalId }) => {
     return <div className="modals-profile-change-lang">change lang</div>;
 };
 

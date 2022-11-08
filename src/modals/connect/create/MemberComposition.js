@@ -7,15 +7,11 @@ import { ReactComponent as RemoveIcon } from "assets/images/icons/connect/remove
 import RippleEffect from "components/surface/RippleEffect";
 import CommonButton from "components/button/CommonButton";
 
-const MemberComposition = ({ state, dispatch }) => {
+const MemberComposition = ({ modalId, state, dispatch }) => {
     const { t } = useTranslation();
     const [position, setPosition] = React.useState(null);
     const [person, setPerson] = React.useState(0);
     const [canAdd, setCanAdd] = React.useState(false);
-
-    React.useEffect(() => {
-        console.log("d state dispatch", state, dispatch);
-    });
 
     React.useEffect(() => {
         if (!position) return setCanAdd(false);

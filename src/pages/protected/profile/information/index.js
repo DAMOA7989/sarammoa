@@ -3,16 +3,15 @@ import { useTranslation } from "react-i18next";
 import { ReactComponent as GpsIcon } from "assets/images/icons/profile/gps.svg";
 import { useOutletContext } from "react-router-dom";
 import RippleEffect from "components/surface/RippleEffect";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 
 const __BOXES__ = [
     {
         key: "views",
         i18nKey: "title.profile.information.views",
         count: ({ userInfo }) => (userInfo?.views || []).length,
-        onClick: ({ t, uid, displayModal }) => {
-            displayModal({
-                pathname: "profile/Statistic",
+        onClick: ({ t, uid, statisticModal }) => {
+            statisticModal.open({
                 params: {
                     uid,
                 },
@@ -26,9 +25,8 @@ const __BOXES__ = [
         key: "appereciations",
         i18nKey: "title.profile.information.appreciations",
         count: ({ userInfo }) => (userInfo?.likes || []).length,
-        onClick: ({ t, uid, displayModal }) => {
-            displayModal({
-                pathname: "profile/Statistic",
+        onClick: ({ t, uid, statisticModal }) => {
+            statisticModal.open({
                 params: {
                     uid,
                 },
@@ -42,9 +40,8 @@ const __BOXES__ = [
         key: "followers",
         i18nKey: "title.profile.information.followers",
         count: ({ userInfo }) => (userInfo?.followers || []).length,
-        onClick: ({ t, uid, displayModal }) => {
-            displayModal({
-                pathname: "profile/Follow",
+        onClick: ({ t, uid, followModal }) => {
+            followModal.open({
                 params: {
                     type: "followers",
                     uid,
@@ -59,9 +56,8 @@ const __BOXES__ = [
         key: "followings",
         i18nKey: "title.profile.information.followings",
         count: ({ userInfo }) => (userInfo?.following || []).length,
-        onClick: ({ t, uid, displayModal }) => {
-            displayModal({
-                pathname: "profile/Follow",
+        onClick: ({ t, uid, followModal }) => {
+            followModal.open({
                 params: {
                     type: "following",
                     uid,
@@ -77,7 +73,8 @@ const __BOXES__ = [
 const Information = () => {
     const { t } = useTranslation();
     const { userInfo } = useOutletContext();
-    const { displayModal } = useModalContext();
+    const statisticModal = useModal("profile/Statistic");
+    const followModal = useModal("profile/Follow");
 
     return (
         <div className="pages-protected-profile-information">
@@ -91,7 +88,8 @@ const Information = () => {
                                         box.onClick({
                                             t,
                                             uid: userInfo?.id,
-                                            displayModal,
+                                            statisticModal,
+                                            followModal,
                                         })
                                     }
                                 >

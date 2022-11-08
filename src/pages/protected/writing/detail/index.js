@@ -28,7 +28,7 @@ import RippleEffect from "components/surface/RippleEffect";
 import { useOutsideClickListener } from "utils/hook";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import CommentCard from "components/surface/CommentCard";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 import { toast } from "react-toastify";
 import { ReactComponent as LikeIcon } from "assets/images/icons/writing/thumb_up.svg";
 import { CircularProgress } from "@mui/material";
@@ -113,12 +113,11 @@ const __DROPDOWN_ITEMS__ = [
         key: "share",
         permission: ["write", "read"],
         i18nKey: "text.dropdown.share",
-        onClick: ({ wid, modal, dispatch, writingInfo }) => {
+        onClick: ({ wid, dispatch, writingInfo, shareModal }) => {
             dispatch({
                 type: "HIDE_MORE_DROPDOWN",
             });
-            modal.displayModal({
-                pathname: "writing/Share",
+            shareModal.open({
                 params: {
                     wid,
                     writingInfo,
@@ -201,7 +200,7 @@ const WritingDetail = () => {
     const { userInfo } = useAuthContext();
     const navigate = useNavigateContext();
     const { task } = useStatusContext();
-    const modal = useModalContext();
+    const shareModal = useModal("writing/Share");
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -495,7 +494,7 @@ const WritingDetail = () => {
                                                                             dispatch,
                                                                             navigate,
                                                                             task,
-                                                                            modal,
+                                                                            shareModal,
                                                                             writingInfo:
                                                                                 state.writingInfo,
                                                                         }
@@ -529,7 +528,7 @@ const WritingDetail = () => {
                                                                             dispatch,
                                                                             navigate,
                                                                             task,
-                                                                            modal,
+                                                                            shareModal,
                                                                             writingInfo:
                                                                                 state.writingInfo,
                                                                         }

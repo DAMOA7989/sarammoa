@@ -5,7 +5,6 @@ import ListButton from "components/button/ListButton";
 import WoilonnToggle from "components/input/WoilonnToggle";
 import { useNavigateContext } from "utils/navigate";
 import { useStatusContext } from "utils/status";
-import { useModalContext } from "utils/modal";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import CommonButton from "components/button/CommonButton";
 import { resources } from "i18n";
@@ -120,8 +119,6 @@ const Setup = () => {
     const { t, i18n } = useTranslation();
     const { signOut } = useAuthContext();
     const navigate = useNavigateContext();
-    const { lang } = useStatusContext();
-    const { displayModal } = useModalContext();
     const [checkedUsageInformation, setCheckedUsageInformation] =
         React.useState(true);
     const [checkedPushNotice, setCheckedPushNotice] = React.useState(true);

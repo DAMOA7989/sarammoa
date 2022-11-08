@@ -1,6 +1,6 @@
 import React from "react";
 
-const Pending = () => {
+const Pending = ({ modalId }) => {
     return <main className="modals-status-pending">pending...</main>;
 };
 

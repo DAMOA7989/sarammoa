@@ -1,18 +1,19 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { useModalContext } from "utils/modal";
+import RippleEffect from "components/surface/RippleEffect";
+import { useModal } from "utils/modal";
 
-const ModalHeader = ({ title }) => {
+const ModalHeader = ({ title, modalId }) => {
     const { t } = useTranslation();
-    const { dismissModal } = useModalContext();
+    const modal = useModal(modalId);
 
     return (
         <header className="modal-header">
             <div className="container">
-                <div
+                <RippleEffect
                     className="dismiss-icon"
-                    onClick={() => dismissModal()}
-                ></div>
+                    onClick={() => modal.close()}
+                ></RippleEffect>
                 {Boolean(title) && <span className="title">{t(title)}</span>}
             </div>
         </header>

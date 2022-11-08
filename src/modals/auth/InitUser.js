@@ -5,7 +5,7 @@ import Agreement from "./initUser/Agreement";
 import ValidatePhoneNumber from "./initUser/ValidatePhoneNumber";
 import ScreenCarousel from "components/layout/ScreenCarousel";
 
-const InitUser = ({ uid, agrees }) => {
+const InitUser = ({ modalId, uid, agrees }) => {
     const { t } = useTranslation();
     const [screenIdx, setScreenIdx] = React.useState(0);
 
@@ -24,9 +24,9 @@ const InitUser = ({ uid, agrees }) => {
             screenIdx={screenIdx}
             setScreenIdx={setScreenIdx}
             screens={[
-                <Index uid={uid} />,
-                <Agreement uid={uid} />,
-                <ValidatePhoneNumber uid={uid} />,
+                <Index modalId={modalId} uid={uid} />,
+                <Agreement modalId={modalId} uid={uid} />,
+                <ValidatePhoneNumber modalId={modalId} uid={uid} />,
             ]}
         />
     );

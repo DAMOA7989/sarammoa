@@ -99,7 +99,7 @@ const __DATAS__ = {
     },
 };
 
-const Statistic = ({ uid }) => {
+const Statistic = ({ modalId, uid }) => {
     const { t } = useTranslation();
 
     const [state, dispatch] = React.useReducer(

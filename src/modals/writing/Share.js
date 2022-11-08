@@ -6,7 +6,7 @@ import { ReactComponent as EmailIcon } from "assets/images/icons/share/email.svg
 import { ReactComponent as KakaotalkIcon } from "assets/images/icons/share/kakaotalk.svg";
 import { copyText } from "utils/string";
 import { toast } from "react-toastify";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 import { _getWritingDetail } from "utils/firebase/writing";
 
 const __AVAILABLE_ITEMS__ = [
@@ -66,9 +66,9 @@ const __AVAILABLE_ITEMS__ = [
     },
 ];
 
-const Share = ({ wid, writingInfo }) => {
+const Share = ({ modalId, wid, writingInfo }) => {
     const { t } = useTranslation();
-    const { dismissModal } = useModalContext();
+    const modal = useModal(modalId);
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {
@@ -136,7 +136,7 @@ const Share = ({ wid, writingInfo }) => {
                         color="dark_gray"
                         loading={state.writingInfoLoading}
                         onClick={() => {
-                            dismissModal();
+                            modal.close();
                             item.onClick({
                                 t,
                                 wid,

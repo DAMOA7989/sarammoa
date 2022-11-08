@@ -10,7 +10,6 @@ import "styles/app.scss";
 import "./i18n";
 import { NavigateProvider } from "utils/navigate";
 import { AuthProvider } from "utils/auth";
-import { ModalProvider } from "utils/modal";
 import { StatusProvider } from "utils/status";
 import { StoreProvider } from "utils/store";
 import { ThemeProvider } from "@mui/material/styles";
@@ -24,17 +23,15 @@ root.render(
     <BrowserRouter>
         <ThemeProvider theme={theme}>
             <RecoilRoot>
-                <ModalProvider>
-                    <StatusProvider>
-                        <AuthProvider>
-                            <StoreProvider>
-                                <NavigateProvider>
-                                    <App />
-                                </NavigateProvider>
-                            </StoreProvider>
-                        </AuthProvider>
-                    </StatusProvider>
-                </ModalProvider>
+                <StatusProvider>
+                    <AuthProvider>
+                        <StoreProvider>
+                            <NavigateProvider>
+                                <App />
+                            </NavigateProvider>
+                        </StoreProvider>
+                    </AuthProvider>
+                </StatusProvider>
             </RecoilRoot>
         </ThemeProvider>
     </BrowserRouter>

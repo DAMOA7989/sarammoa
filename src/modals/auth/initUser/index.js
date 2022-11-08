@@ -3,11 +3,11 @@ import { useTranslation, Trans } from "react-i18next";
 import { ReactComponent as ArrowBottomDoubleIcon } from "assets/images/icons/arrow_bottom_double.svg";
 import CommonButton from "components/button/CommonButton";
 import { useAuthContext } from "utils/auth";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 
-const Index = ({ _idx, screenIdx, setScreenIdx }) => {
+const Index = ({ modalId, _idx, screenIdx, setScreenIdx }) => {
     const { t } = useTranslation();
-    const { dismissModal } = useModalContext();
+    const modal = useModal(modalId);
     const { signOut } = useAuthContext();
 
     return (
@@ -16,7 +16,7 @@ const Index = ({ _idx, screenIdx, setScreenIdx }) => {
                 className="sign-out-button"
                 type="text"
                 color="primary"
-                onClick={() => signOut().then(dismissModal)}
+                onClick={() => signOut().then(() => modal.close())}
             >
                 {t("text.setup.sign_out")}
             </CommonButton>

@@ -6,7 +6,7 @@ import { ReactComponent as EmailIcon } from "assets/images/icons/share/email.svg
 import { ReactComponent as KakaotalkIcon } from "assets/images/icons/share/kakaotalk.svg";
 import { copyText } from "utils/string";
 import { toast } from "react-toastify";
-import { useModalContext } from "utils/modal";
+import { useModal } from "utils/modal";
 import { useAuthContext } from "utils/auth";
 
 const __AVAILABLE_ITEMS__ = [
@@ -70,9 +70,9 @@ const __AVAILABLE_ITEMS__ = [
     },
 ];
 
-const Share = ({ userInfo: _userInfo }) => {
+const Share = ({ modalId, userInfo: _userInfo }) => {
     const { t } = useTranslation();
-    const { dismissModal } = useModalContext();
+    const modal = useModal(modalId);
     const { userInfo } = useAuthContext();
     const [userDetailInfo, setUserDetailInfo] = React.useState(null);
 
@@ -94,7 +94,7 @@ const Share = ({ userInfo: _userInfo }) => {
                         color="dark_gray"
                         loading={false}
                         onClick={() => {
-                            dismissModal();
+                            modal.close();
                             item.onClick({ t, userInfo: userDetailInfo });
                         }}
                         icon={item.icon}

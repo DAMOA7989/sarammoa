@@ -42,7 +42,7 @@ import { RequireAuth } from "utils/auth";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { useNavigateContext } from "utils/navigate";
 import { useAuthContext } from "utils/auth";
-import Modal from "components/layout/Modal";
+import ModalFactory from "components/layout/ModalFactory";
 import Pending from "components/layout/Pending";
 import { useStatusContext } from "utils/status";
 import { ToastContainer } from "react-toastify";
@@ -236,7 +236,7 @@ const App = () => {
                     </Route>
                 </Route>
             </Routes>
-            <Modal />
+            <ModalFactory />
             <Pending />
             <ToastContainer
                 position="bottom-center"
