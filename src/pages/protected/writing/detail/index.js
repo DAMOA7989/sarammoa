@@ -25,7 +25,7 @@ import WoilonnInput from "components/input/WoilonnInput";
 import { ReactComponent as SendIcon } from "assets/images/icons/writing/send.svg";
 import { useAuthContext } from "utils/auth";
 import RippleEffect from "components/surface/RippleEffect";
-import { useOutsideClickListener } from "utils/hook";
+import { useOutsideClickListener } from "utils/hooks";
 import { BottomSheet } from "react-spring-bottom-sheet";
 import CommentCard from "components/surface/CommentCard";
 import { useModal } from "utils/modal";

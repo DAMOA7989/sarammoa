@@ -9,17 +9,18 @@ export const modalSelectorFamily = selectorFamily({
             get(modalAtomFamily(modalId)),
     set:
         (modalId) =>
-        ({ get, set, reset }, modalInfo) => {
+        ({ set, reset }, modalInfo) => {
+            console.log("d modalInfo", modalInfo);
             if (modalInfo instanceof DefaultValue) {
                 reset(modalAtomFamily(modalId));
                 set(modalIdsAtom, (prevValue) =>
                     prevValue.filter((item) => item !== modalId)
                 );
+            } else {
+                set(modalAtomFamily(modalId), modalInfo);
+                set(modalIdsAtom, (prev) =>
+                    Array.from(new Set([...prev, modalInfo.id]))
+                );
             }
-
-            set(modalAtomFamily(modalId), modalInfo);
-            set(modalIdsAtom, (prev) =>
-                Array.from(new Set([...prev, modalInfo.id]))
-            );
         },
 });

@@ -16,25 +16,27 @@ import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "config/theme";
 import "react-phone-number-input/style.css";
 import { RecoilRoot } from "recoil";
+import DebugObserver from "recoil/DebugObserver";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     // <React.StrictMode>
-    <BrowserRouter>
-        <ThemeProvider theme={theme}>
-            <RecoilRoot>
+    <RecoilRoot>
+        <BrowserRouter>
+            <ThemeProvider theme={theme}>
                 <StatusProvider>
                     <AuthProvider>
                         <StoreProvider>
                             <NavigateProvider>
+                                <DebugObserver />
                                 <App />
                             </NavigateProvider>
                         </StoreProvider>
                     </AuthProvider>
                 </StatusProvider>
-            </RecoilRoot>
-        </ThemeProvider>
-    </BrowserRouter>
+            </ThemeProvider>
+        </BrowserRouter>
+    </RecoilRoot>
     // </React.StrictMode>
 );
 

@@ -6,12 +6,14 @@ import { ReactComponent as AddIcon } from "assets/images/icons/connect/add.svg";
 import { ReactComponent as RemoveIcon } from "assets/images/icons/connect/remove.svg";
 import RippleEffect from "components/surface/RippleEffect";
 import CommonButton from "components/button/CommonButton";
+import { useTeam } from "utils/hooks/recoil/team";
 
 const MemberComposition = ({ modalId, state, dispatch }) => {
     const { t } = useTranslation();
     const [position, setPosition] = React.useState(null);
     const [person, setPerson] = React.useState("");
     const [canAdd, setCanAdd] = React.useState(false);
+    const { addPosition, getPositions, deletePosition } = useTeam();
 
     React.useEffect(() => {
         if (!position) return setCanAdd(false);
@@ -22,18 +24,14 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
     const onAddHandler = () => {
         if (!position || !Boolean(person)) return;
 
-        dispatch({
-            type: "ADD_MEMBER_COMPOSITION",
-            payload: {
-                position,
-                person,
-            },
-        });
+        addPosition({ position: position.key, person });
         setPosition(null);
         setPerson("");
     };
 
-    const onRemoveHandler = (key) => {};
+    const onRemoveHandler = (position) => {
+        deletePosition(position);
+    };
 
     return (
         <main className="modals-connect-create-member-composition">
@@ -53,26 +51,20 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
             </header>
             <main>
                 <ul>
-                    {Object.entries(state?.members || {}).map(
-                        ([position, value], idx) => (
-                            <li key={position}>
-                                <div className="container">
-                                    <div className="position">
-                                        {t(value.i18nKey)}
-                                    </div>
-                                    <div className="person">{value.person}</div>
-                                    <RippleEffect
-                                        className="remove"
-                                        onClick={() =>
-                                            onRemoveHandler(position)
-                                        }
-                                    >
-                                        <RemoveIcon />
-                                    </RippleEffect>
-                                </div>
-                            </li>
-                        )
-                    )}
+                    {getPositions().map(({ position, person }, idx) => (
+                        <li key={position}>
+                            <div className="container">
+                                <div className="position">{t(position)}</div>
+                                <div className="person">{person}</div>
+                                <RippleEffect
+                                    className="remove"
+                                    onClick={() => onRemoveHandler(position)}
+                                >
+                                    <RemoveIcon />
+                                </RippleEffect>
+                            </div>
+                        </li>
+                    ))}
                 </ul>
                 <div className="add-row">
                     <div className="position">
@@ -115,19 +107,27 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
 
                     <RippleEffect
                         className="remove"
-                        onClick={() => onRemoveHandler(position)}
+                        onClick={() => {
+                            setPosition(null);
+                            setPerson("");
+                        }}
                     >
                         <RemoveIcon />
                     </RippleEffect>
                 </div>
+                <div className="add">
+                    <CommonButton
+                        type="text"
+                        onClick={onAddHandler}
+                        disabled={!canAdd}
+                    >
+                        <AddIcon />
+                    </CommonButton>
+                </div>
             </main>
-            <footer className="add">
-                <CommonButton
-                    type="text"
-                    onClick={onAddHandler}
-                    disabled={!canAdd}
-                >
-                    <AddIcon />
+            <footer>
+                <CommonButton color="primary" onClick={() => {}}>
+                    {t("btn.create_team")}
                 </CommonButton>
             </footer>
         </main>

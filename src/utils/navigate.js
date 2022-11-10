@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate, createSearchParams } from "react-router-dom";
-import { useBackListener } from "utils/hook";
+import { useBackListener } from "utils/hooks";
 
 const NavigateContext = React.createContext(null);
 
