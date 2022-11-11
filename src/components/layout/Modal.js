@@ -22,7 +22,7 @@ const Modal = ({ modalId }) => {
         const eventHandler = (event) => {
             if (!modalRef.current) return;
             if (!modalRef.current.contains(event.target)) {
-                close();
+                // close();
             }
         };
 

@@ -4,33 +4,155 @@ import WoilonnInput from "components/input/WoilonnInput";
 import WoilonnSelect from "components/input/WoilonnSelect";
 import { ReactComponent as AddIcon } from "assets/images/icons/connect/add.svg";
 import { ReactComponent as RemoveIcon } from "assets/images/icons/connect/remove.svg";
+import { ReactComponent as CheckIcon } from "assets/images/icons/connect/check.svg";
 import RippleEffect from "components/surface/RippleEffect";
 import CommonButton from "components/button/CommonButton";
-import { useTeam } from "utils/hooks/recoil/team";
 
-const MemberComposition = ({ modalId, state, dispatch }) => {
+const MemberComposition = ({
+    modalId,
+    state: parentState,
+    dispatch: parentDispatch,
+    closeModal,
+}) => {
     const { t } = useTranslation();
-    const [position, setPosition] = React.useState(null);
-    const [person, setPerson] = React.useState("");
-    const [canAdd, setCanAdd] = React.useState(false);
-    const { addPosition, getPositions, deletePosition } = useTeam();
+
+    const [state, dispatch] = React.useReducer(
+        (state, action) => {
+            switch (action.type) {
+                case "ADD_MEMBER":
+                    const idx = state.members.findIndex(
+                        (x) =>
+                            x.position.key ===
+                            action.payload?.member.position.key
+                    );
+
+                    return {
+                        ...state,
+                        members:
+                            idx >= 0
+                                ? [
+                                      ...state.members.slice(0, idx),
+                                      action.payload?.member,
+                                      ...state.members.slice(
+                                          idx + 1,
+                                          state.members.length
+                                      ),
+                                  ]
+                                : [...state.members, action.payload?.member],
+                        position: null,
+                        person: "",
+                    };
+                case "DELETE_MEMBER":
+                    return {
+                        ...state,
+                        members: state.members.filter(
+                            (item) => item.position.key !== action.payload?.key
+                        ),
+                    };
+                case "SET_POSITION":
+                    return {
+                        ...state,
+                        position: action.payload?.value,
+                    };
+                case "SET_PERSON":
+                    return {
+                        ...state,
+                        person: action.payload?.value,
+                    };
+                case "SET_CAN_ADD":
+                    return {
+                        ...state,
+                        canAdd: action.payload?.flag,
+                    };
+                case "SET_CAN_SUBMIT":
+                    return {
+                        ...state,
+                        canSubmit: action.payload?.flag,
+                    };
+            }
+        },
+        {
+            members: [],
+            position: null,
+            person: "",
+            canAdd: false,
+            canSubmit: false,
+        }
+    );
 
     React.useEffect(() => {
-        if (!position) return setCanAdd(false);
-        if (!Boolean(person)) return setCanAdd(false);
-        setCanAdd(true);
-    }, [position, person]);
+        if (!state.position)
+            return dispatch({
+                type: "SET_CAN_ADD",
+                payload: {
+                    flag: false,
+                },
+            });
+        if (!Boolean(state.person))
+            return dispatch({
+                type: "SET_CAN_ADD",
+                payload: {
+                    flag: false,
+                },
+            });
+
+        dispatch({
+            type: "SET_CAN_ADD",
+            payload: {
+                flag: true,
+            },
+        });
+    }, [state.position, state.person]);
+
+    React.useEffect(() => {
+        if (state.members.length > 0) {
+            dispatch({
+                type: "SET_CAN_SUBMIT",
+                payload: {
+                    flag: true,
+                },
+            });
+        } else {
+            dispatch({
+                type: "SET_CAN_SUBMIT",
+                payload: {
+                    flag: false,
+                },
+            });
+        }
+    }, [state.members.length]);
 
     const onAddHandler = () => {
-        if (!position || !Boolean(person)) return;
+        if (!state.position || !Boolean(state.person)) return;
 
-        addPosition({ position: position.key, person });
-        setPosition(null);
-        setPerson("");
+        const position = state.position;
+        const person = state.person;
+
+        dispatch({
+            type: "ADD_MEMBER",
+            payload: {
+                member: { position, person },
+            },
+        });
     };
 
-    const onRemoveHandler = (position) => {
-        deletePosition(position);
+    const onRemoveHandler = (member) => {
+        dispatch({
+            type: "DELETE_MEMBER",
+            payload: {
+                key: member.position.key,
+            },
+        });
+    };
+
+    const onCreateHandler = () => {
+        parentDispatch({
+            type: "SET_MEMBERS",
+            payload: {
+                members: state.members,
+            },
+        });
+        closeModal();
     };
 
     return (
@@ -51,14 +173,16 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
             </header>
             <main>
                 <ul>
-                    {getPositions().map(({ position, person }, idx) => (
-                        <li key={position}>
+                    {state.members.map((member, idx) => (
+                        <li key={idx}>
                             <div className="container">
-                                <div className="position">{t(position)}</div>
-                                <div className="person">{person}</div>
+                                <div className="position">
+                                    {t(member.position.i18nKey)}
+                                </div>
+                                <div className="person">{member.person}</div>
                                 <RippleEffect
                                     className="remove"
-                                    onClick={() => onRemoveHandler(position)}
+                                    onClick={() => onRemoveHandler(member)}
                                 >
                                     <RemoveIcon />
                                 </RippleEffect>
@@ -69,8 +193,15 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
                 <div className="add-row">
                     <div className="position">
                         <WoilonnSelect
-                            value={position}
-                            onChange={(item) => setPosition(item)}
+                            value={state.position}
+                            onChange={(item) =>
+                                dispatch({
+                                    type: "SET_POSITION",
+                                    payload: {
+                                        value: item,
+                                    },
+                                })
+                            }
                             datas={[
                                 {
                                     key: "developer",
@@ -94,39 +225,37 @@ const MemberComposition = ({ modalId, state, dispatch }) => {
                     <div className="person">
                         <WoilonnInput
                             type="number"
-                            value={person}
+                            value={state.person}
                             onChange={(event) => {
                                 const { value } = event.target;
                                 const onlyNumberPersonValue = value
                                     .replace(/[^0-9.]/g, "")
                                     .replace(/(\..*)\./g, "$1");
-                                setPerson(onlyNumberPersonValue);
+                                dispatch({
+                                    type: "SET_PERSON",
+                                    payload: {
+                                        value: onlyNumberPersonValue,
+                                    },
+                                });
                             }}
                         />
                     </div>
 
                     <RippleEffect
-                        className="remove"
-                        onClick={() => {
-                            setPosition(null);
-                            setPerson("");
-                        }}
+                        className={`add ${state.canAdd && "active"}`}
+                        onClick={state.canAdd ? onAddHandler : null}
                     >
-                        <RemoveIcon />
+                        <CheckIcon />
                     </RippleEffect>
-                </div>
-                <div className="add">
-                    <CommonButton
-                        type="text"
-                        onClick={onAddHandler}
-                        disabled={!canAdd}
-                    >
-                        <AddIcon />
-                    </CommonButton>
                 </div>
             </main>
             <footer>
-                <CommonButton color="primary" onClick={() => {}}>
+                <CommonButton
+                    className="btn-create"
+                    color="primary"
+                    onClick={onCreateHandler}
+                    disabled={!state.canSubmit}
+                >
                     {t("btn.create_team")}
                 </CommonButton>
             </footer>

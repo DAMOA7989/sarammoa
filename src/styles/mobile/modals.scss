@@ -414,7 +414,7 @@
     > header {
         display: flex;
         gap: 0.75em;
-        margin-bottom: 0.5em;
+        margin-bottom: 1.5em;
 
         > .position {
             flex: 1;
@@ -432,6 +432,8 @@
     }
 
     > main {
+        margin-bottom: 1.5em;
+
         > ul {
             > li {
                 margin-bottom: 0.75em;
@@ -465,6 +467,12 @@
                         display: inline-flex;
                         justify-content: center;
                         align-items: center;
+
+                        > svg {
+                            path {
+                                stroke: $error_color;
+                            }
+                        }
                     }
                 }
             }
@@ -473,7 +481,6 @@
         > .add-row {
             display: flex;
             gap: 0.75em;
-            margin-bottom: 2em;
 
             > .position {
                 flex: 1;
@@ -495,10 +502,24 @@
                 }
             }
 
-            > .remove {
+            > .add {
                 display: inline-flex;
                 justify-content: center;
                 align-items: center;
+
+                > svg {
+                    path {
+                        transition: stroke 0.15s;
+                    }
+                }
+
+                &.active {
+                    > svg {
+                        path {
+                            stroke: $success_color;
+                        }
+                    }
+                }
             }
         }
     }
@@ -507,5 +528,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
+        > .btn-create {
+            width: 100%;
+        }
     }
 }

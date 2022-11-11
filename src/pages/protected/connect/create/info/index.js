@@ -7,7 +7,6 @@ import WoilonnInput from "components/input/WoilonnInput";
 import CommonButton from "components/button/CommonButton";
 import { ReactComponent as PlusIcon } from "assets/images/icons/connect/plus.svg";
 import { ReactComponent as EditIcon } from "assets/images/icons/connect/edit.svg";
-import RippleEffect from "components/surface/RippleEffect";
 import _ from "lodash";
 import { useModal } from "utils/modal";
 
@@ -40,24 +39,10 @@ const ConnectCreateInfo = () => {
                         ...state,
                         description: action.payload?.value,
                     };
-                case "ADD_MEMBER_COMPOSITION":
+                case "SET_MEMBERS":
                     return {
                         ...state,
-                        members: {
-                            ...state.members,
-                            [action.payload?.position?.key]: {
-                                person: action.payload?.person,
-                                i18nKey: action.payload?.position?.i18nKey,
-                            },
-                        },
-                    };
-                case "REMOVE_MEMBER_COMPOSITION":
-                    let members = _.cloneDeep(state.members);
-                    delete members[action.payload?.position];
-
-                    return {
-                        ...state,
-                        members,
+                        members: action.payload?.members,
                     };
             }
         },
@@ -65,7 +50,7 @@ const ConnectCreateInfo = () => {
             purpose: null,
             title: "",
             description: "",
-            members: {},
+            members: [],
             canNext: false,
         }
     );
@@ -102,12 +87,7 @@ const ConnectCreateInfo = () => {
                 },
             });
 
-        if (
-            Object.values(state.members).reduce(
-                (p, c) => p + Number(c.person),
-                0
-            ) === 0
-        )
+        if (state.members.reduce((p, c) => p + Number(c.person), 0) === 0)
             return dispatch({
                 type: "SET_CAN_NEXT",
                 payload: {
@@ -190,7 +170,7 @@ const ConnectCreateInfo = () => {
             </div>
             <div
                 className={`member-composition ${
-                    Object.values(state.members).reduce(
+                    state.members.reduce(
                         (previousValue, currentValue) =>
                             previousValue + Number(currentValue.person),
                         0
@@ -201,9 +181,7 @@ const ConnectCreateInfo = () => {
                     <h3 className="title">
                         {t("title.connect.create.info.member_composition")}
                     </h3>
-                    <span className="count">{`${Object.values(
-                        state.members
-                    ).reduce(
+                    <span className="count">{`${state.members.reduce(
                         (previousValue, currentValue) =>
                             previousValue + Number(currentValue.person),
                         0
@@ -211,18 +189,16 @@ const ConnectCreateInfo = () => {
                 </header>
                 <main>
                     <ul>
-                        {Object.entries(state?.members || {}).map(
-                            ([positionKey, value]) => (
-                                <li key={positionKey}>
-                                    <div className="container">
-                                        <span>{t(value?.i18nKey)}</span>
-                                        <span>{`${value?.person} ${t(
-                                            "text.person"
-                                        )}`}</span>
-                                    </div>
-                                </li>
-                            )
-                        )}
+                        {state?.members.map((member, idx) => (
+                            <li key={member.position.key}>
+                                <div className="container">
+                                    <span>{t(member.position.i18nKey)}</span>
+                                    <span>{`${member.person} ${t(
+                                        "text.person"
+                                    )}`}</span>
+                                </div>
+                            </li>
+                        ))}
                     </ul>
                 </main>
                 <footer>
@@ -236,6 +212,7 @@ const ConnectCreateInfo = () => {
                                 params: {
                                     state,
                                     dispatch,
+                                    closeModal: modal.close,
                                 },
                                 options: {},
                             });

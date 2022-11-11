@@ -29,7 +29,7 @@ export const useModal = (pathname = "") => {
 
     const close = React.useCallback(() => {
         resetModal();
-    }, [resetModal]);
+    }, [setModal]);
 
     return { instance: modal, open, hide, close };
 };

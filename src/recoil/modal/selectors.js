@@ -10,7 +10,6 @@ export const modalSelectorFamily = selectorFamily({
     set:
         (modalId) =>
         ({ set, reset }, modalInfo) => {
-            console.log("d modalInfo", modalInfo);
             if (modalInfo instanceof DefaultValue) {
                 reset(modalAtomFamily(modalId));
                 set(modalIdsAtom, (prevValue) =>
