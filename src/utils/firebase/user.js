@@ -16,10 +16,6 @@ import {
     runTransaction,
     writeBatch,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { httpsCallable } from "firebase/functions";
-import { getResizedImageBlob } from "utils/converter";
-import { v4 as uuidv4 } from "uuid";
 
 export const _isFollow = ({ from, to }) =>
     new Promise(async (resolve, reject) => {
@@ -371,6 +367,57 @@ export const _getUsers = ({ limit: _limit = 100 }) =>
             const users = [];
             usersQuerySnapshot.forEach((userDocSnapshot) => {
                 users.push({
+                    id: userDocSnapshot.id,
+                    ...userDocSnapshot.data(),
+                });
+            });
+
+            return resolve(users);
+        } catch (e) {
+            return reject(e);
+        }
+    });
+
+export const _getUsersWithSearch = ({
+    search,
+    lastDocSnapshot,
+    limit: _limit = 100,
+}) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const usersRef = collection(db, "users");
+
+            let usersQuery = null;
+            if (!Boolean(search)) {
+                if (!lastDocSnapshot) {
+                    usersQuery = query(
+                        usersRef,
+                        orderBy("createdAt", "desc"),
+                        limit(_limit)
+                    );
+                } else {
+                    usersQuery = query(
+                        usersRef,
+                        orderBy("createdAt", "desc"),
+                        startAfter(lastDocSnapshot),
+                        limit(_limit)
+                    );
+                }
+            } else {
+                usersQuery = query(
+                    usersRef,
+                    orderBy("nickname", "asc"),
+                    where("nickname", ">=", search),
+                    where("nickname", "<=", search + "\uf8ff")
+                );
+            }
+
+            const usersQuerySnapshot = await getDocs(usersQuery);
+
+            const users = [];
+            usersQuerySnapshot.forEach((userDocSnapshot) => {
+                users.push({
+                    docSnapshot: userDocSnapshot,
                     id: userDocSnapshot.id,
                     ...userDocSnapshot.data(),
                 });

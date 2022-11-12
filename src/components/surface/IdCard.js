@@ -3,7 +3,7 @@ import LazyImage from "./LazyImage";
 import { Skeleton } from "@mui/material";
 import { _getUserInfoDetail } from "utils/firebase/auth";
 
-const IdCard = ({ className, size, user, userInfo: _userInfo }) => {
+const IdCard = ({ className, uid, size, userInfo: _userInfo }) => {
     const [loaded, setLoaded] = React.useState(false);
     const [userInfo, setUserInfo] = React.useState(null);
 
@@ -19,8 +19,8 @@ const IdCard = ({ className, size, user, userInfo: _userInfo }) => {
 
             setUserInfo(_userInfo);
             return setLoaded(true);
-        } else if (Boolean(user)) {
-            _getUserInfoDetail({ uid: user })
+        } else if (Boolean(uid)) {
+            _getUserInfoDetail({ uid })
                 .then((result) => {
                     setUserInfo(result);
                     setLoaded(true);
@@ -30,7 +30,7 @@ const IdCard = ({ className, size, user, userInfo: _userInfo }) => {
                     setLoaded(true);
                 });
         }
-    }, [user, _userInfo]);
+    }, []);
 
     return (
         <div className={`id-card ${className} ${size}`}>
