@@ -72,7 +72,7 @@ const MemberComposition = ({
             }
         },
         {
-            members: [],
+            members: parentState?.members || [],
             position: null,
             person: "",
             canAdd: false,

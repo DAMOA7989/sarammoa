@@ -192,10 +192,12 @@ const ConnectCreateInfo = () => {
                         {state?.members.map((member, idx) => (
                             <li key={member.position.key}>
                                 <div className="container">
-                                    <span>{t(member.position.i18nKey)}</span>
-                                    <span>{`${member.person} ${t(
-                                        "text.person"
-                                    )}`}</span>
+                                    <span className="role">
+                                        {t(member.position.i18nKey)}
+                                    </span>
+                                    <span className="person">{`${
+                                        member.person
+                                    } ${t("text.person")}`}</span>
                                 </div>
                             </li>
                         ))}
