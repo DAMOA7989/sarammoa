@@ -536,3 +536,25 @@ export const _view = ({ uid, wid }) =>
             return reject(e);
         }
     });
+
+export const getWritingIds = async (uid) => {
+    const writingsRef = collection(db, "writings");
+    let writingsQuery = query(writingsRef, where("writer", "==", uid));
+    writingsQuery = query(writingsQuery, orderBy("createdAt", "desc"));
+    const writingsQuerySnapshot = await getDocs(writingsQuery);
+
+    return writingsQuerySnapshot.docs.map((writingDoc) => writingDoc.id);
+};
+
+export const getWriting = async (id) => {
+    const writingRef = doc(db, `writings/${id}`);
+    const writingDoc = await getDoc(writingRef);
+
+    return writingDoc?.data() ?? null;
+};
+
+export const updateWriting = async (id) => {
+    // TODO : fill this function
+
+    return id;
+};

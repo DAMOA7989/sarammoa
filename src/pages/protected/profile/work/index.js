@@ -7,11 +7,20 @@ import { useNavigateContext } from "utils/navigate";
 import { _getUserWritings } from "utils/firebase/writing";
 import { useAuthContext } from "utils/auth";
 import { CircularProgress } from "@mui/material";
+import { useRecoilValueLoadable } from "recoil";
+import {
+    writingIdsState,
+    writingInfoState,
+    writingInfosSelector,
+} from "recoil/profile";
 
 const Work = () => {
     const { t } = useTranslation();
     const navigate = useNavigateContext();
     const { userInfo } = useAuthContext();
+    const writingInfos = useRecoilValueLoadable(
+        writingInfosSelector(userInfo?.id)
+    );
     const [state, dispatch] = React.useReducer(
         (state, action) => {
             switch (action.type) {

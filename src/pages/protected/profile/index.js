@@ -259,7 +259,9 @@ const Profile = () => {
                             />
                         </ul>
                     </nav>
-                    <Outlet context={{ userInfo }} />
+                    <React.Suspense>
+                        <Outlet context={{ userInfo }} />
+                    </React.Suspense>
                 </div>
             </main>
             <BottomSheet

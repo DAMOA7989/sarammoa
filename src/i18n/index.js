@@ -24,6 +24,7 @@ i18n.use(LanguageDetector)
         },
         react: {
             transKeepBasicHtmlNodesFor: ["br", "ol", "li"],
+            useSuspense: false,
         },
     });
 
